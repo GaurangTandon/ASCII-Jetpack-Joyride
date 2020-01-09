@@ -5,7 +5,11 @@ class Ground:
     def __init__(self):
         self.height = config.GROUND_HEIGHT
 
-    def draw(self, grid):
-        for row in range(config.FRAME_HEIGHT - 1, config.FRAME_HEIGHT - config.GROUND_HEIGHT - 1, -1):
-            for cell in range(0, config.FRAME_WIDTH):
-                grid[row][cell] = config.GRID_CONSTS["ground"]
+    def draw(self):
+        return {
+            "from_row": config.FRAME_HEIGHT - config.GROUND_HEIGHT - 1,
+            "to_row": config.FRAME_HEIGHT - 1,
+            "from_col": 0,
+            "to_col": config.FRAME_WIDTH-1,
+            "objCode": config.GRID_CONSTS["ground"]
+        }

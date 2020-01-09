@@ -1,10 +1,21 @@
-FRAME_WIDTH = 400
-FRAME_HEIGHT = 100
+FRAME_WIDTH = 36
+FRAME_HEIGHT = 96
+FRAME_X_VELOCITY = 10
+
+PLAYER_HEIGHT = 10
+PLAYER_WIDTH = 10
 
 GROUND_HEIGHT = int(0.2 * FRAME_HEIGHT)
+
+GRAVITY_ACC = 0.1
+
+COIN_VALUE = 1
+COIN_HEIGHT = 2
+COIN_WIDTH = 2
 
 GRID_CONSTS = {
     "player": 1,
     "background": 2,
     "ground": 3,
+    "coin": 4
 }
