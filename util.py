@@ -11,12 +11,6 @@ import tty
 import termios
 import subprocess as sp
 
-GRID_CONSTS = {
-    "player": 1,
-    "background": 2,
-    "ground": 3,
-}
-
 
 def clearTerminalScreen():
     sp.call('clear', shell=True)

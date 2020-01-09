@@ -1,5 +1,5 @@
 from colorama import Fore, Back, Style
-from util import GRID_CONSTS
+import config
 
 
 class Player():
@@ -16,4 +16,4 @@ class Player():
     def draw(self, grid):
         for x in range(self.x, self.x + self.width):
             for y in range(self.y, self.y + self.height):
-                grid[x][y] = GRID_CONSTS["player"]
+                grid[x][y] = config.GRID_CONSTS["player"]

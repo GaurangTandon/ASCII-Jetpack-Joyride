@@ -2,16 +2,19 @@ from threading import Timer
 from colorama import init as coloramaInit, Fore, Back, Style
 import signal
 from player import Player
-from util import clearTerminalScreen, GRID_CONSTS
+from util import clearTerminalScreen
+import config
+from config import GRID_CONSTS
+from ground import Ground
 
 
 class Game():
     FRAME_RATE = 1
     _refresh_time = 1 / FRAME_RATE
     COLOR_MAP = {
-        "player": ["red", None],
-        "background": [None, "blue"],
-        "ground": [None, "green"]
+        "player": [Fore.RED, None],
+        "background": [None, Back.BLUE],
+        "ground": [None, Back.GREEN]
     }
 
     SYMBOL_MAP = {
@@ -36,17 +39,19 @@ class Game():
         self.initGridConsts()
 
         # TODO: should be based on terminal height
-        self.X = 100
-        self.Y = 50
+        self.X = config.FRAME_WIDTH
+        self.Y = config.FRAME_HEIGHT
         self.player = Player()
+        self.ground = Ground()
         self.loop()
         # doens't work!@!:@#Q@#
         # Timer(self._refresh_time, self.loop)
 
     def draw(self):
         grid = [[GRID_CONSTS["background"]
-                 for _ in range(self.Y)] for _ in range(self.X)]
+                 for _ in range(self.X)] for _ in range(self.Y)]
         self.player.draw(grid)
+        self.ground.draw(grid)
 
         for row in grid:
             s = ""
@@ -56,10 +61,10 @@ class Game():
                 s += Style.RESET_ALL
 
                 if color[0]:
-                    s += Fore.RED
+                    s += color[0]
 
                 if color[1]:
-                    s += Back.BLUE
+                    s += color[1]
 
                 s += sym
 
