@@ -3,15 +3,14 @@ from threading import Timer
 from colorama import init as coloramaInit, Fore, Back, Style
 import signal
 from player import Player
-from util import clearTerminalScreen
+from util import clearTerminalScreen, NonBlockingInput, getKeyPressed
 import config
-from config import GRID_CONSTS
+from config import GRID_CONSTS, FRAME_RATE
 from ground import Ground
 import time
 
 
 class Game():
-    FRAME_RATE = 1
     _refresh_time = 1 / FRAME_RATE
     COLOR_MAP = {
         "player": [Fore.RED, None],
@@ -55,11 +54,17 @@ class Game():
         self.Y = config.FRAME_HEIGHT
         self.player = Player()
         self.ground = Ground()
+        self.GAME_STATUS = 0
 
         self.renderedObjects.append(self.player)
         self.renderedObjects.append(self.ground)
 
         self.startTime = time.time()
+
+        self.KEYS = NonBlockingInput()
+
+        clearTerminalScreen()
+        self.KEYS.nb_term()
 
         self.loop()
         # doens't work!@!:@#Q@#3
@@ -98,11 +103,43 @@ class Game():
 
         self.infoPrint()
 
+    def update(self):
+        for obj in self.renderedObjects:
+            obj.update()
+
+    # user wants to terminate the game
+    def terminate(self):
+        self.GAME_STATUS = -1
+        print("Game over!")
+        self.infoPrint()
+
+    def handleInput(self):
+        input = ""
+        if self.KEYS.kb_hit():
+            input = self.KEYS.get_ch()
+
+        cin = getKeyPressed(input)
+
+        if cin == -1:
+            self.terminate()
+        elif cin != 0:
+            self.player.updateKey(cin)
+        else:
+            self.player.resetNoKey()
+
+        self.KEYS.flush()
+
     def loop(self):
-        while True:
+        self.GAME_STATUS = 1
+
+        while self.GAME_STATUS == 1:
             clearTerminalScreen()
             self.draw()
+            self.update()
+
             last = time.time()
+            self.handleInput()
+
             while time.time() - last < self._refresh_time:
                 pass
 

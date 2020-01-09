@@ -18,21 +18,13 @@ def clearTerminalScreen():
 
 def getKeyPressed(keyin):
     keyin = keyin.lower()  # ?, i would use a map to store keypresses?
-    if not keyin in ('s', 'w', 'a', 'd'):
+    print(keyin)
+    if not keyin in ('q', ' ', 'w', 'a', 'd'):
         return 0
+    if keyin == 'q':
+        return -1
 
     return keyin
-
-    if keyin in ('Q', 'q'):
-        return -1
-    if keyin in ('D', 'd'):
-        return 1
-    if keyin in ('A', 'a'):
-        return 2
-    if keyin in ('W', 'w'):
-        return 3
-
-    return 0
 
 
 class NonBlockingInput():

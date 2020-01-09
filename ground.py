@@ -13,3 +13,6 @@ class Ground:
             "to_col": config.FRAME_WIDTH-1,
             "objCode": config.GRID_CONSTS["ground"]
         }
+
+    def update(self):
+        pass

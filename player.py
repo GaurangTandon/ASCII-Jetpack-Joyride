@@ -13,9 +13,30 @@ class Player():
         self.xVel = 0
 
     def update(self):
+        self.x += self.xVel
+
         self.y += self.yVel
         self.yVel += config.GRAVITY_ACC
+
         self.checkBounds()
+
+    def resetNoKey(self):
+        self.xVel = 0
+
+    def fireGun(self):
+        pass
+
+    def updateKey(self, key):
+        if key == 'a':
+            self.xVel = -1
+        elif key == 'd':
+            self.xVel = 1
+        elif key == 'w':
+            self.yVel += 1
+        elif key == ' ':
+            self.fireGun()
+        else:
+            assert(False)
 
     def checkBounds(self):
         pass
@@ -27,9 +48,9 @@ class Player():
 
     def draw(self):
         return {
-            "from_row": self.x - self.height,
-            "to_row": self.x,
-            "from_col": self.y,
-            "to_col": self.y + self.width,
+            "from_col": self.x - self.height,
+            "to_col": self.x,
+            "from_row": self.y,
+            "to_row": self.y + self.width,
             "objCode": config.GRID_CONSTS["player"]
         }
