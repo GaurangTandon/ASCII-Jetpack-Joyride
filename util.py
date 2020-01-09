@@ -17,8 +17,8 @@ def clearTerminalScreen():
 
 
 def getKeyPressed(keyin):
-    keyin = keyin.lower()  # ?, i would use a map to store keypresses?
-    print(keyin)
+    keyin = keyin.lower()
+
     if not keyin in ('q', ' ', 'w', 'a', 'd'):
         return 0
     if keyin == 'q':

@@ -1,3 +1,4 @@
+# TODO: should be based on terminal height
 FRAME_WIDTH = 96
 FRAME_HEIGHT = 36
 FRAME_X_VELOCITY = 10

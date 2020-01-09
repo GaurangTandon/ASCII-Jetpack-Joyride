@@ -6,11 +6,13 @@ class Player():
     def __init__(self):
         # x and y coordinate of the player's bottommost point
         self.x = 10
-        self.y = 10
+        self.y = 0
         self.width = config.PLAYER_WIDTH
         self.height = config.PLAYER_HEIGHT
         self.yVel = 0
         self.xVel = 0
+
+        self.lifes = 3
 
     def update(self):
         self.x += self.xVel
@@ -45,6 +47,8 @@ class Player():
         # check obstacle collision
 
         # check coin collision
+        if self.lifes == 0:
+            self.dead()
 
     def draw(self):
         return {

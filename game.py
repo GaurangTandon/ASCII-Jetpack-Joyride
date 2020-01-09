@@ -49,7 +49,6 @@ class Game():
 
         self.renderedObjects = []
 
-        # "TODO":should be based on terminal height
         self.X = config.FRAME_WIDTH
         self.Y = config.FRAME_HEIGHT
         self.player = Player()
@@ -139,6 +138,9 @@ class Game():
 
             last = time.time()
             self.handleInput()
+
+            if self.player.lifes == 0:
+                self.terminate()
 
             while time.time() - last < self._refresh_time:
                 pass
