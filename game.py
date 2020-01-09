@@ -1,22 +1,23 @@
-from colorama import init as coloramaInit, Fore
+from threading import Timer
+from colorama import init as coloramaInit, Fore, Back, Style
 import signal
 from player import Player
 from util import clearTerminalScreen, GRID_CONSTS
 
 
 class Game():
-    FRAME_RATE = 10
+    FRAME_RATE = 1
     _refresh_time = 1 / FRAME_RATE
     COLOR_MAP = {
-        "player": "red",
-        "background": "blue",
-        "ground": "green"
+        "player": ["red", None],
+        "background": [None, "blue"],
+        "ground": [None, "green"]
     }
 
     SYMBOL_MAP = {
         "player": "p",
-        "background": "b",
-        "ground": "g"
+        "background": " ",
+        "ground": " "
     }
 
     def initGridConsts(self):
@@ -36,11 +37,11 @@ class Game():
 
         # TODO: should be based on terminal height
         self.X = 100
-        self.Y = 100
+        self.Y = 50
         self.player = Player()
-        signal.signal(signal.SIGALRM, self.loop)
-
         self.loop()
+        # doens't work!@!:@#Q@#
+        # Timer(self._refresh_time, self.loop)
 
     def draw(self):
         grid = [[GRID_CONSTS["background"]
@@ -50,14 +51,22 @@ class Game():
         for row in grid:
             s = ""
             for cell in row:
-                color = self.SYMBOL_COLOR_MAP[cell].upper()
+                color = self.SYMBOL_COLOR_MAP[cell]
                 sym = self.SYMBOL_PAINT_MAP[cell]
-                s += (Fore.RED + sym)
+                s += Style.RESET_ALL
+
+                if color[0]:
+                    s += Fore.RED
+
+                if color[1]:
+                    s += Back.BLUE
+
+                s += sym
 
             print(f"{s}")
 
     def loop(self):
         clearTerminalScreen()
         self.draw()
-        # doesn't loop?
-        signal.setitimer(signal.ITIMER_REAL, self._refresh_time)
+        # signal.signal(signal.SIGALRM, self.loop)
+        # signal.setitimer(signal.ITIMER_REAL, self._refresh_time)
