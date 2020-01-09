@@ -46,21 +46,37 @@ class Game():
         coloramaInit()
 
         self.initGridConsts()
+        self.score = 0
+
+        self.renderedObjects = []
 
         # "TODO":should be based on terminal height
         self.X = config.FRAME_WIDTH
         self.Y = config.FRAME_HEIGHT
         self.player = Player()
         self.ground = Ground()
+
+        self.renderedObjects.append(self.player)
+        self.renderedObjects.append(self.ground)
+
+        self.startTime = time.time()
+
         self.loop()
-        # doens't work!@!:@#Q@#
+        # doens't work!@!:@#Q@#3
         # Timer(self._refresh_time, self.loop)
+
+    def infoPrint(self):
+        timeSoFar = (time.time() - self.startTime)
+        printTime = int(np.round(timeSoFar))
+        print(f"Time travelled \u23f1 {printTime} seconds")
+        print("Score", self.score)
 
     def draw(self):
         self.grid = np.array([[GRID_CONSTS["background"]
                                for _ in range(self.X)] for _ in range(self.Y)])
-        self.drawInRange(self.player.draw())
-        self.drawInRange(self.ground.draw())
+
+        for obj in self.renderedObjects:
+            self.drawInRange(obj.draw())
 
         for row in self.grid:
             for cell in row:
@@ -76,6 +92,11 @@ class Game():
 
                 s += sym
                 print(s + Style.RESET_ALL, end="")
+            # this standalone print separates rows
+            # and also prevents the render from going haywire, idk how
+            print()
+
+        self.infoPrint()
 
     def loop(self):
         while True:

@@ -3,11 +3,8 @@ import config
 
 
 class Player():
-    # x and y coordinate of the player's bottommost point
-    x = -1
-    y = -1
-
     def __init__(self):
+        # x and y coordinate of the player's bottommost point
         self.x = 10
         self.y = 10
         self.width = config.PLAYER_WIDTH
@@ -21,6 +18,7 @@ class Player():
         self.checkBounds()
 
     def checkBounds(self):
+        pass
         # check sky bounds and ground bounds
 
         # check obstacle collision

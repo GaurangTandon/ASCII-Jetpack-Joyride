@@ -10,12 +10,9 @@ import select
 import tty
 import termios
 import subprocess as sp
-import os
 
 
 def clearTerminalScreen():
-    # os.system("clear")
-    # print(chr(27) + "[2J")
     sp.call('clear', shell=True)
 
 
