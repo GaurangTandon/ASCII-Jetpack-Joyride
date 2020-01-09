@@ -38,8 +38,8 @@ class Game():
 
     # info bounding indices are inclusive
     def drawInRange(self, info):
-        self.grid[info["from_row"]:info["to_row"] + 1,
-                  info["from_col"]:info["to_col"] + 1] = info["objCode"]
+        self.grid[info["rows"][0]:info["rows"][1] + 1,
+                  info["cols"][0]:info["cols"][1] + 1] = info["objCode"]
 
     def __init__(self):
         coloramaInit()

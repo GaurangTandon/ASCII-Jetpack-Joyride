@@ -7,10 +7,8 @@ class Ground:
 
     def draw(self):
         return {
-            "from_row": config.FRAME_HEIGHT - config.GROUND_HEIGHT - 1,
-            "to_row": config.FRAME_HEIGHT - 1,
-            "from_col": 0,
-            "to_col": config.FRAME_WIDTH-1,
+            "rows": [config.FRAME_HEIGHT - config.GROUND_HEIGHT - 1, config.FRAME_HEIGHT - 1],
+            "cols": [0, config.FRAME_WIDTH-1],
             "objCode": config.GRID_CONSTS["ground"]
         }
 

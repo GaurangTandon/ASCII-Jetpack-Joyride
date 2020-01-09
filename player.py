@@ -13,6 +13,7 @@ class Player():
         self.xVel = 0
 
         self.lifes = 3
+        self.health = 100
 
     def update(self):
         self.x += self.xVel
@@ -52,9 +53,7 @@ class Player():
 
     def draw(self):
         return {
-            "from_col": self.x - self.height,
-            "to_col": self.x,
-            "from_row": self.y,
-            "to_row": self.y + self.width,
+            "cols": [self.x - self.height, self.x],
+            "rows": [self.y, self.y + self.width],
             "objCode": config.GRID_CONSTS["player"]
         }
