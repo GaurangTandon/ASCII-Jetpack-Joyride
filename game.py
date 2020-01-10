@@ -127,7 +127,8 @@ class Game():
             obj.update()
 
         for randomSpawn in self.randomSpawningObjects:
-            if random.random() < randomSpawn.spawnProbability:
+            threshold = randomSpawn.spawnProbability()
+            if random.random() < threshold:
                 self.renderedObjects.append(randomSpawn())
 
         self.player.checkBounds()

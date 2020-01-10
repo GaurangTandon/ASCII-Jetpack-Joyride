@@ -5,7 +5,6 @@ from math import sqrt
 
 
 class FireBeam(GenericFrameObject):
-    spawnProbability = 0.05
 
     def __init__(self):
         super().__init__()
@@ -45,7 +44,6 @@ class FireBeam(GenericFrameObject):
 
 
 class Magnet(GenericFrameObject):
-    spawnProbability = 0.05
 
     def __init__(self):
         super().__init__()

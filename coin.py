@@ -26,7 +26,6 @@ Coins occur in groups
 
 
 class CoinGroup(GenericFrameObject):
-    spawnProbability = 0.05
 
     def __init__(self):
         super().__init__()
