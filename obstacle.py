@@ -28,6 +28,7 @@ class FireBeam(GenericFrameObject):
             info["cols"] = [self.x, self.x]
             objs.append(info)
         else:
+            # collision detection :/
             x = self.x
             y = self.y
 
@@ -36,17 +37,20 @@ class FireBeam(GenericFrameObject):
                 info["cols"] = [x, x]
                 info["rows"] = [y, y]
                 x += 1
-                y + """  """ = 1
+                y += 1
                 objs.append(info)
 
         return objs
 
 
-class Magnet():
+class Magnet(GenericFrameObject):
     def __init__(self):
-        pass
+        self.x = 40
+        self.y = 40
 
     def draw(self):
-        return {
+        return [{
             "objCode": config.GRID_CONSTS["magnet"],
-        }
+            "cols": [self.x, self.x + config.MAGNET_LENGTH - 1],
+            "rows": [self.y - config.MAGNET_LENGTH + 1, self.y]
+        }]
