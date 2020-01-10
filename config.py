@@ -1,6 +1,6 @@
 # TODO: should be based on terminal height
-FRAME_WIDTH = 96
-FRAME_HEIGHT = 36
+FRAME_WIDTH = 150
+FRAME_HEIGHT = 50
 FRAME_X_VELOCITY = 10
 FRAME_RATE = 10
 
@@ -14,10 +14,13 @@ GRAVITY_ACC = 0.1
 COIN_VALUE = 1
 COIN_HEIGHT = 2
 COIN_WIDTH = 2
+COIN_SPAWN_PROBABILITY = 0.1
 
 GRID_CONSTS = {
     "player": 1,
     "background": 2,
     "ground": 3,
-    "coin": 4
+    "coin": 4,
+    "magnet": 5,
+    "firebeam": 6
 }

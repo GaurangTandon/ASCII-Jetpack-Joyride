@@ -8,6 +8,8 @@ import config
 from config import GRID_CONSTS, FRAME_RATE
 from ground import Ground
 import time
+import random
+from coin import CoinGroup
 
 
 class Game():
@@ -16,14 +18,18 @@ class Game():
         "player": [Fore.RED, None],
         "background": [None, Back.BLUE],
         "ground": [None, Back.GREEN],
-        "coin": [Fore.YELLOW, None]
+        "coin": [Fore.YELLOW, None],
+        "firebeam": [Fore.YELLOW, Back.RED],
+        "magnet": [Fore.RED, Back.WHITE],
     }
 
     SYMBOL_MAP = {
         "player": "p",
         "background": " ",
         "ground": " ",
-        "coin": "C"
+        "coin": "C",
+        "firebeam": "f",
+        "magnet": "m"
     }
 
     def initGridConsts(self):
@@ -79,7 +85,9 @@ class Game():
                                for _ in range(self.X)] for _ in range(self.Y)])
 
         for obj in self.renderedObjects:
-            self.drawInRange(obj.draw())
+            infoObjs = obj.draw()
+            for info in infoObjs:
+                self.drawInRange(info)
 
         for row in self.grid:
             for cell in row:
@@ -105,7 +113,13 @@ class Game():
         for obj in self.renderedObjects:
             obj.update()
 
-    # user wants to terminate the game
+        if random.random() < config.COIN_SPAWN_PROBABILITY:
+            self.renderedObjects.append(CoinGroup())
+
+    """
+    user wants to terminate the game
+    """
+
     def terminate(self):
         self.GAME_STATUS = -1
         print("Game over!")

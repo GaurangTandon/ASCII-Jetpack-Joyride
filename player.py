@@ -52,8 +52,8 @@ class Player():
             self.dead()
 
     def draw(self):
-        return {
+        return [{
             "cols": [self.x - self.height, self.x],
             "rows": [self.y, self.y + self.width],
             "objCode": config.GRID_CONSTS["player"]
-        }
+        }]
