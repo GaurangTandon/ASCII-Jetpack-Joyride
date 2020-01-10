@@ -68,6 +68,8 @@ class Game():
         self.renderedObjects.append(self.player)
         self.renderedObjects.append(self.ground)
 
+        self.randomSpawningObjects = [FireBeam, Magnet, CoinGroup]
+
         self.startTime = time.time()
 
         self.KEYS = NonBlockingInput()
@@ -117,14 +119,9 @@ class Game():
         for obj in self.renderedObjects:
             obj.update()
 
-        if random.random() < config.COIN_SPAWN_PROBABILITY:
-            self.renderedObjects.append(CoinGroup())
-
-        if random.random() < config.FIREBEAM_SPAWN_PROBABILITY:
-            self.renderedObjects.append(FireBeam())
-
-        if random.random() < config.MAGNET_SPAWN_PROABILITY:
-            self.renderedObjects.append(Magnet())
+        for randomSpawn in self.randomSpawningObjects:
+            if random.random() < randomSpawn.spawnProbability:
+                self.renderedObjects.append(randomSpawn())
 
     """
     user wants to terminate the game

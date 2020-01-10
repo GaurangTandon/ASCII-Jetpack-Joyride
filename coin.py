@@ -9,12 +9,14 @@ class Coin(GenericFrameObject):
         # coordinates of left bottom part
         self.x = -1
         self.y = -1
+        self.width = 1
+        self.height = 1
 
     def draw(self):
         return [{
             "objCode": config.GRID_CONSTS["coin"],
-            "rows": [self.y - config.COIN_HEIGHT + 1, self.y],
-            "cols": [self.x, self.x + config.COIN_WIDTH-1]
+            "rows": [self.y - self.height + 1, self.y],
+            "cols": [self.x, self.x + self.width - 1]
         }]
 
 
@@ -24,27 +26,26 @@ Coins occur in groups
 
 
 class CoinGroup:
+    spawnProbability = 0.05
+
     def __init__(self):
         self.vSize = random.randint(1, 2)
         self.hSize = random.randint(3, 4)
         self.coins = []
         # todo: should be randomly decided
-        self.xCoord = 0
-        self.yCoord = 0
+        x = self.xCoord = 0
+        y = self.yCoord = 0
 
-        # vertical size is always 2 :/
-        print(self.vSize, self.hSize)
-        x, y = self.xCoord, self.yCoord
         for row in range(self.vSize):
             for col in range(self.hSize):
                 c = Coin()
                 c.x = x
                 c.y = y
                 self.coins.append(c)
-                x += config.COIN_WIDTH
+                x += c.width
 
             x = self.xCoord
-            y += config.COIN_HEIGHT
+            y += c.height
 
     def draw(self):
         infos = []

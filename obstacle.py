@@ -5,6 +5,8 @@ from math import sqrt
 
 
 class FireBeam(GenericFrameObject):
+    spawnProbability = 0.05
+
     def __init__(self):
         self.damage = 10
         # horizontal, vertical, diagonal
@@ -44,6 +46,8 @@ class FireBeam(GenericFrameObject):
 
 
 class Magnet(GenericFrameObject):
+    spawnProbability = 0.05
+
     def __init__(self):
         self.x = 40
         self.y = 40
