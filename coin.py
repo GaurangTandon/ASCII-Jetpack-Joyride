@@ -6,7 +6,7 @@ from generic import GenericFrameObject
 class Coin(GenericFrameObject):
     def __init__(self):
         self.value = config.COIN_VALUE
-        # coordinates of bottom part
+        # coordinates of left bottom part
         self.x = -1
         self.y = -1
 

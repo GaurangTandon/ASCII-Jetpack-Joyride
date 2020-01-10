@@ -14,6 +14,7 @@ from coin import CoinGroup
 
 class Game():
     _refresh_time = 1 / FRAME_RATE
+    # TODO: improve rendering with multiple parts of the same object having different colors
     COLOR_MAP = {
         "player": [Fore.RED, None],
         "background": [None, Back.BLUE],
@@ -21,6 +22,7 @@ class Game():
         "coin": [Fore.YELLOW, None],
         "firebeam": [Fore.YELLOW, Back.RED],
         "magnet": [Fore.RED, Back.WHITE],
+        "playerlaser": [Fore.RED, None]
     }
 
     SYMBOL_MAP = {
@@ -29,7 +31,8 @@ class Game():
         "ground": " ",
         "coin": "C",
         "firebeam": "f",
-        "magnet": "m"
+        "magnet": "m",
+        "playerlaser": "l"
     }
 
     def initGridConsts(self):
@@ -135,7 +138,9 @@ class Game():
         if cin == -1:
             self.terminate()
         elif cin != 0:
-            self.player.updateKey(cin)
+            obj = self.player.updateKey(cin)
+            if obj:
+                self.renderedObjects.append(obj)
         else:
             self.player.resetNoKey()
 
