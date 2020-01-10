@@ -12,23 +12,34 @@ class FireBeam(GenericFrameObject):
         self.x = 20
         self.y = 20
 
+    def _getInfo(self):
+        return {"objCode": config.GRID_CONSTS["firebeam"]}
+
     def draw(self):
-        info = {
-            "objCode": config.GRID_CONSTS["firebeam"]
-        }
+        objs = []
+        info = self._getInfo()
 
         if self.type == 0:
             info["rows"] = [self.y, self.y]
             info["cols"] = [self.x, self.x + config.FIREBEAM_LENGTH - 1]
+            objs.append(info)
         elif self.type == 1:
             info["rows"] = [self.y - config.FIREBEAM_LENGTH + 1, self.y]
             info["cols"] = [self.x, self.x]
+            objs.append(info)
         else:
-            dist = sqrt(config.FIREBEAM_LENGTH)
-            info["rows"] = [self.y - dist + 1, self.y]
-            info["cols"] = [self.x, self.x + dist - 1]
+            x = self.x
+            y = self.y
 
-        return [info]
+            for _ in range(config.FIREBEAM_LENGTH):
+                info = self._getInfo()
+                info["cols"] = [x, x]
+                info["rows"] = [y, y]
+                x += 1
+                y + """  """ = 1
+                objs.append(info)
+
+        return objs
 
 
 class Magnet():
