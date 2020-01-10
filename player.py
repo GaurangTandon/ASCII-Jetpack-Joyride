@@ -1,13 +1,16 @@
 from colorama import Fore, Back, Style
 import config
 from generic import GenericFrameObject
+from ground import Ground
 
 
 class Player():
+    startYCoord = config.FRAME_HEIGHT - Ground.height
+
     def __init__(self):
         # x and y coordinate of the player's leftmost bottommost point
-        self.x = 10
-        self.y = 10
+        self.x = 0
+        self.y = self.startYCoord
         self.width = config.PLAYER_WIDTH
         self.height = config.PLAYER_HEIGHT
         self.yVel = 0
@@ -15,6 +18,9 @@ class Player():
 
         self.lifes = 3
         self.health = 100
+
+    def getTop(self):
+        return self.y - self.height + 1
 
     def update(self):
         self.x += self.xVel
@@ -41,14 +47,24 @@ class Player():
         elif key == 'd':
             self.xVel = 1
         elif key == 'w':
-            self.yVel -= 1
+            self.yVel -= 0.5
         elif key == ' ':
             return self.fireLaser()
         else:
             assert(False)
 
     def checkBounds(self):
-        # check sky bounds and ground bounds
+        # check sky bound
+        self.y = max(self.y, self.height - 1)
+
+        # check ground bound
+        self.y = min(self.y, self.startYCoord)
+
+        if self.y == self.startYCoord or self.y == self.height - 1:
+            self.yVel = 0
+
+        if self.y == self.height - 1:
+            self.y += 0.01
 
         # check obstacle collision
 
@@ -59,7 +75,7 @@ class Player():
     def draw(self):
         return [{
             "cols": [self.x, self.x + self.width-1],
-            "rows": [self.y - self.height, self.y],
+            "rows": [self.getTop(), self.y],
             "objCode": config.GRID_CONSTS["player"]
         }]
 

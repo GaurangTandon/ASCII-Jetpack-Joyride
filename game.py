@@ -70,7 +70,7 @@ class Game():
 
         self.randomSpawningObjects = [FireBeam, Magnet, CoinGroup]
 
-        self.gameLength = 30
+        self.gameLength = 120
         self.endTime = time.time() + self.gameLength
 
         self.KEYS = NonBlockingInput()
