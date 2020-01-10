@@ -10,6 +10,7 @@ from ground import Ground
 import time
 import random
 from coin import CoinGroup
+from obstacle import FireBeam
 
 
 class Game():
@@ -118,6 +119,9 @@ class Game():
 
         if random.random() < config.COIN_SPAWN_PROBABILITY:
             self.renderedObjects.append(CoinGroup())
+
+        if random.random() < config.FIREBEAM_SPAWN_PROBABILITY:
+            self.renderedObjects.append(FireBeam())
 
     """
     user wants to terminate the game
