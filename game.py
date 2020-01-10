@@ -70,7 +70,8 @@ class Game():
 
         self.randomSpawningObjects = [FireBeam, Magnet, CoinGroup]
 
-        self.startTime = time.time()
+        self.gameLength = 30
+        self.endTime = time.time() + self.gameLength
 
         self.KEYS = NonBlockingInput()
         clearTerminalScreen()
@@ -80,15 +81,19 @@ class Game():
         # doens't work!@!:@#Q@#3
         # Timer(self._refresh_time, self.loop)
 
+    def getTimeRemaining(self):
+        timeRemaining = (self.endTime - time.time())
+        return int(np.round(timeRemaining))
+
     def infoPrint(self):
-        timeSoFar = (time.time() - self.startTime)
-        printTime = int(np.round(timeSoFar))
-        print(f"Time travelled \u23f1 {printTime} seconds")
+        print(f"Time remaining \u23f1 {self.getTimeRemaining()} seconds")
         print("Score", self.score)
 
     def draw(self):
         self.grid = np.array([[GRID_CONSTS["background"]
                                for _ in range(self.X)] for _ in range(self.Y)])
+
+        self.infoPrint()
 
         for obj in self.renderedObjects:
             infoObjs = obj.draw()
@@ -113,8 +118,6 @@ class Game():
             # and also prevents the render from going haywire, idk how
             print()
 
-        self.infoPrint()
-
     def update(self):
         for obj in self.renderedObjects:
             obj.update()
@@ -129,7 +132,7 @@ class Game():
 
     def terminate(self):
         self.GAME_STATUS = -1
-        print("Game over!")
+        print("\nGame over!")
         self.infoPrint()
 
     def handleInput(self):
@@ -161,7 +164,7 @@ class Game():
             last = time.time()
             self.handleInput()
 
-            if self.player.lifes == 0:
+            if self.player.lifes == 0 or self.getTimeRemaining() <= 0:
                 self.terminate()
 
             while time.time() - last < self._refresh_time:
