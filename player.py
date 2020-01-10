@@ -35,7 +35,7 @@ class Player():
         elif key == 'd':
             self.xVel = 1
         elif key == 'w':
-            self.yVel += 1
+            self.yVel -= 1
         elif key == ' ':
             self.fireGun()
         else:

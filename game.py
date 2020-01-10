@@ -38,8 +38,8 @@ class Game():
 
     # info bounding indices are inclusive
     def drawInRange(self, info):
-        self.grid[info["rows"][0]:info["rows"][1] + 1,
-                  info["cols"][0]:info["cols"][1] + 1] = info["objCode"]
+        self.grid[round(info["rows"][0]):round(info["rows"][1] + 1),
+                  round(info["cols"][0]):round(info["cols"][1] + 1)] = info["objCode"]
 
     def __init__(self):
         coloramaInit()
@@ -51,17 +51,16 @@ class Game():
 
         self.X = config.FRAME_WIDTH
         self.Y = config.FRAME_HEIGHT
-        self.player = Player()
-        self.ground = Ground()
         self.GAME_STATUS = 0
 
+        self.player = Player()
+        self.ground = Ground()
         self.renderedObjects.append(self.player)
         self.renderedObjects.append(self.ground)
 
         self.startTime = time.time()
 
         self.KEYS = NonBlockingInput()
-
         clearTerminalScreen()
         self.KEYS.nb_term()
 
