@@ -48,8 +48,12 @@ class Game():
 
     # info bounding indices are inclusive
     def drawInRange(self, info):
-        self.grid[round(info["rows"][0]):round(info["rows"][1] + 1),
-                  round(info["cols"][0]):round(info["cols"][1] + 1)] = info["objCode"]
+        rowRange = list(map(round, info["rows"]))
+        colRange = list(map(round, info["cols"]))
+        code = info["objCode"]
+
+        self.grid[rowRange[0]:rowRange[1] + 1,
+                  colRange[0]:colRange[1] + 1] = code
 
     def __init__(self):
         coloramaInit()
@@ -78,8 +82,6 @@ class Game():
         self.KEYS.nb_term()
 
         self.loop()
-        # doens't work!@!:@#Q@#3
-        # Timer(self._refresh_time, self.loop)
 
     def getTimeRemaining(self):
         timeRemaining = (self.endTime - time.time())
@@ -87,9 +89,11 @@ class Game():
 
     def infoPrint(self):
         print(f"Time remaining \u23f1 {self.getTimeRemaining()} seconds")
+        print(f"Lives remaining \u2764 {self.player.lifes}")
         print("Score", self.score)
 
     def draw(self):
+        # can we fix this to only repaint pixels that changed
         self.grid = np.array([[GRID_CONSTS["background"]
                                for _ in range(self.X)] for _ in range(self.Y)])
 
@@ -125,6 +129,8 @@ class Game():
         for randomSpawn in self.randomSpawningObjects:
             if random.random() < randomSpawn.spawnProbability:
                 self.renderedObjects.append(randomSpawn())
+
+        self.player.checkBounds()
 
     """
     user wants to terminate the game
@@ -169,6 +175,3 @@ class Game():
 
             while time.time() - last < self._refresh_time:
                 pass
-
-        # signal.signal(signal.SIGALRM, self.loop)
-        # signal.setitimer(signal.ITIMER_REAL, self._refresh_time)

@@ -25,16 +25,17 @@ Coins occur in groups
 """
 
 
-class CoinGroup:
+class CoinGroup(GenericFrameObject):
     spawnProbability = 0.05
 
     def __init__(self):
+        super().__init__()
         self.vSize = random.randint(1, 2)
         self.hSize = random.randint(3, 4)
         self.coins = []
         # todo: should be randomly decided
-        x = self.xCoord = 0
-        y = self.yCoord = 0
+        x = self.x
+        y = self.y
 
         for row in range(self.vSize):
             for col in range(self.hSize):
@@ -44,7 +45,7 @@ class CoinGroup:
                 self.coins.append(c)
                 x += c.width
 
-            x = self.xCoord
+            x = self.x
             y += c.height
 
     def draw(self):

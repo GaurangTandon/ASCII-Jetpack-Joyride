@@ -9,7 +9,7 @@ class Player():
 
     def __init__(self):
         # x and y coordinate of the player's leftmost bottommost point
-        self.x = 0
+        self.x = config.FRAME_LEFT_BOUNDARY
         self.y = self.startYCoord
         self.width = config.PLAYER_WIDTH
         self.height = config.PLAYER_HEIGHT
@@ -60,15 +60,26 @@ class Player():
         # check ground bound
         self.y = min(self.y, self.startYCoord)
 
+        # can't move anymore
         if self.y == self.startYCoord or self.y == self.height - 1:
             self.yVel = 0
 
+        # hack to not make the jetpack get stuck at the top
         if self.y == self.height - 1:
             self.y += 0.01
 
+        # TODO: the window should also move accordingly to accommodate
+        if self.x >= config.FRAME_RIGHT_BOUNARY:
+            self.x = config.FRAME_RIGHT_BOUNARY
+            self.xVel = 0
+
+        if self.x <= config.FRAME_LEFT_BOUNDARY:
+            self.x = config.FRAME_LEFT_BOUNDARY
+            self.xVel = 0
+
         # check obstacle collision
 
-        # check coin collision
+            # check coin collision
         if self.lifes == 0:
             self.dead()
 

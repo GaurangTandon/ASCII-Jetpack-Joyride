@@ -8,11 +8,10 @@ class FireBeam(GenericFrameObject):
     spawnProbability = 0.05
 
     def __init__(self):
+        super().__init__()
         self.damage = 10
-        # horizontal, vertical, diagonal
+        # enum {horizontal, vertical, diagonal}
         self.type = random.randint(0, 2)
-        self.x = 20
-        self.y = 20
 
     def _getInfo(self):
         return {"objCode": config.GRID_CONSTS["firebeam"]}
@@ -49,8 +48,7 @@ class Magnet(GenericFrameObject):
     spawnProbability = 0.05
 
     def __init__(self):
-        self.x = 40
-        self.y = 40
+        super().__init__()
 
     def draw(self):
         return [{
