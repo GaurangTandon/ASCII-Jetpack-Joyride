@@ -1,3 +1,4 @@
+import time
 import config
 from generic import GenericFrameObject
 from colorama import Fore, Back
@@ -41,6 +42,7 @@ class Boss(GenericFrameObject):
 
     def fireGun(self):
         # create a gun object and shoot towards the player
+        pass
 
     def update(self):
         self.y += self.yVel
@@ -59,7 +61,9 @@ class Boss(GenericFrameObject):
 
 class BossLaser(GenericFrameObject):
     stringRepr = [
-        ""
+        "-^-",
+        "<O>",
+        "-v-"
     ]
 
     def __init__(self):

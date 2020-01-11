@@ -9,12 +9,12 @@ class Player(GenericFrameObject):
     startYCoord = config.FRAME_HEIGHT - config.GROUND_HEIGHT - 1
     # maintain rectangular shapes for ease of collision detection
     stringRepr = [
-        ["|", "/", "\\", "|"],
-        ["|", "\\", "/", "|"],
-        ["-", "|", "|", "-"],
-        [" ", "|", "|", " "],
-        ["-", "-", "-", "-"],
-        ["|", "|", "|", "|"]
+        "|/\|",
+        "|\/|",
+        "-||-",
+        " || ",
+        "----",
+        "||||",
     ]
     color = [Fore.RED, None]
 
@@ -115,7 +115,7 @@ class Player(GenericFrameObject):
 
 
 class Laser(GenericFrameObject):
-    stringRepr = ["=", "=", ">"]
+    stringRepr = ["==>"]
 
     def __init__(self):
         super().__init__()

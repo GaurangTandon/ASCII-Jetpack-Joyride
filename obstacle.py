@@ -41,7 +41,7 @@ class FireBeam(GenericFrameObject):
 
 
 class Magnet(GenericFrameObject):
-    stringRepr = [["M", "M"], ["M", "M"]]
+    stringRepr = [["MM"], ["MM"]]
     color = [Fore.RED, Back.WHITE]
 
     def __init__(self):
