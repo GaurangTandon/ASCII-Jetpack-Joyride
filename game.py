@@ -48,13 +48,13 @@ class Game():
 
     # info bounding indices are inclusive
     def drawInRange(self, info, obj):
-        to_row = info["coord"][0]
+        to_row = round(info["coord"][0])
         from_row = to_row - info["size"][0] + 1
 
-        from_col = info["coord"][1]
+        from_col = round(info["coord"][1])
         to_col = from_col + info["size"][1] - 1
 
-        print(info, obj)
+        # print(info, obj)
         self.grid[from_row: to_row + 1,
                   from_col:to_col + 1] = obj
 
@@ -109,7 +109,8 @@ class Game():
             for info in infoObjs:
                 self.drawInRange(info, obj.obj)
 
-        printGrid = "\n".join(["".join(row) for row in self.grid])
+        printGrid = "\n".join([(Style.RESET_ALL).join(row)
+                               for row in self.grid])
         # for row in self.grid:
         #     for cell in row:
         #         color = self.SYMBOL_COLOR_MAP[cell]

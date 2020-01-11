@@ -15,7 +15,7 @@ class FireBeam(GenericFrameObject):
 
     def draw(self):
         objs = []
-        # TODO: collide with any one block should delete all five blocks of the firebeam
+        # TODO: collide of laser with any one block should delete all five blocks of the firebeam
         cx = 0
         cy = 0
 

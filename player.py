@@ -39,8 +39,8 @@ class Player(GenericFrameObject):
         self.y += self.yVel
         self.yVel += config.GRAVITY_ACC
 
-        self.x = round(self.x)
-        self.y = round(self.y)
+        # self.x = round(self.x)
+        # self.y = round(self.y)
 
         self.checkBounds()
 
@@ -61,7 +61,9 @@ class Player(GenericFrameObject):
         elif key == 'd':
             self.xVel = 1
         elif key == 'w':
-            self.yVel -= 0.5
+            self.yVel -= 1
+            self.yVel = max(-3, self.yVel)
+            self.yVel = min(1, self.yVel)
         elif key == ' ':
             return self.fireLaser()
         else:
@@ -102,9 +104,6 @@ class Laser(GenericFrameObject):
     stirngRepr = ["=", "=", ">"]
 
     def __init__(self):
-        # x  and y set by caller
-        self.x = -1
-        self.y = -1
         super().__init__()
 
     def update(self):
