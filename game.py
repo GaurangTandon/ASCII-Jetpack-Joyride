@@ -11,6 +11,7 @@ import time
 import random
 from coin import CoinGroup
 from obstacle import FireBeam, Magnet
+from generic import GenericFrameObject
 
 
 class Game():
@@ -116,8 +117,19 @@ class Game():
         print(printGrid)
 
     def update(self):
+        i = 0
+        listOfIdxsToDelete = []
+
         for obj in self.renderedObjects:
-            obj.update()
+            if obj.update() == GenericFrameObject.DEAD_FLAG:
+                listOfIdxsToDelete.append(i)
+            i += 1
+
+        listOfIdxsToDelete.reverse()
+
+        for i in listOfIdxsToDelete:
+            self.renderedObjects[i].cleanup()
+            self.renderedObjects.pop(i)
 
         for randomSpawn in self.randomSpawningObjects:
             threshold = randomSpawn.spawnProbability()

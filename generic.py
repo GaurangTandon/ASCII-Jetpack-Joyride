@@ -30,6 +30,7 @@ def mapper(x, color):
 
 class GenericFrameObject:
     currentlyActive = 0
+    DEAD_FLAG = 1
 
     def __init__(self):
         self.x, self.y = self.getSpawnCoordinates()
@@ -48,6 +49,9 @@ class GenericFrameObject:
         except AttributeError:
             # stringRepr doesn't exist
             pass
+
+    def cleanup(self):
+        self.__class__.currentlyActive -= 1
 
     def draw(self):
         return [{
@@ -70,6 +74,8 @@ class GenericFrameObject:
 
     def update(self):
         self.x -= 1
+        if self.x < 0:
+            return GenericFrameObject.DEAD_FLAG
 
     @classmethod
     def getSpawnCoordinates(self):

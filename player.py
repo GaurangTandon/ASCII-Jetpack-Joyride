@@ -106,10 +106,13 @@ class Player(GenericFrameObject):
 
 
 class Laser(GenericFrameObject):
-    stirngRepr = ["=", "=", ">"]
+    stringRepr = ["=", "=", ">"]
 
     def __init__(self):
         super().__init__()
 
     def update(self):
         self.x += config.LASER_VEL
+
+        if self.x > config.FRAME_WIDTH:
+            return GenericFrameObject.DEAD_FLAG
