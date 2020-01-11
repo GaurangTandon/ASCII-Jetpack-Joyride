@@ -41,8 +41,16 @@ class Boss(GenericFrameObject):
         self.lastFired = -1
 
     def fireGun(self):
-        # create a gun object and shoot towards the player
-        pass
+        # TODO: fix velocity to be better directed to the player
+        if self.gameObj.player.y < self.y:
+            initvy = -1
+        else:
+            initvy = 1
+
+        self.gameObj.renderedObjects.append(
+            BossLaser(initvy, -1, self.x, self.y - self.height / 2))
+
+        self.lastFired = time.time()
 
     def update(self):
         self.y += self.yVel
@@ -54,8 +62,6 @@ class Boss(GenericFrameObject):
             self.yVel = self.Y_VEL
 
         if time.time() - self.lastFired >= self.FIRE_INTERVAL:
-            self.lastFired = time.time()
-
             self.fireGun()
 
 
@@ -65,6 +71,16 @@ class BossLaser(GenericFrameObject):
         "<O>",
         "-v-"
     ]
+    color = [Fore.BLACK, Back.BLACK]
 
-    def __init__(self):
+    def __init__(self, initvy, initvx, initX, initY):
         super().__init__()
+
+        self.y = initY
+        self.x = initX
+        self.velY = initvy
+        self.velX = initvx
+
+    def update(self):
+        self.x += self.velX
+        self.y += self.velY

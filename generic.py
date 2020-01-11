@@ -45,7 +45,6 @@ class GenericFrameObject:
                 self.__class__.stringRepr, self.__class__.color)
 
         except AttributeError:
-            # stringRepr doesn't exist
             pass
 
     def cleanup(self):
