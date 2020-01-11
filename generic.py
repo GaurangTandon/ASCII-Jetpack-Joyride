@@ -33,19 +33,19 @@ class GenericFrameObject:
     DEAD_FLAG = 1
 
     def __init__(self):
-        self.x, self.y = self.getSpawnCoordinates()
         # this technique has been verified on this repl https://repl.it/@bountyhedge/mvce
         self.__class__.currentlyActive += 1
 
         try:
-            self.height = len(self.__class__.stringRepr)
-            self.width = len(self.__class__.stringRepr[0])
+            self.__class__.height = len(self.__class__.stringRepr)
+            self.__class__.width = len(self.__class__.stringRepr[0])
 
             self.__class__.obj = mapper(
                 self.__class__.stringRepr, self.__class__.color)
-
         except AttributeError:
             pass
+
+        self.x, self.y = self.getSpawnCoordinates()
 
     def cleanup(self):
         self.__class__.currentlyActive -= 1
@@ -69,11 +69,13 @@ class GenericFrameObject:
         except ArithmeticError:
             return 0.1
 
+    def exceedsBounds(self):
+        return self.x < 0 or self.x >= config.FRAME_WIDTH or self.y >= config.FRAME_BOTTOM_BOUNDARY or self.y <= self.height
+
     def update(self):
         self.x -= 1
-        if self.x < 0:
+        if self.exceedsBounds():
             return GenericFrameObject.DEAD_FLAG
 
-    @classmethod
     def getSpawnCoordinates(self):
-        return config.FRAME_SPAWN_X, random.randint(20, config.FRAME_HEIGHT-config.GROUND_HEIGHT)
+        return config.FRAME_SPAWN_X, random.randint(self.height, config.FRAME_BOTTOM_BOUNDARY)

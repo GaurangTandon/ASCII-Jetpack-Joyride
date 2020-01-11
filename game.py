@@ -82,6 +82,8 @@ class Game():
         self.gameLength = 120
         self.endTime = time.time() + self.gameLength
 
+        self.nextSpawnPoint = 0
+
         self.hasBossSpawned = False
 
         self.KEYS = NonBlockingInput()
@@ -137,10 +139,18 @@ class Game():
             self.renderedObjects[i].cleanup()
             self.renderedObjects.pop(i)
 
-        for randomSpawn in self.randomSpawningObjects:
-            threshold = randomSpawn.spawnProbability()
-            if random.random() < threshold:
-                self.renderedObjects.append(randomSpawn())
+        # make spawning random somehow
+        # make two slots in y axis as well
+        if self.player.x + config.FRAME_WIDTH > self.nextSpawnPoint:
+            for randomSpawn in self.randomSpawningObjects:
+                threshold = randomSpawn.spawnProbability()
+
+                if random.random() < threshold:
+                    obj = randomSpawn()
+                    self.renderedObjects.append(obj)
+                    self.nextSpawnPoint = max(
+                        self.nextSpawnPoint, obj.x + obj.width)
+                    break
 
         self.player.checkBounds()
 

@@ -9,7 +9,7 @@ class Boss(GenericFrameObject):
     X_THRESHOLD = 15
     Y_VEL = 0.1
     START_Y = config.FRAME_HEIGHT / 2
-    FIRE_INTERVAL = 1
+    FIRE_INTERVAL = 2
 
     # create an aura around him, basically make him a rectangular box to ease collision detection :P
     stringRepr = [
@@ -41,6 +41,10 @@ class Boss(GenericFrameObject):
         self.health = 100
         self.lastFired = -1
 
+    def _direction(self):
+        return (-1 if self.y > self.gameObj.player.y else 0 if self.y ==
+                self.gameObj.player.y else 1)
+
     def fireGun(self):
         # TODO: fix velocity to be better directed to the player
         xdist = abs(self.x - self.gameObj.player.x)
@@ -51,8 +55,7 @@ class Boss(GenericFrameObject):
         velx = vel * xdist / hyp
         vely = vel * ydist / hyp
 
-        vely = (-1 if self.y > self.gameObj.player.y else 0 if self.y ==
-                self.gameObj.player.y else 1) * vely
+        vely = self._direction() * vely
 
         self.gameObj.renderedObjects.append(
             BossLaser(vely, -velx, self.x, self.y - self.height / 2))
@@ -61,12 +64,11 @@ class Boss(GenericFrameObject):
 
     def update(self):
         self.y += self.yVel
+        self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
+        self.y = max(self.y, self.height)
 
         # get the player's coordinates and move towards it
-        if self.gameObj.player.y < self.y:
-            self.yVel = -self.Y_VEL
-        else:
-            self.yVel = self.Y_VEL
+        self.yVel = self._direction() * self.Y_VEL
 
         if time.time() - self.lastFired >= self.FIRE_INTERVAL:
             self.fireGun()
@@ -78,7 +80,7 @@ class BossLaser(GenericFrameObject):
         "<O>",
         "-v-"
     ]
-    color = [Fore.BLACK, Back.BLACK]
+    color = [Fore.WHITE, Back.BLACK]
 
     def __init__(self, initvy, initvx, initX, initY):
         super().__init__()
@@ -92,8 +94,5 @@ class BossLaser(GenericFrameObject):
         self.x += self.velX
         self.y += self.velY
 
-        if self.x < 0:
-            return GenericFrameObject.DEAD_FLAG
-
-        if self.y >= config.FRAME_HEIGHT - config.GROUND_HEIGHT or self.y < 0:
+        if self.exceedsBounds():
             return GenericFrameObject.DEAD_FLAG

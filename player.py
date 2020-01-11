@@ -123,5 +123,5 @@ class Laser(GenericFrameObject):
     def update(self):
         self.x += config.LASER_VEL
 
-        if self.x > config.FRAME_WIDTH:
+        if self.exceedsBounds():
             return GenericFrameObject.DEAD_FLAG
