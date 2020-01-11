@@ -1,3 +1,4 @@
+from math import sqrt
 import time
 import config
 from generic import GenericFrameObject
@@ -42,13 +43,19 @@ class Boss(GenericFrameObject):
 
     def fireGun(self):
         # TODO: fix velocity to be better directed to the player
-        if self.gameObj.player.y < self.y:
-            initvy = -1
-        else:
-            initvy = 1
+        xdist = abs(self.x - self.gameObj.player.x)
+        ydist = abs(self.y - self.gameObj.player.y)
+        hyp = sqrt(xdist * xdist + ydist * ydist)
+        vel = 2
+
+        velx = vel * xdist / hyp
+        vely = vel * ydist / hyp
+
+        vely = (-1 if self.y > self.gameObj.player.y else 0 if self.y ==
+                self.gameObj.player.y else 1) * vely
 
         self.gameObj.renderedObjects.append(
-            BossLaser(initvy, -1, self.x, self.y - self.height / 2))
+            BossLaser(vely, -velx, self.x, self.y - self.height / 2))
 
         self.lastFired = time.time()
 

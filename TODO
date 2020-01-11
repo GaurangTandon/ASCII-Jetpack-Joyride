@@ -1,0 +1,6 @@
+- improve kbhit
+- improve pylint rating to at least 8/10
+- use private variables correctly
+- use kaushal's input method (https://github.com/kaushalvivek/Bomberman/blob/master/bomberman.py  see userinput, getch.py, )
+- add sound to movement
+- how to add polymorphism?
