@@ -1,20 +1,21 @@
 import config
-
-DRAGON = """
-   /     \\
-  ((     ))
-=  \\\\_v_//  =
-====)_^_(====
-===/ O O \\===
-= | /_ _\\ | =
-   \\/_ _\\/
-    \\_ _/
-    (o_o)
-     VwV
-"""
+from generic import GenericFrameObject
 
 
-class Boss:
+class Boss(GenericFrameObject):
+    # get something rectangular
+    stringRepr = [
+        "   /     \\",
+        "  ((     ))",
+        "=  \\\\_v_//  =",
+        "====)_^_(====",
+        "===/ O O \\===",
+        "= | /_ _\\ | =",
+        "   \\/_ _\\/",
+        "    \\_ _/",
+        "    (o_o)",
+        "     VwV"]
+
     def __init__(self):
         pass
 

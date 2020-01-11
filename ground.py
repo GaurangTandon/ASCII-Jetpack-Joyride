@@ -1,18 +1,17 @@
+import numpy as np
 import config
+from generic import GenericFrameObject
+from colorama import Back
 
 
-class Ground:
-    height = config.GROUND_HEIGHT
+class Ground(GenericFrameObject):
+    stringRepr = np.full(
+        (config.GROUND_HEIGHT, config.FRAME_WIDTH), Back.GREEN + ' ')
 
     def __init__(self):
-        pass
-
-    def draw(self):
-        return [{
-            "rows": [config.FRAME_HEIGHT - self.height + 1, config.FRAME_HEIGHT - 1],
-            "cols": [0, config.FRAME_WIDTH-1],
-            "objCode": config.GRID_CONSTS["ground"]
-        }]
+        super().__init__()
+        self.x = 0
+        self.y = config.FRAME_HEIGHT - 1
 
     def update(self):
         pass

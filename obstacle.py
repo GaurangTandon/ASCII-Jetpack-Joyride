@@ -5,52 +5,41 @@ from math import sqrt
 
 
 class FireBeam(GenericFrameObject):
+    stringRepr = ["f"]
 
     def __init__(self):
         super().__init__()
         self.damage = 10
         # enum {horizontal, vertical, diagonal}
-        self.type = random.randint(0, 2)
-
-    def _getInfo(self):
-        return {"objCode": config.GRID_CONSTS["firebeam"]}
+        self.type = random.randint(1, 3)
 
     def draw(self):
         objs = []
-        info = self._getInfo()
+        # TODO: collide with any one block should delete all five blocks of the firebeam
+        cx = 0
+        cy = 0
 
-        if self.type == 0:
-            info["rows"] = [self.y, self.y]
-            info["cols"] = [self.x, self.x + config.FIREBEAM_LENGTH - 1]
-            objs.append(info)
-        elif self.type == 1:
-            info["rows"] = [self.y - config.FIREBEAM_LENGTH + 1, self.y]
-            info["cols"] = [self.x, self.x]
-            objs.append(info)
-        else:
-            # collision detection :/
-            x = self.x
-            y = self.y
+        if self.type & 1:
+            cx = 1
+        if self.type & 2:
+            cy = 1
 
-            for _ in range(config.FIREBEAM_LENGTH):
-                info = self._getInfo()
-                info["cols"] = [x, x]
-                info["rows"] = [y, y]
-                x += 1
-                y += 1
-                objs.append(info)
+        x = self.x
+        y = self.y
+
+        for _ in range(config.FIREBEAM_LENGTH):
+            info = {}
+            info["coord"] = [x, y]
+            info["size"] = [1, 1]
+            x += cx
+            y += cy
+            objs.append(info)
 
         return objs
 
 
 class Magnet(GenericFrameObject):
+    stringRepr = [["M", "M"], ["M", "M"]]
 
     def __init__(self):
         super().__init__()
-
-    def draw(self):
-        return [{
-            "objCode": config.GRID_CONSTS["magnet"],
-            "cols": [self.x, self.x + config.MAGNET_LENGTH - 1],
-            "rows": [self.y - config.MAGNET_LENGTH + 1, self.y]
-        }]

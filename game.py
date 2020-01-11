@@ -47,13 +47,16 @@ class Game():
             self.SYMBOL_PAINT_MAP[GRID_CONSTS[symbol]] = paint
 
     # info bounding indices are inclusive
-    def drawInRange(self, info):
-        rowRange = list(map(round, info["rows"]))
-        colRange = list(map(round, info["cols"]))
-        code = info["objCode"]
+    def drawInRange(self, info, obj):
+        to_row = info["coord"][0]
+        from_row = to_row - info["size"][0] + 1
 
-        self.grid[rowRange[0]:rowRange[1] + 1,
-                  colRange[0]:colRange[1] + 1] = code
+        from_col = info["coord"][1]
+        to_col = from_col + info["size"][1] - 1
+
+        print(info, obj)
+        self.grid[from_row: to_row + 1,
+                  from_col:to_col + 1] = obj
 
     def __init__(self):
         coloramaInit()
@@ -95,8 +98,8 @@ class Game():
         print("Score", self.score)
 
     def draw(self):
-        # can we fix this to only repaint pixels that changed
-        self.grid = np.array([[GRID_CONSTS["background"]
+        # TODO: can we fix this to only repaint pixels that changed
+        self.grid = np.array([[Back.BLUE + " "
                                for _ in range(self.X)] for _ in range(self.Y)])
 
         self.infoPrint()
@@ -104,26 +107,24 @@ class Game():
         for obj in self.renderedObjects:
             infoObjs = obj.draw()
             for info in infoObjs:
-                self.drawInRange(info)
+                self.drawInRange(info, obj.obj)
 
-        printGrid = ""
-        for row in self.grid:
-            for cell in row:
-                color = self.SYMBOL_COLOR_MAP[cell]
-                sym = self.SYMBOL_PAINT_MAP[cell]
-                s = ""
+        printGrid = "\n".join(["".join(row) for row in self.grid])
+        # for row in self.grid:
+        #     for cell in row:
+        #         color = self.SYMBOL_COLOR_MAP[cell]
+        #         sym = self.SYMBOL_PAINT_MAP[cell]
+        #         s = ""
 
-                if color[0]:
-                    s += color[0]
+        #         if color[0]:
+        #             s += color[0]
 
-                if color[1]:
-                    s += color[1]
+        #         if color[1]:
+        #             s += color[1]
 
-                s += sym
-                printGrid += s + Style.RESET_ALL
-            # this standalone print separates rows
-            # and also prevents the render from going haywire, idk how
-            printGrid += "\n"
+        #         s += sym
+        #         printGrid += s + Style.RESET_ALL
+
         # only a single print at the end makes rendering efficient
         print(printGrid)
 

@@ -1,5 +1,6 @@
 import config
 import random
+import numpy as np
 
 
 class GenericFrameObject:
@@ -9,6 +10,22 @@ class GenericFrameObject:
         self.x, self.y = self.getSpawnCoordinates()
         # this technique has been verified on this repl https://repl.it/@bountyhedge/mvce
         self.__class__.currentlyActive += 1
+
+        try:
+            self.height = len(self.__class__.stringRepr)
+            self.width = len(self.__class__.stringRepr[0])
+
+            self.__class__.obj = np.array(
+                self.__class__.stringRepr).reshape((self.height, self.width))
+        except AttributeError:
+            # stringRepr doesn't exist
+            pass
+
+    def draw(self):
+        return [{
+            "coord": [self.y, self.x],
+            "size": [self.height, self.width]
+        }]
 
     @classmethod
     def spawnProbability(self):

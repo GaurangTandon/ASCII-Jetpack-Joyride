@@ -2,17 +2,28 @@ from colorama import Fore, Back, Style
 import config
 from generic import GenericFrameObject
 from ground import Ground
+import numpy
 
 
-class Player():
-    startYCoord = config.FRAME_HEIGHT - Ground.height
+class Player(GenericFrameObject):
+    startYCoord = config.FRAME_HEIGHT - config.GROUND_HEIGHT
+    # maintain rectangular shapes for ease of collision detection
+    stringRepr = [
+        ["|", "/", "\\", "|"],
+        ["|", "\\", "/", "|"],
+        ["-", "|", "|", "-"],
+        [" ", "|", "|", " "],
+        ["-", "-", "-", "-"],
+        ["|", "|", "|", "|"]
+    ]
 
     def __init__(self):
+        super().__init__()
+
         # x and y coordinate of the player's leftmost bottommost point
         self.x = config.FRAME_LEFT_BOUNDARY
         self.y = self.startYCoord
-        self.width = config.PLAYER_WIDTH
-        self.height = config.PLAYER_HEIGHT
+
         self.yVel = 0
         self.xVel = 0
 
@@ -27,6 +38,9 @@ class Player():
 
         self.y += self.yVel
         self.yVel += config.GRAVITY_ACC
+
+        self.x = round(self.x)
+        self.y = round(self.y)
 
         self.checkBounds()
 
@@ -79,30 +93,19 @@ class Player():
 
         # check obstacle collision
 
-            # check coin collision
+        # check coin collision
         if self.lifes == 0:
             self.dead()
 
-    def draw(self):
-        return [{
-            "cols": [self.x, self.x + self.width-1],
-            "rows": [self.getTop(), self.y],
-            "objCode": config.GRID_CONSTS["player"]
-        }]
-
 
 class Laser(GenericFrameObject):
+    stirngRepr = ["=", "=", ">"]
+
     def __init__(self):
         # x  and y set by caller
         self.x = -1
         self.y = -1
-
-    def draw(self):
-        return [{
-            "objCode": config.GRID_CONSTS["playerlaser"],
-            "cols": [self.x, self.x + config.LASER_WIDTH-1],
-            "rows": [self.y - config.LASER_HEIGHT, self.y]
-        }]
+        super().__init__()
 
     def update(self):
         self.x += config.LASER_VEL
