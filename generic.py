@@ -15,7 +15,11 @@ class GenericFrameObject:
         try:
             ca = self.currentlyActive
 
-            return 1 / (ca*ca*ca)
+            # TODO: improve random spawning, still not nice
+            ca2 = ca*ca
+            ca4 = ca2*ca2
+
+            return 1 / ca4
         except ArithmeticError:
             return 0.1
 

@@ -77,6 +77,8 @@ class Game():
         self.gameLength = 120
         self.endTime = time.time() + self.gameLength
 
+        self.hasBossSpawned = False
+
         self.KEYS = NonBlockingInput()
         clearTerminalScreen()
         self.KEYS.nb_term()
@@ -104,6 +106,7 @@ class Game():
             for info in infoObjs:
                 self.drawInRange(info)
 
+        printGrid = ""
         for row in self.grid:
             for cell in row:
                 color = self.SYMBOL_COLOR_MAP[cell]
@@ -117,10 +120,12 @@ class Game():
                     s += color[1]
 
                 s += sym
-                print(s + Style.RESET_ALL, end="")
+                printGrid += s + Style.RESET_ALL
             # this standalone print separates rows
             # and also prevents the render from going haywire, idk how
-            print()
+            printGrid += "\n"
+        # only a single print at the end makes rendering efficient
+        print(printGrid)
 
     def update(self):
         for obj in self.renderedObjects:
@@ -132,6 +137,9 @@ class Game():
                 self.renderedObjects.append(randomSpawn())
 
         self.player.checkBounds()
+
+        if not self.hasBossSpawned and self.player.x > config.BOSS_X_THRESHOLD:
+            self.renderedObjects.append(Boss())
 
     """
     user wants to terminate the game
