@@ -41,10 +41,8 @@ class GenericFrameObject:
             self.height = len(self.__class__.stringRepr)
             self.width = len(self.__class__.stringRepr[0])
 
-            self.__class__.obj = np.array(
-                self.__class__.stringRepr).reshape((self.height, self.width))
             self.__class__.obj = mapper(
-                self.__class__.obj, self.__class__.color)
+                self.__class__.stringRepr, self.__class__.color)
 
         except AttributeError:
             # stringRepr doesn't exist

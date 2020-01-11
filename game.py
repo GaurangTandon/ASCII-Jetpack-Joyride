@@ -12,6 +12,7 @@ import random
 from coin import CoinGroup
 from obstacle import FireBeam, Magnet
 from generic import GenericFrameObject
+from boss import Boss
 
 
 class Game():
@@ -97,6 +98,11 @@ class Game():
         print(f"Time remaining \u23f1 {self.getTimeRemaining()} seconds")
         print(f"Lives remaining \u2764 {self.player.lifes}")
         print(f"Score {self.score}")
+        if not self.hasBossSpawned:
+            print(
+                f"Distance to boss {config.BOSS_X_THRESHOLD - self.player.x}")
+        else:
+            print("Boss has spawned!")
 
     def draw(self):
         # TODO: can we fix this to only repaint pixels that changed
@@ -138,7 +144,8 @@ class Game():
 
         self.player.checkBounds()
 
-        if not self.hasBossSpawned and self.player.x > config.BOSS_X_THRESHOLD:
+        if not self.hasBossSpawned and self.player.x >= config.BOSS_X_THRESHOLD:
+            self.hasBossSpawned = True
             self.renderedObjects.append(Boss())
 
     """
