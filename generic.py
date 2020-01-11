@@ -5,10 +5,9 @@ import numpy as np
 
 
 def mapper(x, color):
-    res = []
+    res = np.array([])
 
     for row in x:
-        res2 = []
         for col in row:
             s = ""
             if color[0]:
@@ -22,8 +21,9 @@ def mapper(x, color):
                 s += Back.BLUE
 
             s += col
-            res2.append(s)
-        res.append(res2)
+            res = np.append(res, s)
+
+    res = res.reshape((len(x), len(x[0])))
 
     return res
 

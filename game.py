@@ -95,11 +95,11 @@ class Game():
     def infoPrint(self):
         print(f"Time remaining \u23f1 {self.getTimeRemaining()} seconds")
         print(f"Lives remaining \u2764 {self.player.lifes}")
-        print("Score", self.score)
+        print(f"Score {self.score}")
 
     def draw(self):
         # TODO: can we fix this to only repaint pixels that changed
-        self.grid = np.array([[Back.BLUE + " "
+        self.grid = np.array([[Fore.WHITE + Back.BLUE + " "
                                for _ in range(self.X)] for _ in range(self.Y)])
 
         self.infoPrint()
@@ -109,22 +109,8 @@ class Game():
             for info in infoObjs:
                 self.drawInRange(info, obj.obj)
 
-        printGrid = "\n".join([(Style.RESET_ALL).join(row)
+        printGrid = "\n".join([(Style.RESET_ALL).join(row) + Style.RESET_ALL
                                for row in self.grid])
-        # for row in self.grid:
-        #     for cell in row:
-        #         color = self.SYMBOL_COLOR_MAP[cell]
-        #         sym = self.SYMBOL_PAINT_MAP[cell]
-        #         s = ""
-
-        #         if color[0]:
-        #             s += color[0]
-
-        #         if color[1]:
-        #             s += color[1]
-
-        #         s += sym
-        #         printGrid += s + Style.RESET_ALL
 
         # only a single print at the end makes rendering efficient
         print(printGrid)

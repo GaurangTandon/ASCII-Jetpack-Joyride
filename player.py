@@ -6,7 +6,7 @@ import numpy
 
 
 class Player(GenericFrameObject):
-    startYCoord = config.FRAME_HEIGHT - config.GROUND_HEIGHT
+    startYCoord = config.FRAME_HEIGHT - config.GROUND_HEIGHT - 1
     # maintain rectangular shapes for ease of collision detection
     stringRepr = [
         ["|", "/", "\\", "|"],
@@ -16,7 +16,7 @@ class Player(GenericFrameObject):
         ["-", "-", "-", "-"],
         ["|", "|", "|", "|"]
     ]
-    color = [Fore.MAGENTA, None]
+    color = [Fore.RED, None]
 
     def __init__(self):
         super().__init__()
