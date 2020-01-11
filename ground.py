@@ -6,7 +6,8 @@ from colorama import Back
 
 class Ground(GenericFrameObject):
     stringRepr = np.full(
-        (config.GROUND_HEIGHT, config.FRAME_WIDTH), Back.GREEN + ' ')
+        (config.GROUND_HEIGHT, config.FRAME_WIDTH), ' ')
+    color = [None, Back.GREEN]
 
     def __init__(self):
         super().__init__()

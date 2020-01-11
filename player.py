@@ -16,6 +16,7 @@ class Player(GenericFrameObject):
         ["-", "-", "-", "-"],
         ["|", "|", "|", "|"]
     ]
+    color = [Fore.MAGENTA, None]
 
     def __init__(self):
         super().__init__()
@@ -56,12 +57,16 @@ class Player(GenericFrameObject):
         return l
 
     def updateKey(self, key):
+        if key not in 'ad':
+            self.xVel = 0
+
         if key == 'a':
             self.xVel = -1
         elif key == 'd':
             self.xVel = 1
         elif key == 'w':
-            self.yVel -= 1
+            # makes controls very hard to use
+            self.yVel -= 2
             self.yVel = max(-3, self.yVel)
             self.yVel = min(1, self.yVel)
         elif key == ' ':

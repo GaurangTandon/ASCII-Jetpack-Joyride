@@ -1,6 +1,31 @@
+from colorama import Back, Fore
 import config
 import random
 import numpy as np
+
+
+def mapper(x, color):
+    res = []
+
+    for row in x:
+        res2 = []
+        for col in row:
+            s = ""
+            if color[0]:
+                s += color[0]
+            else:
+                s += Fore.BLACK
+
+            if color[1]:
+                s += color[1]
+            else:
+                s += Back.BLUE
+
+            s += col
+            res2.append(s)
+        res.append(res2)
+
+    return res
 
 
 class GenericFrameObject:
@@ -17,6 +42,9 @@ class GenericFrameObject:
 
             self.__class__.obj = np.array(
                 self.__class__.stringRepr).reshape((self.height, self.width))
+            self.__class__.obj = mapper(
+                self.__class__.obj, self.__class__.color)
+
         except AttributeError:
             # stringRepr doesn't exist
             pass

@@ -2,10 +2,12 @@ import config
 import random
 from generic import GenericFrameObject
 from math import sqrt
+from colorama import Fore, Back
 
 
 class FireBeam(GenericFrameObject):
     stringRepr = ["f"]
+    color = [Fore.RED, None]
 
     def __init__(self):
         super().__init__()
@@ -29,7 +31,7 @@ class FireBeam(GenericFrameObject):
 
         for _ in range(config.FIREBEAM_LENGTH):
             info = {}
-            info["coord"] = [x, y]
+            info["coord"] = [y, x]
             info["size"] = [1, 1]
             x += cx
             y += cy
@@ -40,6 +42,7 @@ class FireBeam(GenericFrameObject):
 
 class Magnet(GenericFrameObject):
     stringRepr = [["M", "M"], ["M", "M"]]
+    color = [Fore.RED, Back.WHITE]
 
     def __init__(self):
         super().__init__()
