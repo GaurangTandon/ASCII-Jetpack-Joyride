@@ -28,6 +28,8 @@ class Player(GenericFrameObject):
         self.yVel = 0
         self.xVel = 0
 
+        self.yAcc = 0
+
         self.lifes = 3
         self.health = 100
 
@@ -36,9 +38,10 @@ class Player(GenericFrameObject):
 
     def update(self):
         self.x += self.xVel
-
         self.y += self.yVel
+
         self.yVel += config.GRAVITY_ACC
+        self.yVel += self.yAcc
 
         # self.x = round(self.x)
         # self.y = round(self.y)
@@ -60,15 +63,20 @@ class Player(GenericFrameObject):
         if key not in 'ad':
             self.xVel = 0
 
+        if key != 'w':
+            self.yAcc = 0
+
         if key == 'a':
             self.xVel = -1
         elif key == 'd':
             self.xVel = 1
         elif key == 'w':
-            # makes controls very hard to use
-            self.yVel -= 2
-            self.yVel = max(-3, self.yVel)
-            self.yVel = min(1, self.yVel)
+            # TODO: why do I need this initial push?
+            if self.yAcc == 0:
+                self.yVel -= 0.001
+
+            # TODO: gotta fix this, feels janky
+            self.yAcc = -0.12
         elif key == ' ':
             return self.fireLaser()
         else:
@@ -82,11 +90,12 @@ class Player(GenericFrameObject):
         self.y = min(self.y, self.startYCoord)
 
         # can't move anymore
-        if self.y == self.startYCoord or self.y == self.height - 1:
+        if self.y >= self.startYCoord or self.y <= self.height - 1:
             self.yVel = 0
+            self.yAcc = 0
 
         # hack to not make the jetpack get stuck at the top
-        if self.y == self.height - 1:
+        if self.y <= self.height - 1:
             self.y += 0.01
 
         # TODO: the window should also move accordingly to accommodate
