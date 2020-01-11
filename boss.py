@@ -7,6 +7,7 @@ class Boss(GenericFrameObject):
     X_THRESHOLD = 15
     Y_VEL = 0.1
     START_Y = config.FRAME_HEIGHT / 2
+    FIRE_INTERVAL = 1
 
     # create an aura around him, basically make him a rectangular box to ease collision detection :P
     stringRepr = [
@@ -27,8 +28,6 @@ class Boss(GenericFrameObject):
     color = [Fore.WHITE, Back.RED]
 
     def __init__(self, gameObj):
-        self.__class__.stringRepr = [[c for c in x]
-                                     for x in self.__class__.stringRepr]
         super().__init__()
         self.yVel = 0
 
@@ -36,6 +35,12 @@ class Boss(GenericFrameObject):
         self.x = config.FRAME_SPAWN_X
 
         self.gameObj = gameObj
+
+        self.health = 100
+        self.lastFired = -1
+
+    def fireGun(self):
+        # create a gun object and shoot towards the player
 
     def update(self):
         self.y += self.yVel
@@ -45,3 +50,17 @@ class Boss(GenericFrameObject):
             self.yVel = -self.Y_VEL
         else:
             self.yVel = self.Y_VEL
+
+        if time.time() - self.lastFired >= self.FIRE_INTERVAL:
+            self.lastFired = time.time()
+
+            self.fireGun()
+
+
+class BossLaser(GenericFrameObject):
+    stringRepr = [
+        ""
+    ]
+
+    def __init__(self):
+        super().__init__()
