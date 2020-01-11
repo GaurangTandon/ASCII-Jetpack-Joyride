@@ -91,3 +91,9 @@ class BossLaser(GenericFrameObject):
     def update(self):
         self.x += self.velX
         self.y += self.velY
+
+        if self.x < 0:
+            return GenericFrameObject.DEAD_FLAG
+
+        if self.y >= config.FRAME_HEIGHT - config.GROUND_HEIGHT or self.y < 0:
+            return GenericFrameObject.DEAD_FLAG
