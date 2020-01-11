@@ -18,7 +18,7 @@ class Player(GenericFrameObject):
     ]
     color = [Fore.RED, None]
 
-    def __init__(self):
+    def __init__(self, objGame):
         super().__init__()
 
         # x and y coordinate of the player's leftmost bottommost point
@@ -27,6 +27,7 @@ class Player(GenericFrameObject):
 
         self.yVel = 0
         self.xVel = 0
+        self.gameObj = objGame
 
         self.yAcc = 0
 
@@ -107,9 +108,14 @@ class Player(GenericFrameObject):
             self.x = config.FRAME_LEFT_BOUNDARY
             self.xVel = 0
 
-        # check obstacle collision
+        for obj in self.gameObj.renderedObjs:
+            # check collision
+            if self.collide(obj):
+                if obj.isCoin:
+                    pass
+                elif:
+                    pass
 
-        # check coin collision
         if self.lifes == 0:
             self.dead()
 

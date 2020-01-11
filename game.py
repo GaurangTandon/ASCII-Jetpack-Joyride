@@ -72,7 +72,7 @@ class Game():
         self.Y = config.FRAME_HEIGHT
         self.GAME_STATUS = 0
 
-        self.player = Player()
+        self.player = Player(self)
         self.ground = Ground()
         self.renderedObjects.append(self.player)
         self.renderedObjects.append(self.ground)
