@@ -77,4 +77,4 @@ class GenericFrameObject:
 
     @classmethod
     def getSpawnCoordinates(self):
-        return config.FRAME_RIGHT_BOUNARY + config.FRAME_SPAWN_OFFSET, random.randint(20, config.FRAME_HEIGHT-config.GROUND_HEIGHT)
+        return config.FRAME_SPAWN_X, random.randint(20, config.FRAME_HEIGHT-config.GROUND_HEIGHT)

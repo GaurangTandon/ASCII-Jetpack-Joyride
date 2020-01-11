@@ -100,7 +100,7 @@ class Game():
         print(f"Score {self.score}")
         if not self.hasBossSpawned:
             print(
-                f"Distance to boss {config.BOSS_X_THRESHOLD - self.player.x}")
+                f"Distance to boss {Boss.X_THRESHOLD - self.player.x}")
         else:
             print("Boss has spawned!")
 
@@ -144,9 +144,9 @@ class Game():
 
         self.player.checkBounds()
 
-        if not self.hasBossSpawned and self.player.x >= config.BOSS_X_THRESHOLD:
+        if not self.hasBossSpawned and self.player.x >= Boss.X_THRESHOLD:
             self.hasBossSpawned = True
-            self.renderedObjects.append(Boss())
+            self.renderedObjects.append(Boss(self))
 
     """
     user wants to terminate the game
