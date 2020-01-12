@@ -108,13 +108,14 @@ class Player(GenericFrameObject):
             self.x = config.FRAME_LEFT_BOUNDARY
             self.x_vel = 0
 
-        for obj in self.game_obj.renderedObjs:
+        for obj in self.game_obj.rendered_objects:
+            pass
             # check collision
-            if self.collide(obj):
-                if obj.isCoin:
-                    pass
-                else:
-                    pass
+            # if self.collide(obj):
+            #     if obj.isCoin:
+            #         pass
+            #     else:
+            #         pass
 
         if self.lifes == 0:
             self.dead()

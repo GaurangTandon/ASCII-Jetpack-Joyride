@@ -56,6 +56,7 @@ class GenericFrameObject:
             "size": [self.height, self.width]
         }]
 
+    @classmethod
     def spawn_probability(self):
         try:
             c_a = self.currentlyActive
