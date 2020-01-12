@@ -36,13 +36,14 @@ class Game():
         "playerlaser": "l"
     }
 
+    SYMBOL_COLOR_MAP = {}
+    SYMBOL_PAINT_MAP = {}
+
     def init_grid_consts(self):
-        self.SYMBOL_COLOR_MAP = {}
         assert self.COLOR_MAP.keys() == GRID_CONSTS.keys()
         for symbol, color in self.COLOR_MAP.items():
             self.SYMBOL_COLOR_MAP[GRID_CONSTS[symbol]] = color
 
-        self.SYMBOL_PAINT_MAP = {}
         for symbol, paint in self.SYMBOL_MAP.items():
             self.SYMBOL_PAINT_MAP[GRID_CONSTS[symbol]] = paint
 
@@ -67,9 +68,7 @@ class Game():
         self.grid = [[]]
         self.rendered_objects = []
 
-        self.X = config.FRAME_WIDTH
-        self.Y = config.FRAME_HEIGHT
-        self.GAME_STATUS = 0
+        self.game_status = 0
 
         self.player = Player(self)
         self.ground = Ground()
@@ -85,9 +84,9 @@ class Game():
 
         self.has_boss_spawned = False
 
-        self.KEYS = NonBlockingInput()
+        self.keys = NonBlockingInput()
         clear_terminal_screen()
-        self.KEYS.nb_term()
+        self.keys.nb_term()
 
         self.loop()
 
@@ -108,7 +107,8 @@ class Game():
     def draw(self):
         # TODO: can we fix this to only repaint pixels that changed
         self.grid = np.array([[Fore.WHITE + Back.BLUE + " "
-                               for _ in range(self.X)] for _ in range(self.Y)])
+                               for _ in range(config.FRAME_WIDTH)]
+                              for _ in range(config.FRAME_HEIGHT)])
 
         self.info_print()
 
@@ -161,14 +161,14 @@ class Game():
         """
         user wants to terminate the game
         """
-        self.GAME_STATUS = -1
+        self.game_status = -1
         print("\nGame over!")
         self.info_print()
 
     def handle_input(self):
         inputted = ""
-        if self.KEYS.kb_hit():
-            inputted = self.KEYS.get_ch()
+        if self.keys.kb_hit():
+            inputted = self.keys.get_ch()
 
         cin = get_key_pressed(inputted)
 
@@ -181,12 +181,12 @@ class Game():
         else:
             self.player.reset_no_key()
 
-        self.KEYS.flush()
+        self.keys.flush()
 
     def loop(self):
-        self.GAME_STATUS = 1
+        self.game_status = 1
 
-        while self.GAME_STATUS == 1:
+        while self.game_status == 1:
             clear_terminal_screen()
             self.draw()
             self.update()
