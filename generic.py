@@ -1,29 +1,29 @@
+import random
 from colorama import Back, Fore
 import numpy as np
-import random
 import config
 
 
-def mapper(x, color):
+def mapper(grid, color):
     res = np.array([])
 
-    for row in x:
+    for row in grid:
         for col in row:
-            s = ""
+            curr_str = ""
             if color[0]:
-                s += color[0]
+                curr_str += color[0]
             else:
-                s += Fore.BLACK
+                curr_str += Fore.BLACK
 
             if color[1]:
-                s += color[1]
+                curr_str += color[1]
             else:
-                s += Back.BLUE
+                curr_str += Back.BLUE
 
-            s += col
-            res = np.append(res, s)
+            curr_str += col
+            res = np.append(res, curr_str)
 
-    res = res.reshape((len(x), len(x[0])))
+    res = res.reshape((len(grid), len(grid[0])))
 
     return res
 
@@ -58,10 +58,10 @@ class GenericFrameObject:
 
     def spawn_probability(self):
         try:
-            ca = self.currentlyActive
+            c_a = self.currentlyActive
 
             # TODO: improve random spawning, still not nice
-            ca2 = ca*ca
+            ca2 = c_a*c_a
             ca4 = ca2*ca2
 
             return 1 / ca4

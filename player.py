@@ -51,12 +51,12 @@ class Player(GenericFrameObject):
         self.x_vel = 0
 
     def fire_laser(self):
-        l = Laser()
+        laser = Laser()
 
-        l.x = self.x
-        l.y = self.y
+        laser.x = self.x
+        laser.y = self.y
 
-        return l
+        return laser
 
     def update_key(self, key):
         if key not in 'ad':
