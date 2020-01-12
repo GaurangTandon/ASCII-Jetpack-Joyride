@@ -1,8 +1,9 @@
 from math import sqrt
 import time
+from colorama import Fore, Back
+
 import config
 from generic import GenericFrameObject
-from colorama import Fore, Back
 
 
 class Boss(GenericFrameObject):
@@ -29,49 +30,49 @@ class Boss(GenericFrameObject):
 
     color = [Fore.WHITE, Back.RED]
 
-    def __init__(self, gameObj):
+    def __init__(self, game_obj):
         super().__init__()
-        self.yVel = 0
+        self.y_vel = 0
 
         self.y = self.START_Y
         self.x = config.FRAME_SPAWN_X
 
-        self.gameObj = gameObj
+        self.game_obj = game_obj
 
         self.health = 100
-        self.lastFired = -1
+        self.last_fired = -1
 
     def _direction(self):
-        return (-1 if self.y > self.gameObj.player.y else 0 if self.y ==
-                self.gameObj.player.y else 1)
+        return (-1 if self.y > self.game_obj.player.y else 0 if self.y ==
+                self.game_obj.player.y else 1)
 
-    def fireGun(self):
+    def fire_gun(self):
         # TODO: fix velocity to be better directed to the player
-        xdist = abs(self.x - self.gameObj.player.x)
-        ydist = abs(self.y - self.gameObj.player.y)
-        hyp = sqrt(xdist * xdist + ydist * ydist)
+        x_dist = abs(self.x - self.game_obj.player.x)
+        y_dist = abs(self.y - self.game_obj.player.y)
+        hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
         vel = 2
 
-        velx = vel * xdist / hyp
-        vely = vel * ydist / hyp
+        velx = vel * x_dist / hyp
+        vely = vel * y_dist / hyp
 
         vely = self._direction() * vely
 
-        self.gameObj.renderedObjects.append(
+        self.game_obj.rendered_objects.append(
             BossLaser(vely, -velx, self.x, self.y - self.height / 2))
 
-        self.lastFired = time.time()
+        self.last_fired = time.time()
 
     def update(self):
-        self.y += self.yVel
+        self.y += self.y_vel
         self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
         self.y = max(self.y, self.height)
 
         # get the player's coordinates and move towards it
-        self.yVel = self._direction() * self.Y_VEL
+        self.y_vel = self._direction() * self.Y_VEL
 
-        if time.time() - self.lastFired >= self.FIRE_INTERVAL:
-            self.fireGun()
+        if time.time() - self.last_fired >= self.FIRE_INTERVAL:
+            self.fire_gun()
 
 
 class BossLaser(GenericFrameObject):
@@ -87,12 +88,14 @@ class BossLaser(GenericFrameObject):
 
         self.y = initY
         self.x = initX
-        self.velY = initvy
-        self.velX = initvx
+        self.vel_y = initvy
+        self.vel_x = initvx
 
     def update(self):
-        self.x += self.velX
-        self.y += self.velY
+        self.x += self.vel_x
+        self.y += self.vel_y
 
-        if self.exceedsBounds():
+        if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG
+
+        return False

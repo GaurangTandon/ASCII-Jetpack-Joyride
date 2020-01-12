@@ -1,14 +1,12 @@
+import random
+import time
 import numpy as np
-from threading import Timer
 from colorama import init as coloramaInit, Fore, Back, Style
-import signal
 from player import Player
-from util import clearTerminalScreen, NonBlockingInput, getKeyPressed
+from util import clear_terminal_screen, NonBlockingInput, get_key_pressed
 import config
 from config import GRID_CONSTS, FRAME_RATE
 from ground import Ground
-import time
-import random
 from coin import CoinGroup
 from obstacle import FireBeam, Magnet
 from generic import GenericFrameObject
@@ -38,9 +36,9 @@ class Game():
         "playerlaser": "l"
     }
 
-    def initGridConsts(self):
+    def init_grid_consts(self):
         self.SYMBOL_COLOR_MAP = {}
-        assert(self.COLOR_MAP.keys() == GRID_CONSTS.keys())
+        assert self.COLOR_MAP.keys() == GRID_CONSTS.keys()
         for symbol, color in self.COLOR_MAP.items():
             self.SYMBOL_COLOR_MAP[GRID_CONSTS[symbol]] = color
 
@@ -49,7 +47,7 @@ class Game():
             self.SYMBOL_PAINT_MAP[GRID_CONSTS[symbol]] = paint
 
     # info bounding indices are inclusive
-    def drawInRange(self, info, obj):
+    def draw_in_range(self, info, obj):
         to_row = round(info["coord"][0])
         from_row = to_row - info["size"][0] + 1
 
@@ -63,10 +61,11 @@ class Game():
     def __init__(self):
         coloramaInit()
 
-        self.initGridConsts()
+        self.init_grid_consts()
         self.score = 0
 
-        self.renderedObjects = []
+        self.grid = [[]]
+        self.rendered_objects = []
 
         self.X = config.FRAME_WIDTH
         self.Y = config.FRAME_HEIGHT
@@ -74,33 +73,33 @@ class Game():
 
         self.player = Player(self)
         self.ground = Ground()
-        self.renderedObjects.append(self.player)
-        self.renderedObjects.append(self.ground)
+        self.rendered_objects.append(self.player)
+        self.rendered_objects.append(self.ground)
 
-        self.randomSpawningObjects = [FireBeam, Magnet, CoinGroup]
+        self.random_spawning_objects = [FireBeam, Magnet, CoinGroup]
 
-        self.gameLength = 120
-        self.endTime = time.time() + self.gameLength
+        self.game_length = 120
+        self.end_time = time.time() + self.game_length
 
-        self.nextSpawnPoint = 0
+        self.next_spawn_point = 0
 
-        self.hasBossSpawned = False
+        self.has_boss_spawned = False
 
         self.KEYS = NonBlockingInput()
-        clearTerminalScreen()
+        clear_terminal_screen()
         self.KEYS.nb_term()
 
         self.loop()
 
-    def getTimeRemaining(self):
-        timeRemaining = (self.endTime - time.time())
-        return int(np.round(timeRemaining))
+    def get_time_remaining(self):
+        time_remaining = (self.end_time - time.time())
+        return int(np.round(time_remaining))
 
-    def infoPrint(self):
-        print(f"Time remaining \u23f1 {self.getTimeRemaining()} seconds")
+    def info_print(self):
+        print(f"Time remaining \u23f1 {self.get_time_remaining()} seconds")
         print(f"Lives remaining \u2764 {self.player.lifes}")
         print(f"Score {self.score}")
-        if not self.hasBossSpawned:
+        if not self.has_boss_spawned:
             print(
                 f"Distance to boss {Boss.X_THRESHOLD - self.player.x}")
         else:
@@ -111,77 +110,76 @@ class Game():
         self.grid = np.array([[Fore.WHITE + Back.BLUE + " "
                                for _ in range(self.X)] for _ in range(self.Y)])
 
-        self.infoPrint()
+        self.info_print()
 
-        for obj in self.renderedObjects:
-            infoObjs = obj.draw()
-            for info in infoObjs:
-                self.drawInRange(info, obj.obj)
+        for obj in self.rendered_objects:
+            info_objs = obj.draw()
+            for info in info_objs:
+                self.draw_in_range(info, obj.obj)
 
-        printGrid = "\n".join([(Style.RESET_ALL).join(row) + Style.RESET_ALL
-                               for row in self.grid])
+        print_grid = "\n".join([(Style.RESET_ALL).join(row) + Style.RESET_ALL
+                                for row in self.grid])
 
         # only a single print at the end makes rendering efficient
-        print(printGrid)
+        print(print_grid)
 
     def update(self):
         i = 0
-        listOfIdxsToDelete = []
+        list_of_idxs_to_delete = []
 
-        for obj in self.renderedObjects:
+        for obj in self.rendered_objects:
             if obj.update() == GenericFrameObject.DEAD_FLAG:
-                listOfIdxsToDelete.append(i)
+                list_of_idxs_to_delete.append(i)
             i += 1
 
-        listOfIdxsToDelete.reverse()
+        list_of_idxs_to_delete.reverse()
 
-        for i in listOfIdxsToDelete:
-            self.renderedObjects[i].cleanup()
-            self.renderedObjects.pop(i)
+        for i in list_of_idxs_to_delete:
+            self.rendered_objects[i].cleanup()
+            self.rendered_objects.pop(i)
 
         # make spawning random somehow
         # make two slots in y axis as well
-        if self.player.x + config.FRAME_WIDTH > self.nextSpawnPoint:
-            for randomSpawn in self.randomSpawningObjects:
-                threshold = randomSpawn.spawnProbability()
+        if self.player.x + config.FRAME_WIDTH > self.next_spawn_point:
+            for random_spawn in self.random_spawning_objects:
+                threshold = random_spawn.spawn_probability()
 
                 if random.random() < threshold:
-                    obj = randomSpawn()
-                    self.renderedObjects.append(obj)
-                    self.nextSpawnPoint = max(
-                        self.nextSpawnPoint, obj.x + obj.width)
+                    obj = random_spawn()
+                    self.rendered_objects.append(obj)
+                    self.next_spawn_point = max(
+                        self.next_spawn_point, obj.x + obj.width)
                     break
 
-        self.player.checkBounds()
+        self.player.check_bounds()
 
-        if not self.hasBossSpawned and self.player.x >= Boss.X_THRESHOLD:
-            self.hasBossSpawned = True
-            self.renderedObjects.append(Boss(self))
-
-    """
-    user wants to terminate the game
-    """
+        if not self.has_boss_spawned and self.player.x >= Boss.X_THRESHOLD:
+            self.has_boss_spawned = True
+            self.rendered_objects.append(Boss(self))
 
     def terminate(self):
+        """
+        user wants to terminate the game
+        """
         self.GAME_STATUS = -1
         print("\nGame over!")
-        self.infoPrint()
+        self.info_print()
 
-    def handleInput(self):
-        input = ""
+    def handle_input(self):
+        inputted = ""
         if self.KEYS.kb_hit():
-            input = self.KEYS.get_ch()
+            inputted = self.KEYS.get_ch()
 
-        cin = getKeyPressed(input)
+        cin = get_key_pressed(inputted)
 
         if cin == -1:
             self.terminate()
         elif cin != 0:
-            obj = self.player.updateKey(cin)
+            obj = self.player.update_key(cin)
             if obj:
-                self.renderedObjects.append(obj)
+                self.rendered_objects.append(obj)
         else:
-            self.player.resetNoKey()
+            self.player.reset_no_key()
 
         self.KEYS.flush()
 
@@ -189,14 +187,14 @@ class Game():
         self.GAME_STATUS = 1
 
         while self.GAME_STATUS == 1:
-            clearTerminalScreen()
+            clear_terminal_screen()
             self.draw()
             self.update()
 
             last = time.time()
-            self.handleInput()
+            self.handle_input()
 
-            if self.player.lifes == 0 or self.getTimeRemaining() <= 0:
+            if self.player.lifes == 0 or self.get_time_remaining() <= 0:
                 self.terminate()
 
             while time.time() - last < self._refresh_time:

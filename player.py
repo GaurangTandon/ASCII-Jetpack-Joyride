@@ -1,16 +1,14 @@
-from colorama import Fore, Back, Style
+from colorama import Fore
 import config
 from generic import GenericFrameObject
-from ground import Ground
-import numpy
 
 
 class Player(GenericFrameObject):
     startYCoord = config.FRAME_HEIGHT - config.GROUND_HEIGHT - 1
     # maintain rectangular shapes for ease of collision detection
     stringRepr = [
-        "|/\|",
-        "|\/|",
+        "|/\\|",
+        "|\\/|",
         "-||-",
         " || ",
         "----",
@@ -18,41 +16,41 @@ class Player(GenericFrameObject):
     ]
     color = [Fore.RED, None]
 
-    def __init__(self, objGame):
+    def __init__(self, obj_game):
         super().__init__()
 
         # x and y coordinate of the player's leftmost bottommost point
         self.x = config.FRAME_LEFT_BOUNDARY
         self.y = self.startYCoord
 
-        self.yVel = 0
-        self.xVel = 0
-        self.gameObj = objGame
+        self.y_vel = 0
+        self.x_vel = 0
+        self.game_obj = obj_game
 
-        self.yAcc = 0
+        self.y_acc = 0
 
         self.lifes = 3
         self.health = 100
 
-    def getTop(self):
+    def get_top(self):
         return self.y - self.height + 1
 
     def update(self):
-        self.x += self.xVel
-        self.y += self.yVel
+        self.x += self.x_vel
+        self.y += self.y_vel
 
-        self.yVel += config.GRAVITY_ACC
-        self.yVel += self.yAcc
+        self.y_vel += config.GRAVITY_ACC
+        self.y_vel += self.y_acc
 
         # self.x = round(self.x)
         # self.y = round(self.y)
 
-        self.checkBounds()
+        self.check_bounds()
 
-    def resetNoKey(self):
-        self.xVel = 0
+    def reset_no_key(self):
+        self.x_vel = 0
 
-    def fireLaser(self):
+    def fire_laser(self):
         l = Laser()
 
         l.x = self.x
@@ -60,30 +58,32 @@ class Player(GenericFrameObject):
 
         return l
 
-    def updateKey(self, key):
+    def update_key(self, key):
         if key not in 'ad':
-            self.xVel = 0
+            self.x_vel = 0
 
         if key != 'w':
-            self.yAcc = 0
+            self.y_acc = 0
 
         if key == 'a':
-            self.xVel = -1
+            self.x_vel = -1
         elif key == 'd':
-            self.xVel = 1
+            self.x_vel = 1
         elif key == 'w':
             # TODO: why do I need this initial push?
-            if self.yAcc == 0:
-                self.yVel -= 0.001
+            if self.y_acc == 0:
+                self.y_vel -= 0.001
 
             # TODO: gotta fix this, feels janky
-            self.yAcc = -0.12
+            self.y_acc = -0.12
         elif key == ' ':
-            return self.fireLaser()
+            return self.fire_laser()
         else:
-            assert(False)
+            assert False
 
-    def checkBounds(self):
+        return None
+
+    def check_bounds(self):
         # check sky bound
         self.y = max(self.y, self.height - 1)
 
@@ -92,8 +92,8 @@ class Player(GenericFrameObject):
 
         # can't move anymore
         if self.y >= self.startYCoord or self.y <= self.height - 1:
-            self.yVel = 0
-            self.yAcc = 0
+            self.y_vel = 0
+            self.y_acc = 0
 
         # hack to not make the jetpack get stuck at the top
         if self.y <= self.height - 1:
@@ -102,18 +102,18 @@ class Player(GenericFrameObject):
         # TODO: the window should also move accordingly to accommodate
         if self.x >= config.FRAME_RIGHT_BOUNARY:
             self.x = config.FRAME_RIGHT_BOUNARY
-            self.xVel = 0
+            self.x_vel = 0
 
         if self.x <= config.FRAME_LEFT_BOUNDARY:
             self.x = config.FRAME_LEFT_BOUNDARY
-            self.xVel = 0
+            self.x_vel = 0
 
-        for obj in self.gameObj.renderedObjs:
+        for obj in self.game_obj.renderedObjs:
             # check collision
             if self.collide(obj):
                 if obj.isCoin:
                     pass
-                elif:
+                else:
                     pass
 
         if self.lifes == 0:
@@ -123,11 +123,8 @@ class Player(GenericFrameObject):
 class Laser(GenericFrameObject):
     stringRepr = ["==>"]
 
-    def __init__(self):
-        super().__init__()
-
     def update(self):
         self.x += config.LASER_VEL
 
-        if self.exceedsBounds():
+        if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG

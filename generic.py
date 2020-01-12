@@ -1,7 +1,7 @@
 from colorama import Back, Fore
-import config
-import random
 import numpy as np
+import random
+import config
 
 
 def mapper(x, color):
@@ -45,7 +45,7 @@ class GenericFrameObject:
         except AttributeError:
             pass
 
-        self.x, self.y = self.getSpawnCoordinates()
+        self.x, self.y = self.get_spawn_coordinates()
 
     def cleanup(self):
         self.__class__.currentlyActive -= 1
@@ -56,8 +56,7 @@ class GenericFrameObject:
             "size": [self.height, self.width]
         }]
 
-    @classmethod
-    def spawnProbability(self):
+    def spawn_probability(self):
         try:
             ca = self.currentlyActive
 
@@ -69,13 +68,15 @@ class GenericFrameObject:
         except ArithmeticError:
             return 0.1
 
-    def exceedsBounds(self):
-        return self.x < 0 or self.x >= config.FRAME_WIDTH or self.y >= config.FRAME_BOTTOM_BOUNDARY or self.y <= self.height
+    def exceeds_bounds(self):
+        return self.x < 0 or self.x >= config.FRAME_WIDTH \
+            or self.y >= config.FRAME_BOTTOM_BOUNDARY or self.y <= self.height
 
     def update(self):
         self.x -= 1
-        if self.exceedsBounds():
+        if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG
+        return None
 
-    def getSpawnCoordinates(self):
+    def get_spawn_coordinates(self):
         return config.FRAME_SPAWN_X, random.randint(self.height, config.FRAME_BOTTOM_BOUNDARY)

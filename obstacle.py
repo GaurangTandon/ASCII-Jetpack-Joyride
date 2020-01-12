@@ -1,7 +1,6 @@
-import config
 import random
+import config
 from generic import GenericFrameObject
-from math import sqrt
 from colorama import Fore, Back
 
 
@@ -43,6 +42,3 @@ class FireBeam(GenericFrameObject):
 class Magnet(GenericFrameObject):
     stringRepr = [["MM"], ["MM"]]
     color = [Fore.RED, Back.WHITE]
-
-    def __init__(self):
-        super().__init__()

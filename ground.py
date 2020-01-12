@@ -1,7 +1,7 @@
 import numpy as np
+from colorama import Back
 import config
 from generic import GenericFrameObject
-from colorama import Back
 
 
 class Ground(GenericFrameObject):

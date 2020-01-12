@@ -1,15 +1,13 @@
-import config
 import random
 import numpy as np
+from colorama import Fore
 from generic import GenericFrameObject
-from colorama import Fore, Back
-
-"""
-Coins occur in groups
-"""
 
 
 class CoinGroup(GenericFrameObject):
+    """
+    Coins occur in groups
+    """
     color = [Fore.YELLOW, None]
 
     def __init__(self):

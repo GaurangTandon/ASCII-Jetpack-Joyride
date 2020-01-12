@@ -12,11 +12,11 @@ import termios
 import subprocess as sp
 
 
-def clearTerminalScreen():
+def clear_terminal_screen():
     sp.call('clear', shell=True)
 
 
-def getKeyPressed(keyin):
+def get_key_pressed(keyin):
     keyin = keyin.lower()
 
     if not keyin in ('q', ' ', 'w', 'a', 'd'):
