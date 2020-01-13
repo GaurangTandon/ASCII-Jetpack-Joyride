@@ -80,8 +80,6 @@ class Player(GenericFrameObject):
         self.x_vel += self.x_acc
         self.x_vel += (-1 if self.x_vel > 0 else 1) * min(self.DRAG_CONSTANT * self.x_vel *
                                                           self.x_vel, abs(self.x_vel))
-        # self.x_vel += (-1 if self.x_vel > 0 else 1) * min(self.DRAG_CONSTANT * self.x_vel *
-        #                                                   self.x_vel, abs(self.x_vel))
 
         self.x += round(self.x_vel)
         self.y += round(self.y_vel)

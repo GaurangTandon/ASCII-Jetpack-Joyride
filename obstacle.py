@@ -6,7 +6,7 @@ from generic import GenericFrameObject
 
 
 class FireBeam(GenericFrameObject):
-    stringRepr = ["f"]
+    stringRepr = ["🔥"]
     color = [Fore.RED, None]
     TYPE = "firebeam"
 
