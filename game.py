@@ -144,7 +144,7 @@ class Game():
         # make two slots in y axis as well
         if not config.DEBUG:
             if self.player.x + config.FRAME_WIDTH > self.next_spawn_point:
-                for random_spawn in [FireBeam,  CoinGroup]:
+                for random_spawn in [FireBeam, CoinGroup]:
                     threshold = random_spawn.spawn_probability()
 
                     if random.random() < threshold:
@@ -154,16 +154,13 @@ class Game():
                             self.next_spawn_point, obj.x + obj.width)
                         break
 
-            if not self.magnet_obj:
+            # there should be no magnet if there is a boss
+            # since otherwise it is almost impossible to win
+            # TODO: see if necessary
+            if not self.magnet_obj and not self.has_boss_spawned:
                 if random.random() < Magnet.SPAWN_PROBABILITY:
                     self.magnet_obj = Magnet()
                     self.rendered_objects.append(self.magnet_obj)
-
-        self.player.check_bounds()
-
-        if not self.has_boss_spawned and self.player.x >= Boss.X_THRESHOLD:
-            self.has_boss_spawned = True
-            self.rendered_objects.append(Boss(self))
 
     def terminate(self):
         """
@@ -220,8 +217,15 @@ class Game():
                 print(debugStr)
 
             self.draw()
-            self.player.update(last_key_pressed)
             self.update()
+            self.player.update(last_key_pressed)
+
+            if not self.has_boss_spawned and self.player.x >= Boss.X_THRESHOLD:
+                self.has_boss_spawned = True
+                self.rendered_objects.append(Boss(self))
+                # TODO: see other comment
+                if self.magnet_obj:
+                    self.magnet_obj.destroy()
 
             last = time.time()
             last_key_pressed = self.handle_input()

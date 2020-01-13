@@ -82,3 +82,6 @@ class GenericFrameObject:
 
     def get_spawn_coordinates(self):
         return config.FRAME_SPAWN_X, random.randint(self.height, config.FRAME_BOTTOM_BOUNDARY)
+
+    def check_collision(self, object):
+        pass

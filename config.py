@@ -1,7 +1,7 @@
 GROUND_HEIGHT = 2
 
 # TODO: should be based on terminal height
-FRAME_WIDTH = 150
+FRAME_WIDTH = 170
 FRAME_HEIGHT = 40
 FRAME_X_VELOCITY = 10
 FRAME_RATE = 20

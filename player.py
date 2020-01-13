@@ -63,6 +63,8 @@ class Player(GenericFrameObject):
         # keypress gives an impulse, not an accn
         if last_key_pressed == 'w':
             self.y_vel -= self.Y_IMPULSE
+        elif last_key_pressed == 's':
+            self.y_vel += self.Y_IMPULSE
         elif last_key_pressed == 'a':
             self.x_vel -= self.X_IMPULSE
         elif last_key_pressed == 'd':
@@ -115,13 +117,16 @@ class Player(GenericFrameObject):
             self.x_vel = 0
 
         for obj in self.game_obj.rendered_objects:
-            pass
-            # check collision
-            # if self.collide(obj):
-            #     if obj.isCoin:
-            #         pass
-            #     else:
-            #         pass
+            if obj == self or obj == self.game_obj:
+                continue
+
+            # # if these two collide
+            # if obj.TYPE == "coin":
+            #     # loop over each point of obj and check which was hit
+            #     # and remove it
+            #     pass
+            # elif obj.TYPE == "firebeam":
+            #     pass
 
         if self.lifes == 0:
             self.dead()
