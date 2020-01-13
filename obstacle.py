@@ -8,6 +8,7 @@ from generic import GenericFrameObject
 class FireBeam(GenericFrameObject):
     stringRepr = ["f"]
     color = [Fore.RED, None]
+    TYPE = "firebeam"
 
     def __init__(self):
         super().__init__()
@@ -45,9 +46,10 @@ class Magnet(GenericFrameObject):
     color = [Fore.RED, Back.WHITE]
     LIFETIME = 10
     SPAWN_PROBABILITY = 0.01
+    TYPE = "magnet"
 
     # magnetic attraction is modeled as Gm1m2/r^2 or Kq1q2/r^2
-    FORCE_NUMERATOR = 0.8
+    FORCE_NUMERATOR = 1
 
     def __init__(self):
         super().__init__()

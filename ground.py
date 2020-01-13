@@ -8,6 +8,7 @@ class Ground(GenericFrameObject):
     stringRepr = np.full(
         (config.GROUND_HEIGHT, config.FRAME_WIDTH), ' ')
     color = [None, Back.GREEN]
+    TYPE = "ground"
 
     def __init__(self):
         super().__init__()

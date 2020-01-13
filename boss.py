@@ -8,9 +8,10 @@ from generic import GenericFrameObject
 
 class Boss(GenericFrameObject):
     X_THRESHOLD = 15
-    Y_VEL = 0.1
-    START_Y = config.FRAME_HEIGHT / 2
+    Y_VEL = 0.5
+    START_Y = round(config.FRAME_HEIGHT / 2)
     FIRE_INTERVAL = 2
+    TYPE = "boss"
 
     # create an aura around him, basically make him a rectangular box to ease collision detection :P
     stringRepr = [
@@ -64,7 +65,7 @@ class Boss(GenericFrameObject):
         self.last_fired = time.time()
 
     def update(self):
-        self.y += self.y_vel
+        self.y += round(self.y_vel)
         self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
         self.y = max(self.y, self.height)
 
@@ -82,6 +83,7 @@ class BossLaser(GenericFrameObject):
         "-v-"
     ]
     color = [Fore.WHITE, Back.BLACK]
+    TYPE = "bosslaser"
 
     def __init__(self, initvy, initvx, initX, initY):
         super().__init__()
@@ -92,8 +94,8 @@ class BossLaser(GenericFrameObject):
         self.vel_x = initvx
 
     def update(self):
-        self.x += self.vel_x
-        self.y += self.vel_y
+        self.x += round(self.vel_x)
+        self.y += round(self.vel_y)
 
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG

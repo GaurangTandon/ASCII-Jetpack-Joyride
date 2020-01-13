@@ -94,14 +94,18 @@ class Game():
         return int(np.round(time_remaining))
 
     def info_print(self):
-        print(f"Time remaining \u23f1 {self.get_time_remaining()} seconds")
-        print(f"Lives remaining \u2764 {self.player.lifes}")
-        print(f"Score {self.score}")
+        # required padding since we are not clearing screen and just resetting carat pos
+        padding = ' '*10
+        print(
+            f"Time remaining \u23f1 {self.get_time_remaining()} seconds{padding}")
+        print(f"Health remaining {self.player.health}{padding}")
+        print(f"Lives remaining \u2764 {self.player.lifes}{padding}")
+        print(f"Score {self.score}{padding}")
         if not self.has_boss_spawned:
             print(
-                f"Distance to boss {Boss.X_THRESHOLD - self.player.x}")
+                f"Distance to boss {Boss.X_THRESHOLD - self.player.x}{padding}")
         else:
-            print("Boss has spawned!")
+            print(f"Boss has spawned!{padding}")
 
     def draw(self):
         # TODO: can we fix this to only repaint pixels that changed
@@ -116,7 +120,9 @@ class Game():
             for info in info_objs:
                 self.draw_in_range(info, obj.obj)
 
-        print_grid = "\n".join([(Style.RESET_ALL).join(row) + Style.RESET_ALL
+        # offset by 10: since otherwise the whole coin group disappears even if a
+        # single coin touches the boundary
+        print_grid = "\n".join([(Style.RESET_ALL).join(row[10:]) + Style.RESET_ALL
                                 for row in self.grid])
 
         # only a single print at the end makes rendering efficient
@@ -209,9 +215,6 @@ class Game():
             debugStr = f"[{self.player.x} {self.player.y}] \
 [{self.player.x_vel} {self.player.y_vel}] \
 [{self.player.x_acc} {self.player.y_acc}]" + " " * 50
-            # if config.DEBUG:
-            #     with open("log", "a") as f:
-            #         f.write(debugStr)
 
             if config.DEBUG:
                 print(debugStr)

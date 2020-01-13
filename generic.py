@@ -83,5 +83,24 @@ class GenericFrameObject:
     def get_spawn_coordinates(self):
         return config.FRAME_SPAWN_X, random.randint(self.height, config.FRAME_BOTTOM_BOUNDARY)
 
+    # TODO: is this private?
+    @staticmethod
+    def _generate_coords(obj):
+        points = set([])
+
+        # both coordinates must be integers
+        assert obj.y % 1 <= 1e-6
+        assert obj.x % 1 <= 1e-6
+
+        for i in range(int(obj.y) - obj.height + 1, int(obj.y) + 1):
+            for j in range(int(obj.x), int(obj.x) + obj.width):
+                points.add((i, j))
+
+        return points
+
+    # returns set of coordinates common to both objects
     def check_collision(self, object):
-        pass
+        coords_self = GenericFrameObject._generate_coords(self)
+        coords_obj = GenericFrameObject._generate_coords(object)
+
+        return coords_obj & coords_self

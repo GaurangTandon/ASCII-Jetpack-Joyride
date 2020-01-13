@@ -20,6 +20,10 @@ class Player(GenericFrameObject):
     DRAG_CONSTANT = 0.1
     X_IMPULSE = 1
     Y_IMPULSE = 1
+    TYPE = "player"
+    INITIAL_HEALTH = 100
+    BOSS_LASER_DAMAGE = 0.3 * INITIAL_HEALTH
+    FIREBEAM_DAMAGE = 0.2 * INITIAL_HEALTH
 
     def __init__(self, obj_game):
         super().__init__()
@@ -51,8 +55,9 @@ class Player(GenericFrameObject):
             hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
 
             if hyp != 0:
-                self.x_acc = x_dist / hyp * num
-                self.y_acc = y_dist / hyp * num
+                force = num / (hyp * hyp)
+                self.x_acc = (x_dist / hyp) * force
+                self.y_acc = (y_dist / hyp) * force
             else:
                 self.x_acc = 0
                 self.y_acc = 0
@@ -104,8 +109,9 @@ class Player(GenericFrameObject):
             self.y_acc = 0
 
         # hack to not make the jetpack get stuck at the top
-        if self.y <= self.height - 1:
-            self.y += 0.01
+        # try work without this since y coordinate cannot be fractional
+        # if self.y <= self.height - 1:
+        #     self.y += 0.01
 
         # TODO: the window should also move accordingly to accommodate
         if self.x >= config.FRAME_RIGHT_BOUNARY:
@@ -117,16 +123,20 @@ class Player(GenericFrameObject):
             self.x_vel = 0
 
         for obj in self.game_obj.rendered_objects:
-            if obj == self or obj == self.game_obj:
+            common_points = self.check_collision(obj)
+            if len(common_points) == 0:
                 continue
 
             # # if these two collide
-            # if obj.TYPE == "coin":
-            #     # loop over each point of obj and check which was hit
-            #     # and remove it
-            #     pass
-            # elif obj.TYPE == "firebeam":
-            #     pass
+            if obj.TYPE == "coin":
+                for point in common_points:
+                    # play sound
+                    # remove that point from object body
+                    pass
+            elif obj.TYPE == "firebeam":
+                self.health -= self.FIREBEAM_DAMAGE
+            elif obj.TYPE == "bosslaser":
+                self.health -= self.BOSS_LASER_DAMAGE
 
         if self.lifes == 0:
             self.dead()
@@ -140,5 +150,20 @@ class Laser(GenericFrameObject):
 
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG
+
+        for obj in self.game_obj.rendered_objects:
+            common_points = self.check_collision(obj)
+            if len(common_points) == 0:
+                continue
+
+            if obj.TYPE == "boss":
+                # decrease health by number of points touched and remove that fire beam
+                pass
+            elif obj.TYPE == "bosslaser":
+                # destroy both
+                pass
+            elif obj.TYPE == "firebeam":
+                # destroy both
+                pass
 
         return None
