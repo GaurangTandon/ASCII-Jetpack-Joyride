@@ -49,7 +49,7 @@ class Magnet(GenericFrameObject):
     TYPE = "magnet"
 
     # magnetic attraction is modeled as Gm1m2/r^2 or Kq1q2/r^2
-    FORCE_NUMERATOR = 1
+    FORCE_CONSTANT = 50
 
     def __init__(self):
         super().__init__()

@@ -49,7 +49,7 @@ class Player(GenericFrameObject):
 
     def update(self, last_key_pressed):
         if self.game_obj.magnet_obj:
-            num = Magnet.FORCE_NUMERATOR
+            num = Magnet.FORCE_CONSTANT
             x_dist = self.game_obj.magnet_obj.x - self.x
             y_dist = self.game_obj.magnet_obj.y - self.y
             hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
