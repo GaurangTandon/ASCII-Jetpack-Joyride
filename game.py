@@ -3,7 +3,8 @@ import time
 import numpy as np
 from colorama import init as coloramaInit, Fore, Back, Style
 from player import Player
-from util import clear_terminal_screen, NonBlockingInput, get_key_pressed
+from kbhit import KBHit
+from util import clear_terminal_screen, NonBlockingInput, get_key_pressed, reposition_cursor
 import config
 from config import GRID_CONSTS, FRAME_RATE
 from ground import Ground
@@ -83,9 +84,8 @@ class Game():
         self.has_boss_spawned = False
         self.magnet_obj = None
 
-        self.keys = NonBlockingInput()
+        self.keys = KBHit()
         clear_terminal_screen()
-        self.keys.nb_term()
 
         self.loop()
 
@@ -123,13 +123,15 @@ class Game():
         print(print_grid)
 
     def update(self):
-        i = 0
+        i = -1
         list_of_idxs_to_delete = []
 
         for obj in self.rendered_objects:
+            i += 1
+            if obj == self.player:
+                continue
             if obj.update() == GenericFrameObject.DEAD_FLAG:
                 list_of_idxs_to_delete.append(i)
-            i += 1
 
         list_of_idxs_to_delete.reverse()
 
@@ -173,40 +175,53 @@ class Game():
 
     def handle_input(self):
         inputted = ""
-        if self.keys.kb_hit():
-            inputted = self.keys.get_ch()
+
+        if self.keys.kbhit():
+            inputted = self.keys.getch()
 
         cin = get_key_pressed(inputted)
 
         if cin == -1:
             self.terminate()
         elif cin != 0:
-            print(cin)
             if cin in '1234' and config.DEBUG:
                 if cin == '1':
                     self.rendered_objects.append(CoinGroup())
                 if cin == '2':
-                    self.rendered_objects.append(Magnet())
+                    self.magnet_obj = Magnet()
+                    self.rendered_objects.append(self.magnet_obj)
                 if cin == '3':
                     self.rendered_objects.append(FireBeam())
-            obj = self.player.update_key(cin)
-            if obj:
-                self.rendered_objects.append(obj)
-        else:
-            self.player.reset_no_key()
 
-        self.keys.flush()
+            if cin == ' ':
+                self.rendered_objects.append(self.fire_laser())
+            else:
+                return cin
 
     def loop(self):
         self.game_status = 1
 
+        last_key_pressed = ""
+        clear_terminal_screen()
+
         while self.game_status == 1:
-            clear_terminal_screen()
+            # switch to non terminal clearing later
+            reposition_cursor()
+            # clear_terminal_screen()
+
+            debugStr = f"[{self.player.x} {self.player.y}] [{self.player.x_vel} {self.player.y_vel}] [{self.player.x_acc} {self.player.y_acc}]" + " " * 100
+            # if config.DEBUG:
+            #     with open("log", "a") as f:
+            #         f.write(debugStr)
+
+            print(debugStr)
+
             self.draw()
+            self.player.update(last_key_pressed)
             self.update()
 
             last = time.time()
-            self.handle_input()
+            last_key_pressed = self.handle_input()
 
             if self.player.lifes == 0 or self.get_time_remaining() <= 0:
                 self.terminate()

@@ -17,6 +17,9 @@ class Player(GenericFrameObject):
         "||||",
     ]
     color = [Fore.RED, None]
+    DRAG_CONSTANT = 0.1
+    X_IMPULSE = 1
+    Y_IMPULSE = 1
 
     def __init__(self, obj_game):
         super().__init__()
@@ -29,8 +32,8 @@ class Player(GenericFrameObject):
         self.x_vel = 0
         self.game_obj = obj_game
 
-        self.x_acc = 0
         self.y_acc = 0
+        self.x_acc = 0
 
         self.w_key = False
 
@@ -40,31 +43,39 @@ class Player(GenericFrameObject):
     def get_top(self):
         return self.y - self.height + 1
 
-    def update(self):
-        self.x += self.x_vel
-        self.y += self.y_vel
-
-        self.y_vel += config.GRAVITY_ACC
-        self.y_vel += self.y_acc
-
+    def update(self, last_key_pressed):
         if self.game_obj.magnet_obj:
             num = Magnet.FORCE_NUMERATOR
             x_dist = self.game_obj.magnet_obj.x - self.x
             y_dist = self.game_obj.magnet_obj.y - self.y
             hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
+
             self.x_acc = x_dist / hyp * num
             self.y_acc = y_dist / hyp * num
         else:
             self.x_acc = 0
             self.y_acc = 0
 
-        if self.w_key:
-            self.y_acc += 0.15
+        # keypress gives an impulse, not an accn
+        if last_key_pressed == 'w':
+            self.y_vel -= self.Y_IMPULSE
+        elif last_key_pressed == 'a':
+            self.x_vel -= self.X_IMPULSE
+        elif last_key_pressed == 'd':
+            self.x_vel += self.X_IMPULSE
+
+        self.y_vel += config.GRAVITY_ACC
+        self.y_vel += self.y_acc
+        self.x_vel += self.x_acc
+        self.x_vel += (-1 if self.x_vel > 0 else 1) * min(self.DRAG_CONSTANT * self.x_vel *
+                                                          self.x_vel, abs(self.x_vel))
+        # self.x_vel += (-1 if self.x_vel > 0 else 1) * min(self.DRAG_CONSTANT * self.x_vel *
+        #                                                   self.x_vel, abs(self.x_vel))
+
+        self.x += round(self.x_vel)
+        self.y += round(self.y_vel)
 
         self.check_bounds()
-
-    def reset_no_key(self):
-        self.x_vel = 0
 
     def fire_laser(self):
         laser = Laser()
@@ -73,28 +84,6 @@ class Player(GenericFrameObject):
         laser.y = self.y
 
         return laser
-
-    def update_key(self, key):
-        if key not in 'ad':
-            self.x_vel = 0
-
-        if key != 'w':
-            self.w_key = False
-
-        # y_vel is set to zero in first two cases
-        # such that player is still using jetpack
-        if key == 'a':
-            self.x_vel = -1
-            self.y_vel = 0
-        elif key == 'd':
-            self.x_vel = 1
-            self.y_vel = 0
-        elif key == 'w':
-            self.w_key = True
-        elif key == ' ':
-            return self.fire_laser()
-
-        return None
 
     def check_bounds(self):
         # check sky bound

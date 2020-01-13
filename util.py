@@ -18,6 +18,10 @@ def clear_terminal_screen():
     sp.call('clear', shell=True)
 
 
+def reposition_cursor():
+    print("\033[0;0H")
+
+
 def delay(delay_time=0.):
     """
     Decorator delaying the execution of a function for a while.

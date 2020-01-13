@@ -3,3 +3,4 @@
 - use kaushal's input method (https://github.com/kaushalvivek/Bomberman/blob/master/bomberman.py  see userinput, getch.py, )
 - add sound to footsteps, background music, coin collection, missile launch (files present in music and sound directories)
 - how to add polymorphism?
+- trap ctrl-c, show game over msg
