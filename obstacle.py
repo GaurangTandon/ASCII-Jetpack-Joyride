@@ -43,11 +43,11 @@ class FireBeam(GenericFrameObject):
 class Magnet(GenericFrameObject):
     stringRepr = ["MM", "MM"]
     color = [Fore.RED, Back.WHITE]
-    LIFETIME = 5
+    LIFETIME = 10
     SPAWN_PROBABILITY = 0.01
 
     # magnetic attraction is modeled as Gm1m2/r^2 or Kq1q2/r^2
-    FORCE_NUMERATOR = 1
+    FORCE_NUMERATOR = 0.8
 
     def __init__(self):
         super().__init__()

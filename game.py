@@ -209,12 +209,13 @@ class Game():
             reposition_cursor()
             # clear_terminal_screen()
 
-            debugStr = f"[{self.player.x} {self.player.y}] [{self.player.x_vel} {self.player.y_vel}] [{self.player.x_acc} {self.player.y_acc}]" + " " * 100
+            debugStr = f"[{self.player.x} {self.player.y}] [{self.player.x_vel} {self.player.y_vel}] [{self.player.x_acc} {self.player.y_acc}]" + " " * 50
             # if config.DEBUG:
             #     with open("log", "a") as f:
             #         f.write(debugStr)
 
-            print(debugStr)
+            if config.DEBUG:
+                print(debugStr)
 
             self.draw()
             self.player.update(last_key_pressed)

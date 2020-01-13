@@ -50,8 +50,12 @@ class Player(GenericFrameObject):
             y_dist = self.game_obj.magnet_obj.y - self.y
             hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
 
-            self.x_acc = x_dist / hyp * num
-            self.y_acc = y_dist / hyp * num
+            if hyp != 0:
+                self.x_acc = x_dist / hyp * num
+                self.y_acc = y_dist / hyp * num
+            else:
+                self.x_acc = 0
+                self.y_acc = 0
         else:
             self.x_acc = 0
             self.y_acc = 0
