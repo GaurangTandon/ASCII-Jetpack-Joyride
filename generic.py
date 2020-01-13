@@ -74,7 +74,7 @@ class GenericFrameObject:
             or self.y >= config.FRAME_BOTTOM_BOUNDARY or self.y <= self.height
 
     def update(self):
-        self.x -= 1
+        self.x -= config.FRAME_MOVE_SPEED
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG
         return None

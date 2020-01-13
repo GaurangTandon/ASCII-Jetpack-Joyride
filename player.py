@@ -65,17 +65,21 @@ class Player(GenericFrameObject):
         if key != 'w':
             self.y_acc = 0
 
+        # y_vel is set to zero in first two cases
+        # such that player is still using jetpack
         if key == 'a':
             self.x_vel = -1
+            self.y_vel = 0
         elif key == 'd':
             self.x_vel = 1
+            self.y_vel = 0
         elif key == 'w':
             # TODO: why do I need this initial push?
             if self.y_acc == 0:
                 self.y_vel -= 0.001
 
             # TODO: gotta fix this, feels janky
-            self.y_acc = -0.12
+            self.y_acc = -0.15
         elif key == ' ':
             return self.fire_laser()
         else:

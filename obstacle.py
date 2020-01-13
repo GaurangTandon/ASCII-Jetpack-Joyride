@@ -33,12 +33,12 @@ class FireBeam(GenericFrameObject):
             info["coord"] = [y_coord, x_coord]
             info["size"] = [1, 1]
             x_coord += c_x
-            y_coord += c_y
+            y_coord -= c_y
             objs.append(info)
 
         return objs
 
 
 class Magnet(GenericFrameObject):
-    stringRepr = [["MM"], ["MM"]]
+    stringRepr = ["MM", "MM"]
     color = [Fore.RED, Back.WHITE]
