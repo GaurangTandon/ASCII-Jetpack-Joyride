@@ -4,7 +4,7 @@ import numpy as np
 from colorama import init as coloramaInit, Fore, Back, Style
 from player import Player
 from kbhit import KBHit
-from util import clear_terminal_screen, NonBlockingInput, get_key_pressed, reposition_cursor
+from util import clear_terminal_screen, get_key_pressed, reposition_cursor
 import config
 from config import GRID_CONSTS, FRAME_RATE
 from ground import Ground
@@ -136,7 +136,7 @@ class Game():
         list_of_idxs_to_delete.reverse()
 
         for i in list_of_idxs_to_delete:
-            if self.rendered_objects[i].cleanup() == True:
+            if self.rendered_objects[i].cleanup():
                 self.magnet_obj = None
             self.rendered_objects.pop(i)
 
@@ -194,9 +194,9 @@ class Game():
                     self.rendered_objects.append(FireBeam())
 
             if cin == ' ':
-                self.rendered_objects.append(self.fire_laser())
-            else:
-                return cin
+                self.rendered_objects.append(self.player.fire_laser())
+
+        return cin
 
     def loop(self):
         self.game_status = 1
@@ -209,7 +209,9 @@ class Game():
             reposition_cursor()
             # clear_terminal_screen()
 
-            debugStr = f"[{self.player.x} {self.player.y}] [{self.player.x_vel} {self.player.y_vel}] [{self.player.x_acc} {self.player.y_acc}]" + " " * 50
+            debugStr = f"[{self.player.x} {self.player.y}] \
+[{self.player.x_vel} {self.player.y_vel}] \
+[{self.player.x_acc} {self.player.y_acc}]" + " " * 50
             # if config.DEBUG:
             #     with open("log", "a") as f:
             #         f.write(debugStr)
