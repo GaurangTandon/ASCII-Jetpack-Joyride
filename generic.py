@@ -75,6 +75,7 @@ class GenericFrameObject:
 
     def update(self):
         self.x -= config.FRAME_MOVE_SPEED
+
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG
         return None

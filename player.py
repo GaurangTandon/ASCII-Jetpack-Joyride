@@ -1,6 +1,8 @@
+from math import sqrt
 from colorama import Fore
 import config
 from generic import GenericFrameObject
+from obstacle import Magnet
 
 
 class Player(GenericFrameObject):
@@ -27,7 +29,10 @@ class Player(GenericFrameObject):
         self.x_vel = 0
         self.game_obj = obj_game
 
+        self.x_acc = 0
         self.y_acc = 0
+
+        self.w_key = False
 
         self.lifes = 3
         self.health = 100
@@ -42,8 +47,19 @@ class Player(GenericFrameObject):
         self.y_vel += config.GRAVITY_ACC
         self.y_vel += self.y_acc
 
-        # self.x = round(self.x)
-        # self.y = round(self.y)
+        if self.game_obj.magnet_obj:
+            num = Magnet.FORCE_NUMERATOR
+            x_dist = self.game_obj.magnet_obj.x - self.x
+            y_dist = self.game_obj.magnet_obj.y - self.y
+            hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
+            self.x_acc = x_dist / hyp * num
+            self.y_acc = y_dist / hyp * num
+        else:
+            self.x_acc = 0
+            self.y_acc = 0
+
+        if self.w_key:
+            self.y_acc += 0.15
 
         self.check_bounds()
 
@@ -63,7 +79,7 @@ class Player(GenericFrameObject):
             self.x_vel = 0
 
         if key != 'w':
-            self.y_acc = 0
+            self.w_key = False
 
         # y_vel is set to zero in first two cases
         # such that player is still using jetpack
@@ -74,16 +90,9 @@ class Player(GenericFrameObject):
             self.x_vel = 1
             self.y_vel = 0
         elif key == 'w':
-            # TODO: why do I need this initial push?
-            if self.y_acc == 0:
-                self.y_vel -= 0.001
-
-            # TODO: gotta fix this, feels janky
-            self.y_acc = -0.15
+            self.w_key = True
         elif key == ' ':
             return self.fire_laser()
-        else:
-            assert False
 
         return None
 
@@ -133,3 +142,5 @@ class Laser(GenericFrameObject):
 
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG
+
+        return None

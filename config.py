@@ -22,6 +22,7 @@ COIN_VALUE = 1
 
 FIREBEAM_LENGTH = 5
 
+DEBUG = True
 
 GRID_CONSTS = {
     "player": 1,

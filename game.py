@@ -75,14 +75,13 @@ class Game():
         self.rendered_objects.append(self.player)
         self.rendered_objects.append(self.ground)
 
-        self.random_spawning_objects = [FireBeam, Magnet, CoinGroup]
-
         self.game_length = 120
         self.end_time = time.time() + self.game_length
 
         self.next_spawn_point = 0
 
         self.has_boss_spawned = False
+        self.magnet_obj = None
 
         self.keys = NonBlockingInput()
         clear_terminal_screen()
@@ -135,21 +134,28 @@ class Game():
         list_of_idxs_to_delete.reverse()
 
         for i in list_of_idxs_to_delete:
-            self.rendered_objects[i].cleanup()
+            if self.rendered_objects[i].cleanup() == True:
+                self.magnet_obj = None
             self.rendered_objects.pop(i)
 
         # make spawning random somehow
         # make two slots in y axis as well
-        if self.player.x + config.FRAME_WIDTH > self.next_spawn_point:
-            for random_spawn in self.random_spawning_objects:
-                threshold = random_spawn.spawn_probability()
+        if not config.DEBUG:
+            if self.player.x + config.FRAME_WIDTH > self.next_spawn_point:
+                for random_spawn in [FireBeam,  CoinGroup]:
+                    threshold = random_spawn.spawn_probability()
 
-                if random.random() < threshold:
-                    obj = random_spawn()
-                    self.rendered_objects.append(obj)
-                    self.next_spawn_point = max(
-                        self.next_spawn_point, obj.x + obj.width)
-                    break
+                    if random.random() < threshold:
+                        obj = random_spawn()
+                        self.rendered_objects.append(obj)
+                        self.next_spawn_point = max(
+                            self.next_spawn_point, obj.x + obj.width)
+                        break
+
+            if not self.magnet_obj:
+                if random.random() < Magnet.SPAWN_PROBABILITY:
+                    self.magnet_obj = Magnet()
+                    self.rendered_objects.append(self.magnet_obj)
 
         self.player.check_bounds()
 
@@ -175,6 +181,14 @@ class Game():
         if cin == -1:
             self.terminate()
         elif cin != 0:
+            print(cin)
+            if cin in '1234' and config.DEBUG:
+                if cin == '1':
+                    self.rendered_objects.append(CoinGroup())
+                if cin == '2':
+                    self.rendered_objects.append(Magnet())
+                if cin == '3':
+                    self.rendered_objects.append(FireBeam())
             obj = self.player.update_key(cin)
             if obj:
                 self.rendered_objects.append(obj)
