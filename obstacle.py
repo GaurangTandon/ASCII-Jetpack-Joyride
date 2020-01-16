@@ -1,6 +1,6 @@
+import time
 import random
 from colorama import Fore, Back
-from util import Timer
 import config
 from generic import GenericFrameObject
 
@@ -65,14 +65,11 @@ class Magnet(GenericFrameObject):
             3 * config.FRAME_HEIGHT // 4 - 5, 3 * config.FRAME_HEIGHT // 4 + 5)
         self.y = top_half if random.random() < 0.5 else bottom_half
 
-        timer = Timer()
-        timer.set_timeout(self.destroy, self.LIFETIME)
+        self.creation_time = time.time()
 
     def update(self):
-        return None if self.exists else GenericFrameObject.DEAD_FLAG
+        time_spent = time.time() - self.creation_time
+        return None if time_spent < self.LIFETIME else GenericFrameObject.DEAD_FLAG
 
     def cleanup(self):
         return True
-
-    def destroy(self):
-        self.exists = False
