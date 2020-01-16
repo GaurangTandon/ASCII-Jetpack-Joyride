@@ -80,7 +80,7 @@ class Game():
 
         self.next_spawn_point = 0
 
-        self.has_boss_spawned = False
+        self.boss_obj = None
         self.magnet_obj = None
 
         self.keys = KBHit()
@@ -99,7 +99,7 @@ class Game():
             f"Time remaining \u23f1 {self.get_time_remaining()} seconds{padding}")
         print(f"Lives remaining \u2764 {self.player.lifes}{padding}")
         print(f"Score {self.score}{padding}")
-        if not self.has_boss_spawned:
+        if not self.boss_obj:
             print(
                 f"Distance to boss {Boss.X_THRESHOLD - self.player.x}{padding}")
         else:
@@ -161,7 +161,7 @@ class Game():
             # there should be no magnet if there is a boss
             # since otherwise it is almost impossible to win
             # TODO: see if necessary
-            if not self.magnet_obj and not self.has_boss_spawned:
+            if not self.magnet_obj and not self.boss_obj:
                 if random.random() < Magnet.SPAWN_PROBABILITY:
                     self.magnet_obj = Magnet()
                     self.rendered_objects.append(self.magnet_obj)
@@ -221,9 +221,9 @@ class Game():
             self.update()
             self.player.update_overriden(last_key_pressed)
 
-            if not self.has_boss_spawned and self.player.x >= Boss.X_THRESHOLD:
-                self.has_boss_spawned = True
-                self.rendered_objects.append(Boss(self))
+            if not self.boss_obj and self.player.x >= Boss.X_THRESHOLD:
+                self.boss_obj = Boss(self)
+                self.rendered_objects.append(self.boss_obj)
                 # TODO: see other comment
                 if self.magnet_obj:
                     self.magnet_obj.destroy()

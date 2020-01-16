@@ -169,6 +169,7 @@ class Laser(GenericFrameObject):
     stringRepr = ["==>"]
     color = [Fore.RED, None]
     TYPE = "laser"
+    BOSS_DAMAGE = 10
 
     def __init__(self, x, y, game_obj):
         super().__init__()
@@ -182,18 +183,26 @@ class Laser(GenericFrameObject):
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG
 
+        list_to_delete = []
+        i = -1
         for obj in self.game_obj.rendered_objects:
+            i += 1
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
 
+            to_delete = False
+
             if obj.TYPE == "boss":
-                pass
-            elif obj.TYPE == "bosslaser":
-                # destroy both
-                pass
-            elif obj.TYPE == "firebeam":
-                # destroy both
-                pass
+                self.game_obj.boss_obj.health -= self.BOSS_DAMAGE
+            elif obj.TYPE in ["bosslaser", "firebeam"]:
+                to_delete = True
+
+            if to_delete:
+                list_to_delete.append(i)
+
+        list_to_delete.reverse()
+        for j in list_to_delete:
+            self.game_obj.rendered_objects.pop(j)
 
         return None

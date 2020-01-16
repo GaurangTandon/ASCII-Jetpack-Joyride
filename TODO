@@ -5,4 +5,4 @@
 - trap ctrl-c, show game over msg
 - fix all TODO comments
 - screen gets fringed when fire spawns on the end
--
+- add bullet rate limiting
