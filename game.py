@@ -17,38 +17,9 @@ from boss import Boss
 class Game():
     _refresh_time = 1 / FRAME_RATE
     # TODO: improve rendering with multiple parts of the same object having different colors
-    COLOR_MAP = {
-        "player": [Fore.RED, None],
-        "background": [None, Back.BLUE],
-        "ground": [None, Back.GREEN],
-        "coin": [Fore.YELLOW, None],
-        "firebeam": [Fore.YELLOW, Back.RED],
-        "magnet": [Fore.RED, Back.WHITE],
-        "playerlaser": [Fore.RED, None]
-    }
-
-    SYMBOL_MAP = {
-        "player": "p",
-        "background": " ",
-        "ground": " ",
-        "coin": "C",
-        "firebeam": "f",
-        "magnet": "m",
-        "playerlaser": "l"
-    }
-
-    SYMBOL_COLOR_MAP = {}
-    SYMBOL_PAINT_MAP = {}
-
-    def init_grid_consts(self):
-        assert self.COLOR_MAP.keys() == GRID_CONSTS.keys()
-        for symbol, color in self.COLOR_MAP.items():
-            self.SYMBOL_COLOR_MAP[GRID_CONSTS[symbol]] = color
-
-        for symbol, paint in self.SYMBOL_MAP.items():
-            self.SYMBOL_PAINT_MAP[GRID_CONSTS[symbol]] = paint
 
     # info bounding indices are inclusive
+
     def draw_in_range(self, info, obj):
         to_row = round(info["coord"][0])
         from_row = to_row - info["size"][0] + 1
@@ -62,7 +33,6 @@ class Game():
     def __init__(self):
         coloramaInit()
 
-        self.init_grid_consts()
         self.score = 0
 
         self.grid = [[]]

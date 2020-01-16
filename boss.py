@@ -48,8 +48,6 @@ class Boss(GenericFrameObject):
                 self.game_obj.player.y else 1)
 
     def fire_gun(self):
-        # TODO: fix velocity to be better directed to the player
-
         self.game_obj.rendered_objects.append(
             BossLaser(self.x, self.y - self.height / 2, self.game_obj))
 
@@ -96,6 +94,9 @@ class BossLaser(GenericFrameObject):
         shouldFollow = 1 if random.random() <= 0.9 else -1
 
         self.y += round(self.vel_y * self._direction() * shouldFollow)
+        # do not fall off-bounds
+        self.y = max(self.y, self.height - 1)
+        self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
 
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG

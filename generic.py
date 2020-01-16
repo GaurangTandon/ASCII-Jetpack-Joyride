@@ -80,8 +80,8 @@ class GenericFrameObject:
             return 0.1
 
     def exceeds_bounds(self):
-        return self.x < 0 or self.x + self.width >= config.FRAME_WIDTH \
-            or self.y >= config.FRAME_BOTTOM_BOUNDARY or self.y <= self.height
+        return self.x < 0 or self.x + self.width > config.FRAME_WIDTH \
+            or self.y > config.FRAME_BOTTOM_BOUNDARY or self.y < self.height
 
     def update(self):
         self.x -= config.FRAME_MOVE_SPEED
