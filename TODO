@@ -1,8 +1,6 @@
-- improve pylint rating to at least 8/10
+- improve pylint rating to at least 9/10
 - use private variables correctly
 - add sound to footsteps, background music, coin collection, missile launch (files present in music and sound directories)
 - how to add polymorphism?
-- trap ctrl-c, show game over msg
 - fix all TODO comments
 - screen gets fringed when fire spawns on the end
-- add bullet rate limiting

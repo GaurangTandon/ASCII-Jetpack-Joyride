@@ -56,48 +56,9 @@ class KBHit:
 
         return sys.stdin.read(1)
 
-    # TODO: remove in the end if not needed
-    # def getarrow(self):
-    #     ''' Returns an arrow-key code after kbhit() has been called. Codes are
-    #     0 : up
-    #     1 : right
-    #     2 : down
-    #     3 : left
-    #     Should not be called in the same program as getch().
-    #     '''
-
-    #     if os.name == 'nt':
-    #         msvcrt.getch()  # skip 0xE0
-    #         c = msvcrt.getch()
-    #         vals = [72, 77, 80, 75]
-
-    #     else:
-    #     c = sys.stdin.read(3)[2]
-    #     vals = [65, 67, 66, 68]
-
-    #     return vals.index(ord(c.decode('utf-8')))
-
     @staticmethod
     def kbhit():
         ''' Returns True if keyboard character was hit, False otherwise.
         '''
         drr, _, _ = select([sys.stdin], [], [], 0)
         return drr != []
-
-
-#  Test
-# TODO: remove in the end
-# if __name__ == "__main__":
-
-#     kb = KBHit()
-
-#     print('Hit any key, or ESC to exit')
-
-#     while True:
-#         if kb.kbhit():
-#             c = kb.getch()
-#             if ord(c) == 27:  # ESC
-#                 break
-#             print(c)
-
-#     kb.set_normal_term()

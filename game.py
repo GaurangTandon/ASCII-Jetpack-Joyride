@@ -200,7 +200,7 @@ class Game():
             if not self.boss_obj and self.player.x >= Boss.X_THRESHOLD:
                 self.boss_obj = Boss(self)
                 self.rendered_objects.append(self.boss_obj)
-                # TODO: see other comment
+                # TODO: see other TODO comment
                 if self.magnet_obj:
                     self.magnet_obj.destroy()
 
