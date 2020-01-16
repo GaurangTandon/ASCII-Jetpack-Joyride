@@ -24,6 +24,7 @@ class Player(GenericFrameObject):
     X_IMPULSE = 1
     Y_IMPULSE = 1
     TYPE = "player"
+    MAX_BULLETS = 10
 
     def __init__(self, obj_game):
         super().__init__()
@@ -42,6 +43,7 @@ class Player(GenericFrameObject):
         self.y_acc = 0
         self.x_acc = 0
 
+        self.current_bullets = 0
         self.w_key = False
 
         self.lifes = 3
@@ -104,7 +106,11 @@ class Player(GenericFrameObject):
         self.check_bounds()
 
     def fire_laser(self):
+        if self.current_bullets >= self.MAX_BULLETS:
+            return None
+
         laser = Laser(self.x, self._get_middle(), self.game_obj)
+        self.current_bullets += 1
 
         return laser
 
@@ -181,28 +187,37 @@ class Laser(GenericFrameObject):
         self.x += config.LASER_VEL
 
         if self.exceeds_bounds():
+            self.game_obj.player.current_bullets -= 1
             return GenericFrameObject.DEAD_FLAG
 
-        list_to_delete = []
+        # bullet can only delete one object
+        to_delete = None
         i = -1
+        delete_self = False
+
         for obj in self.game_obj.rendered_objects:
             i += 1
+
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
 
-            to_delete = False
-
             if obj.TYPE == "boss":
                 self.game_obj.boss_obj.health -= self.BOSS_DAMAGE
+                delete_self = True
+                break
             elif obj.TYPE in ["bosslaser", "firebeam"]:
-                to_delete = True
+                to_delete = i
+                delete_self = True
+                break
 
-            if to_delete:
-                list_to_delete.append(i)
+        if to_delete:
+            # todo: this can lead to undefined behavior since
+            # we are popping objects while looping over the list
+            self.game_obj.rendered_objects.pop(to_delete)
 
-        list_to_delete.reverse()
-        for j in list_to_delete:
-            self.game_obj.rendered_objects.pop(j)
+        if delete_self:
+            self.game_obj.player.current_bullets -= 1
+            return GenericFrameObject.DEAD_FLAG
 
         return None

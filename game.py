@@ -199,7 +199,9 @@ class Game():
                     self.rendered_objects.append(FireBeam())
 
             if cin == ' ':
-                self.rendered_objects.append(self.player.fire_laser())
+                laser = self.player.fire_laser()
+                if laser:
+                    self.rendered_objects.append(laser)
 
         return cin
 

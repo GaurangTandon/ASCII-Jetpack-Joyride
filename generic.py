@@ -32,12 +32,12 @@ def mapper(grid, ht, wt, color):
 
 
 class GenericFrameObject:
-    currentlyActive = 0
+    currently_active = 0
     DEAD_FLAG = 1
 
     def __init__(self):
         # this technique has been verified on this repl https://repl.it/@bountyhedge/mvce
-        self.__class__.currentlyActive += 1
+        self.__class__.currently_active += 1
 
         self.generate_draw_obj()
 
@@ -58,7 +58,7 @@ class GenericFrameObject:
             pass
 
     def cleanup(self):
-        self.__class__.currentlyActive -= 1
+        self.__class__.currently_active -= 1
 
     def draw(self):
         return [{
@@ -69,7 +69,7 @@ class GenericFrameObject:
     @classmethod
     def spawn_probability(self):
         try:
-            c_a = self.currentlyActive
+            c_a = self.currently_active
 
             # TODO: improve random spawning, still not nice
             ca2 = c_a*c_a
