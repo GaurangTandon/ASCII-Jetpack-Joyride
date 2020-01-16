@@ -56,7 +56,6 @@ class Game():
         from_col = round(info["coord"][1])
         to_col = from_col + info["size"][1] - 1
 
-        # print(info, obj)
         self.grid[from_row: to_row + 1,
                   from_col:to_col + 1] = obj
 

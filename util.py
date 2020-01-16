@@ -22,6 +22,18 @@ def reposition_cursor():
     print("\033[0;0H")
 
 
+def tiler(elm, row, col):
+    res = []
+
+    for r in range(row):
+        res2 = []
+        for c in range(col):
+            res2.append(elm)
+        res.append(res2)
+
+    return res[0] if row == 1 or res
+
+
 def delay(delay_time=0.):
     """
     Decorator delaying the execution of a function for a while.

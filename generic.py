@@ -2,28 +2,31 @@ import random
 from colorama import Back, Fore
 import numpy as np
 import config
+from util import tiler
 
 
-def mapper(grid, color):
+def mapper(grid, ht, wt, color):
     res = np.array([])
 
-    for row in grid:
-        for col in row:
+    for row in range(ht):
+        for col in range(wt):
             curr_str = ""
-            if color[0]:
-                curr_str += color[0]
+            colorElm = color[row][col]
+
+            if colorElm[0]:
+                curr_str += colorElm[0]
             else:
                 curr_str += Fore.BLACK
 
-            if color[1]:
-                curr_str += color[1]
+            if colorElm[1]:
+                curr_str += colorElm[1]
             else:
                 curr_str += Back.BLUE
 
-            curr_str += col
+            curr_str += grid[row][col]
             res = np.append(res, curr_str)
 
-    res = res.reshape((len(grid), len(grid[0])))
+    res = res.reshape((ht, wt))
 
     return res
 
@@ -36,16 +39,23 @@ class GenericFrameObject:
         # this technique has been verified on this repl https://repl.it/@bountyhedge/mvce
         self.__class__.currentlyActive += 1
 
-        try:
-            self.__class__.height = len(self.__class__.stringRepr)
-            self.__class__.width = len(self.__class__.stringRepr[0])
-
-            self.__class__.obj = mapper(
-                self.__class__.stringRepr, self.__class__.color)
-        except AttributeError:
-            pass
+        self.generate_draw_obj()
 
         self.x, self.y = self.get_spawn_coordinates()
+
+    def generate_draw_obj(self):
+        try:
+            self.__class__.height = ht = len(self.__class__.stringRepr)
+            self.__class__.width = wt = len(self.__class__.stringRepr[0])
+
+            if len(self.__class__.color) != ht or not isinstance(self.__class__.color[0], list) or len(self.__class__.color[0]) != wt:
+                self.__class__.color = tiler(
+                    self.__class__.color, ht, wt)
+
+            self.__class__.obj = mapper(
+                self.__class__.stringRepr, ht, wt, self.__class__.color)
+        except AttributeError:
+            pass
 
     def cleanup(self):
         self.__class__.currentlyActive -= 1

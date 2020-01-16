@@ -1,5 +1,7 @@
+from util import tiler
+import numpy as np
 from math import sqrt
-from colorama import Fore
+from colorama import Fore, Back
 import config
 from generic import GenericFrameObject
 from obstacle import Magnet
@@ -16,7 +18,9 @@ class Player(GenericFrameObject):
         "----",
         "||||",
     ]
+
     color = [Fore.RED, None]
+
     DRAG_CONSTANT = 0.1
     X_IMPULSE = 1
     Y_IMPULSE = 1
@@ -66,6 +70,9 @@ class Player(GenericFrameObject):
             self.x_acc = 0
             self.y_acc = 0
 
+        self.__class__.stringRepr[-1] = "||||"
+        self.__class__.color[-1] = tiler([Fore.RED, None], 1, self.width)
+
         # keypress gives an impulse, not an accn
         if last_key_pressed == 'w':
             self.y_vel -= self.Y_IMPULSE
@@ -73,14 +80,22 @@ class Player(GenericFrameObject):
             self.y_vel += self.Y_IMPULSE
         elif last_key_pressed == 'a':
             self.x_vel -= self.X_IMPULSE
+            self.__class__.stringRepr[-1] = "////"
         elif last_key_pressed == 'd':
             self.x_vel += self.X_IMPULSE
+            self.__class__.stringRepr[-1] = "\\\\\\\\"
 
+        if last_key_pressed == 'w' or last_key_pressed == 's':
+            self.__class__.color[-1] = tiler([Fore.RED,
+                                              Back.MAGENTA], 1, self.width)
+
+        self.generate_draw_obj()
         self.y_vel += config.GRAVITY_ACC
         self.y_vel += self.y_acc
         self.x_vel += self.x_acc
-        self.x_vel += (-1 if self.x_vel > 0 else 1) * min(self.DRAG_CONSTANT * self.x_vel *
-                                                          self.x_vel, abs(self.x_vel))
+        drag_value = min(self.DRAG_CONSTANT * self.x_vel *
+                         self.x_vel, abs(self.x_vel))
+        self.x_vel += (-1 if self.x_vel > 0 else 1) * drag_value
 
         self.x += round(self.x_vel)
         self.y += round(self.y_vel)
