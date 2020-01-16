@@ -26,7 +26,6 @@ class Game():
     """
     _refresh_time = 1 / FRAME_RATE
     GAME_LENGTH = 120
-    # TODO: improve rendering with multiple parts of the same object having different colors
 
     # info bounding indices are inclusive
 
@@ -85,7 +84,6 @@ class Game():
             print(f"Boss health: {self.boss_obj.health}{padding}")
 
     def _draw(self):
-        # TODO: can we fix this to only repaint pixels that changed
         self.grid = np.array([[Fore.WHITE + Back.BLUE + " "
                                for _ in range(config.FRAME_WIDTH)]
                               for _ in range(config.FRAME_HEIGHT)])

@@ -4,7 +4,6 @@ Constants related to the frame and the game
 
 GROUND_HEIGHT = 2
 
-# TODO: should be based on terminal height
 FRAME_WIDTH = 170
 FRAME_HEIGHT = 40
 FRAME_X_VELOCITY = 10

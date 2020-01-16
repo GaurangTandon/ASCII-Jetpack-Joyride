@@ -127,7 +127,6 @@ class GenericFrameObject:
         """
         return config.FRAME_SPAWN_X, random.randint(self.height, config.FRAME_BOTTOM_BOUNDARY)
 
-    # TODO: is this private?
     @staticmethod
     def _generate_coords(obj):
         points = set([])
