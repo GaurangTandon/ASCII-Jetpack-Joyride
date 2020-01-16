@@ -45,19 +45,19 @@ class GenericFrameObject:
         # this technique has been verified on this repl https://repl.it/@bountyhedge/mvce
         self.__class__.currently_active += 1
 
-        self.generate_draw_obj()
+        self._generate_draw_obj()
 
         self.x, self.y = self.get_spawn_coordinates()
 
-    def generate_draw_obj(self):
+    def _generate_draw_obj(self):
         try:
             self.__class__.height = hgt = len(self.__class__.stringRepr)
             self.__class__.width = wdt = len(self.__class__.stringRepr[0])
 
             cond1 = len(self.__class__.color) != hgt
-            cond2 = not isinstance(self.__class__.color[0], list)
-            cond3 = len(self.__class__.color[0]) != wdt
-            if cond1 or cond2 or cond3:
+            cond2 = not isinstance(self.__class__.color[0], list) or len(
+                self.__class__.color[0]) != wdt
+            if cond1 or cond2:
                 self.__class__.color = tiler(
                     self.__class__.color, hgt, wdt, True)
 

@@ -92,7 +92,7 @@ class Player(GenericFrameObject):
             self.__class__.color[-1] = tiler([Fore.RED,
                                               Back.MAGENTA], 1, self.width)
 
-        self.generate_draw_obj()
+        self._generate_draw_obj()
         self.y_vel += config.GRAVITY_ACC
         self.y_vel += self.y_acc
         self.x_vel += self.x_acc
