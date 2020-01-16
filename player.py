@@ -49,6 +49,7 @@ class Player(GenericFrameObject):
 
     def update(self, last_key_pressed):
         if self.game_obj.magnet_obj:
+            # TODO: messed up
             num = Magnet.FORCE_CONSTANT
             x_dist = self.game_obj.magnet_obj.x - self.x
             y_dist = self.game_obj.magnet_obj.y - self.y
@@ -120,6 +121,8 @@ class Player(GenericFrameObject):
             self.x = config.FRAME_LEFT_BOUNDARY
             self.x_vel = 0
 
+        listOfIdxsToDelete = []
+        i = 0
         for obj in self.game_obj.rendered_objects:
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
@@ -131,10 +134,19 @@ class Player(GenericFrameObject):
                     # play sound
                     # remove that point from object body
                     pass
+                listOfIdxsToDelete.append(i)
             elif obj.TYPE == "firebeam":
                 self.health -= self.FIREBEAM_DAMAGE
+                listOfIdxsToDelete.append(i)
             elif obj.TYPE == "bosslaser":
                 self.health -= self.BOSS_LASER_DAMAGE
+                listOfIdxsToDelete.append(i)
+
+            i += 1
+
+        listOfIdxsToDelete.reverse()
+        for j in listOfIdxsToDelete:
+            self.game_obj.rendered_objects.pop(j)
 
         if self.lifes == 0:
             self.dead()
