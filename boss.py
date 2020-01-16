@@ -1,7 +1,7 @@
 from math import sqrt
 import time
 from colorama import Fore, Back
-
+import random
 import config
 from generic import GenericFrameObject
 
@@ -49,22 +49,9 @@ class Boss(GenericFrameObject):
 
     def fire_gun(self):
         # TODO: fix velocity to be better directed to the player
-        x_dist = abs(self.x - self.game_obj.player.x)
-        y_dist = abs(self.y - self.game_obj.player.y)
-        hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
-        vel = 2
-
-        velx = vel * x_dist / hyp
-        vely = vel * y_dist / hyp
-
-        # y_dist appears lesser than it actually is
-        # so we need to increase the vely otherwise
-        y_scaling = 2.01
-        vely *= self._direction() * y_scaling
-        # print(vely, y_dist, x_dist)
 
         self.game_obj.rendered_objects.append(
-            BossLaser(vely, -velx, self.x, self.y - self.height / 2))
+            BossLaser(self.x, self.y - self.height / 2, self.game_obj))
 
         self.last_fired = time.time()
 
@@ -89,17 +76,26 @@ class BossLaser(GenericFrameObject):
     color = [Fore.WHITE, Back.BLACK]
     TYPE = "bosslaser"
 
-    def __init__(self, initvy, initvx, initX, initY):
+    def _direction(self):
+        return (-1 if self.y > self.game_obj.player.y else 0 if self.y ==
+                self.game_obj.player.y else 1)
+
+    def __init__(self, initX, initY, game_obj):
         super().__init__()
 
+        self.game_obj = game_obj
         self.y = initY
         self.x = initX
-        self.vel_y = initvy
-        self.vel_x = initvx
+        self.vel_y = 1
+        self.vel_x = -2
 
     def update(self):
         self.x += round(self.vel_x)
-        self.y += round(self.vel_y)
+
+        # with a probability, do not follow the player
+        shouldFollow = 1 if random.random() <= 0.9 else -1
+
+        self.y += round(self.vel_y * self._direction() * shouldFollow)
 
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG
