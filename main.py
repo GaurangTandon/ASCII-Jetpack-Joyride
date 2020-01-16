@@ -1,3 +1,7 @@
+"""
+This thing runs everything else
+"""
+
 import signal
 import os
 from game import Game

@@ -1,3 +1,7 @@
+"""
+Implementation of magnet and firebeam
+"""
+
 import time
 import random
 from colorama import Fore, Back
@@ -6,6 +10,9 @@ from generic import GenericFrameObject
 
 
 class FireBeam(GenericFrameObject):
+    """
+    Your usual fire!!
+    """
     stringRepr = ["🔥"]
     color = [Fore.RED, None]
     TYPE = "firebeam"
@@ -42,6 +49,9 @@ class FireBeam(GenericFrameObject):
 
 
 class Magnet(GenericFrameObject):
+    """
+    That which won't leave you alone
+    """
     stringRepr = ["MM", "MM"]
     color = [Fore.RED, Back.WHITE]
     LIFETIME = 10
@@ -69,7 +79,13 @@ class Magnet(GenericFrameObject):
 
     def update(self):
         time_spent = time.time() - self.creation_time
-        return None if time_spent < self.LIFETIME else GenericFrameObject.DEAD_FLAG
+        return None if time_spent < self.LIFETIME and self.exists else GenericFrameObject.DEAD_FLAG
+
+    def destroy(self):
+        """
+        Destroy self, called by Game in extreme cases
+        """
+        self.exists = False
 
     def cleanup(self):
         return True

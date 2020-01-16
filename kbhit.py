@@ -24,6 +24,9 @@ from select import select
 
 
 class KBHit:
+    """
+    To take input, whoever wrote this is awesome
+    """
 
     def __init__(self):
         '''Creates a KBHit object that you can call to do various keyboard things.

@@ -6,8 +6,6 @@ Utility functions:
 """
 
 import subprocess as sp
-import threading
-from functools import wraps
 
 
 def clear_terminal_screen():
@@ -40,6 +38,9 @@ def tiler(elm, row, col, send_matrix=False):
 
 
 def get_key_pressed(keyin):
+    """
+    wrapper for returning one of the intended keys
+    """
     keyin = keyin.lower()
 
     if not keyin in ('q', ' ', 'w', 'a', 's', 'd', '1', '2', '3', '4'):

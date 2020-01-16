@@ -8,11 +8,17 @@ import config
 from util import tiler
 
 
-def mapper(grid, hgt, wdt, color):
+def mapper(grid, height, width, color):
+    """
+    Maps a color array to the grid of height and width
+    """
+    assert len(grid[0]) == len(color[0])
+    assert len(grid) == len(color)
+
     res = np.array([])
 
-    for row in range(hgt):
-        for col in range(wdt):
+    for row in range(height):
+        for col in range(width):
             curr_str = ""
             color_elm = color[row][col]
 
@@ -29,7 +35,7 @@ def mapper(grid, hgt, wdt, color):
             curr_str += grid[row][col]
             res = np.append(res, curr_str)
 
-    res = res.reshape((hgt, wdt))
+    res = res.reshape((height, width))
 
     return res
 
@@ -67,9 +73,15 @@ class GenericFrameObject:
             pass
 
     def cleanup(self):
+        """
+        Any changes you may want to undo before getting destroyed
+        """
         self.__class__.currently_active -= 1
 
     def draw(self):
+        """
+        Returns a dictionary containing sufficient info to draw
+        """
         return [{
             "coord": [self.y, self.x],
             "size": [self.height, self.width]
@@ -77,6 +89,10 @@ class GenericFrameObject:
 
     @classmethod
     def spawn_probability(cls):
+        """
+        Returns a fraction denoting probability with which
+        an object of this class should be spawned
+        """
         try:
             c_a = cls.currently_active
 
@@ -89,10 +105,16 @@ class GenericFrameObject:
             return 0.1
 
     def exceeds_bounds(self):
+        """
+        If this object exceeds top or bottom bounds of the frame
+        """
         return self.x < 0 or self.x + self.width > config.FRAME_WIDTH \
             or self.y > config.FRAME_BOTTOM_BOUNDARY or self.y < self.height
 
     def update(self):
+        """
+        Generic update function for moving things left
+        """
         self.x -= config.FRAME_MOVE_SPEED
 
         if self.exceeds_bounds():
@@ -100,6 +122,9 @@ class GenericFrameObject:
         return None
 
     def get_spawn_coordinates(self):
+        """
+        Randomly return a valid spawn coordinate for things
+        """
         return config.FRAME_SPAWN_X, random.randint(self.height, config.FRAME_BOTTOM_BOUNDARY)
 
     # TODO: is this private?
@@ -119,6 +144,9 @@ class GenericFrameObject:
 
     # returns set of coordinates common to both objects
     def check_collision(self, obj):
+        """
+        Returns a set of points at which self and obj intersect
+        """
         coords_self = GenericFrameObject._generate_coords(self)
         coords_obj = GenericFrameObject._generate_coords(obj)
 

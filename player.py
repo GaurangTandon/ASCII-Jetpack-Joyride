@@ -1,3 +1,7 @@
+"""
+Module for the player and his/her laser
+"""
+
 from math import sqrt
 from colorama import Fore, Back
 from util import tiler
@@ -7,6 +11,9 @@ from obstacle import Magnet
 
 
 class Player(GenericFrameObject):
+    """
+    Our hero
+    """
     startYCoord = config.FRAME_HEIGHT - config.GROUND_HEIGHT - 1
     # maintain rectangular shapes for ease of collision detection
     stringRepr = [
@@ -51,10 +58,13 @@ class Player(GenericFrameObject):
     def _get_middle(self):
         return self.y - self.height / 2
 
-    def get_top(self):
+    def _get_top(self):
         return self.y - self.height + 1
 
     def update_overriden(self, last_key_pressed):
+        """
+        Called by Game to update the player stuff
+        """
         if self.game_obj.magnet_obj:
             # TODO: messed up
             num = Magnet.FORCE_CONSTANT
@@ -103,9 +113,12 @@ class Player(GenericFrameObject):
         self.x += round(self.x_vel)
         self.y += round(self.y_vel)
 
-        self.check_bounds()
+        self._check_bounds()
 
     def fire_laser(self):
+        """
+        Called by Game when user presses Space
+        """
         if self.current_bullets >= self.MAX_BULLETS:
             return None
 
@@ -114,7 +127,7 @@ class Player(GenericFrameObject):
 
         return laser
 
-    def check_bounds(self):
+    def _check_bounds(self):
         touched_ceil = self.y <= self.height - 1
         touched_bottom = self.y >= self.startYCoord
 
@@ -171,6 +184,9 @@ class Player(GenericFrameObject):
 
 
 class Laser(GenericFrameObject):
+    """
+    Laser fired by our hero
+    """
     stringRepr = ["==>"]
     color = [Fore.RED, None]
     TYPE = "laser"
@@ -183,6 +199,9 @@ class Laser(GenericFrameObject):
         self.game_obj = game_obj
 
     def update(self):
+        """
+        Override of the generic update function
+        """
         self.x += config.LASER_VEL
 
         if self.exceeds_bounds():
@@ -214,6 +233,7 @@ class Laser(GenericFrameObject):
         if to_delete:
             # todo: this can lead to undefined behavior since
             # we are popping objects while looping over the list
+            # occassionaly i can reproduce this behavior
             self.game_obj.rendered_objects.pop(to_delete)
 
         if delete_self:

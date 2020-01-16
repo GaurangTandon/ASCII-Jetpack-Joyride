@@ -25,6 +25,7 @@ class Game():
     The actual game and rendering related functions
     """
     _refresh_time = 1 / FRAME_RATE
+    GAME_LENGTH = 120
     # TODO: improve rendering with multiple parts of the same object having different colors
 
     # info bounding indices are inclusive
@@ -50,12 +51,11 @@ class Game():
         self.game_status = 0
 
         self.player = Player(self)
-        self.ground = Ground()
+        ground = Ground()
         self.rendered_objects.append(self.player)
-        self.rendered_objects.append(self.ground)
+        self.rendered_objects.append(ground)
 
-        self.game_length = 120
-        self.end_time = time.time() + self.game_length
+        self.end_time = time.time() + self.GAME_LENGTH
 
         self.next_spawn_point = 0
 
@@ -147,7 +147,7 @@ class Game():
                     self.magnet_obj = Magnet()
                     self.rendered_objects.append(self.magnet_obj)
 
-    def terminate(self, we_won):
+    def _terminate(self, we_won):
         """
         user wants to terminate the game
         """
@@ -170,7 +170,7 @@ class Game():
         cin = get_key_pressed(inputted)
 
         if cin == -1:
-            self.terminate(-1)
+            self._terminate(-1)
         elif cin != 0:
             if cin in '1234' and config.DEBUG:
                 if cin == '1':
@@ -221,9 +221,9 @@ class Game():
             last_key_pressed = self._handle_input()
 
             if self.player.lifes <= 0 or self._get_time_remaining() <= 0:
-                self.terminate(0)
+                self._terminate(0)
             if self.boss_obj and self.boss_obj.health <= 0:
-                self.terminate(1)
+                self._terminate(1)
 
             while time.time() - last < self._refresh_time:
                 pass
