@@ -1,3 +1,4 @@
+import os
 import random
 import time
 import numpy as np
@@ -88,13 +89,15 @@ class Game():
             for info in info_objs:
                 self.draw_in_range(info, obj.obj)
 
+        # to avoid fringing
+        padding = " " * 10
         # offset by 10: since otherwise the whole coin group disappears even if a
         # single coin touches the boundary
-        print_grid = "\n".join([str(Style.RESET_ALL).join(row[10:]) + Style.RESET_ALL
-                                for row in self.grid])
+        grid_str = "\n".join([str(Style.RESET_ALL).join(row[10:]) + Style.RESET_ALL + padding
+                              for row in self.grid])
 
         # only a single print at the end makes rendering efficient
-        print(print_grid)
+        os.write(1, str.encode(grid_str))
 
     def update(self):
         i = -1
@@ -147,6 +150,8 @@ class Game():
         elif we_won == 1:
             print("You won!")
         self.info_print()
+
+        os.system('setterm -cursor on')
 
     def handle_input(self):
         inputted = ""
