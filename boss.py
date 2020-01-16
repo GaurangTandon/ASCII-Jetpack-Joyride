@@ -8,7 +8,7 @@ from generic import GenericFrameObject
 
 class Boss(GenericFrameObject):
     X_THRESHOLD = 15
-    Y_VEL = 0.5
+    Y_VEL = 1
     START_Y = round(config.FRAME_HEIGHT / 2)
     FIRE_INTERVAL = 2
     TYPE = "boss"
@@ -33,7 +33,7 @@ class Boss(GenericFrameObject):
 
     def __init__(self, game_obj):
         super().__init__()
-        self.y_vel = 0
+        self.y_vel = -1
 
         self.y = self.START_Y
         self.x = config.FRAME_SPAWN_X
@@ -56,12 +56,12 @@ class Boss(GenericFrameObject):
         self.last_fired = time.time()
 
     def update(self):
+        self.y_vel = self._direction() * self.Y_VEL
         self.y += round(self.y_vel)
         self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
         self.y = max(self.y, self.height)
 
         # get the player's coordinates and move towards it
-        self.y_vel = self._direction() * self.Y_VEL
 
         if time.time() - self.last_fired >= self.FIRE_INTERVAL:
             self.fire_gun()

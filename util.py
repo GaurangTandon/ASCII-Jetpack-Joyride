@@ -5,10 +5,6 @@ Utility functions:
     - timer settimeout
 """
 
-import sys
-import select
-import tty
-import termios
 import subprocess as sp
 import threading
 from functools import wraps
@@ -22,16 +18,16 @@ def reposition_cursor():
     print("\033[0;0H")
 
 
-def tiler(elm, row, col):
+def tiler(elm, row, col, send_matrix=False):
     res = []
 
-    for r in range(row):
+    for _ in range(row):
         res2 = []
-        for c in range(col):
+        for __ in range(col):
             res2.append(elm)
         res.append(res2)
 
-    return res[0] if row == 1 else res
+    return res[0] if row == 1 and not send_matrix else res
 
 
 def delay(delay_time=0.):

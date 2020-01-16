@@ -45,15 +45,15 @@ class GenericFrameObject:
 
     def generate_draw_obj(self):
         try:
-            self.__class__.height = ht = len(self.__class__.stringRepr)
-            self.__class__.width = wt = len(self.__class__.stringRepr[0])
+            self.__class__.height = hgt = len(self.__class__.stringRepr)
+            self.__class__.width = wdt = len(self.__class__.stringRepr[0])
 
-            if len(self.__class__.color) != ht or not isinstance(self.__class__.color[0], list) or len(self.__class__.color[0]) != wt:
+            if len(self.__class__.color) != hgt or not isinstance(self.__class__.color[0], list) or len(self.__class__.color[0]) != wdt:
                 self.__class__.color = tiler(
-                    self.__class__.color, ht, wt)
+                    self.__class__.color, hgt, wdt, True)
 
             self.__class__.obj = mapper(
-                self.__class__.stringRepr, ht, wt, self.__class__.color)
+                self.__class__.stringRepr, hgt, wdt, self.__class__.color)
         except AttributeError:
             pass
 
@@ -80,7 +80,7 @@ class GenericFrameObject:
             return 0.1
 
     def exceeds_bounds(self):
-        return self.x < 0 or self.x >= config.FRAME_WIDTH \
+        return self.x < 0 or self.x + self.width >= config.FRAME_WIDTH \
             or self.y >= config.FRAME_BOTTOM_BOUNDARY or self.y <= self.height
 
     def update(self):
@@ -109,8 +109,8 @@ class GenericFrameObject:
         return points
 
     # returns set of coordinates common to both objects
-    def check_collision(self, object):
+    def check_collision(self, obj):
         coords_self = GenericFrameObject._generate_coords(self)
-        coords_obj = GenericFrameObject._generate_coords(object)
+        coords_obj = GenericFrameObject._generate_coords(obj)
 
         return coords_obj & coords_self

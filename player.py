@@ -1,7 +1,6 @@
-from util import tiler
-import numpy as np
 from math import sqrt
 from colorama import Fore, Back
+from util import tiler
 import config
 from generic import GenericFrameObject
 from obstacle import Magnet
@@ -36,6 +35,9 @@ class Player(GenericFrameObject):
         self.x = config.FRAME_LEFT_BOUNDARY
         self.y = self.startYCoord
 
+        # number of frames for which the player is touching the ceiling
+        self.was_touching_ceiling = 0
+
         self.y_vel = 0
         self.x_vel = 0
         self.game_obj = obj_game
@@ -48,10 +50,13 @@ class Player(GenericFrameObject):
         self.lifes = 3
         self.health = 100
 
+    def _get_middle(self):
+        return self.y - self.height / 2
+
     def get_top(self):
         return self.y - self.height + 1
 
-    def update(self, last_key_pressed):
+    def update_overriden(self, last_key_pressed):
         if self.game_obj.magnet_obj:
             # TODO: messed up
             num = Magnet.FORCE_CONSTANT
@@ -85,7 +90,7 @@ class Player(GenericFrameObject):
             self.x_vel += self.X_IMPULSE
             self.__class__.stringRepr[-1] = "\\\\\\\\"
 
-        if last_key_pressed == 'w' or last_key_pressed == 's':
+        if last_key_pressed in 'sw':
             self.__class__.color[-1] = tiler([Fore.RED,
                                               Back.MAGENTA], 1, self.width)
 
@@ -103,31 +108,32 @@ class Player(GenericFrameObject):
         self.check_bounds()
 
     def fire_laser(self):
-        laser = Laser()
-
-        laser.x = self.x
-        laser.y = self.y
+        laser = Laser(self.x, self._get_middle(), self.game_obj)
 
         return laser
 
     def check_bounds(self):
-        # check sky bound
-        self.y = max(self.y, self.height - 1)
+        touched_ceil = self.y <= self.height - 1
+        touched_bottom = self.y >= self.startYCoord
 
-        # check ground bound
+        self.y = max(self.y, self.height - 1)
         self.y = min(self.y, self.startYCoord)
 
+        remain_at_the_top_threshold = 20
+        # without this jetpack gets stuck at the top
+        if touched_ceil and self.was_touching_ceiling >= remain_at_the_top_threshold:
+            # do not add a fractional quantity
+            self.y += 1
+
         # can't move anymore
-        if self.y >= self.startYCoord or self.y <= self.height - 1:
+        if touched_bottom or touched_ceil:
             self.y_vel = 0
             self.y_acc = 0
+            if touched_ceil:
+                self.was_touching_ceiling += 1
+        else:
+            self.was_touching_ceiling = 0
 
-        # hack to not make the jetpack get stuck at the top
-        # try work without this since y coordinate cannot be fractional
-        # if self.y <= self.height - 1:
-        #     self.y += 0.01
-
-        # TODO: the window should also move accordingly to accommodate
         if self.x >= config.FRAME_RIGHT_BOUNARY:
             self.x = config.FRAME_RIGHT_BOUNARY
             self.x_vel = 0
@@ -136,7 +142,7 @@ class Player(GenericFrameObject):
             self.x = config.FRAME_LEFT_BOUNDARY
             self.x_vel = 0
 
-        listOfIdxsToDelete = []
+        list_to_delete = []
         i = 0
         for obj in self.game_obj.rendered_objects:
             common_points = self.check_collision(obj)
@@ -149,18 +155,18 @@ class Player(GenericFrameObject):
                     # play sound
                     # remove that point from object body
                     pass
-                listOfIdxsToDelete.append(i)
+                list_to_delete.append(i)
             elif obj.TYPE == "firebeam":
                 self.health -= self.FIREBEAM_DAMAGE
-                listOfIdxsToDelete.append(i)
+                list_to_delete.append(i)
             elif obj.TYPE == "bosslaser":
                 self.health -= self.BOSS_LASER_DAMAGE
-                listOfIdxsToDelete.append(i)
+                list_to_delete.append(i)
 
             i += 1
 
-        listOfIdxsToDelete.reverse()
-        for j in listOfIdxsToDelete:
+        list_to_delete.reverse()
+        for j in list_to_delete:
             self.game_obj.rendered_objects.pop(j)
 
         if self.lifes == 0:
@@ -169,6 +175,14 @@ class Player(GenericFrameObject):
 
 class Laser(GenericFrameObject):
     stringRepr = ["==>"]
+    color = [Fore.RED, None]
+    TYPE = "laser"
+
+    def __init__(self, x, y, game_obj):
+        super().__init__()
+        self.x = round(x)
+        self.y = round(y)
+        self.game_obj = game_obj
 
     def update(self):
         self.x += config.LASER_VEL

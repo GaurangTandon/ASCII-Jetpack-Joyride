@@ -121,7 +121,7 @@ class Game():
 
         # offset by 10: since otherwise the whole coin group disappears even if a
         # single coin touches the boundary
-        print_grid = "\n".join([(Style.RESET_ALL).join(row[10:]) + Style.RESET_ALL
+        print_grid = "\n".join([str(Style.RESET_ALL).join(row[10:]) + Style.RESET_ALL
                                 for row in self.grid])
 
         # only a single print at the end makes rendering efficient
@@ -220,7 +220,7 @@ class Game():
 
             self.draw()
             self.update()
-            self.player.update(last_key_pressed)
+            self.player.update_overriden(last_key_pressed)
 
             if not self.has_boss_spawned and self.player.x >= Boss.X_THRESHOLD:
                 self.has_boss_spawned = True

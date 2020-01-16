@@ -18,5 +18,5 @@ class DragonPowerup():
 # give the player a separate color when it has got shield
 
 
-def ShieldPowerup(Generic):
+class ShieldPowerup(GenericFrameObject):
     pass
