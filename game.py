@@ -103,7 +103,7 @@ class Game():
             print(
                 f"Distance to boss {Boss.X_THRESHOLD - self.player.x}{padding}")
         else:
-            print(f"Boss has spawned!{padding}")
+            print(f"Boss health: {self.boss_obj.health}{padding}")
 
     def draw(self):
         # TODO: can we fix this to only repaint pixels that changed
@@ -166,12 +166,16 @@ class Game():
                     self.magnet_obj = Magnet()
                     self.rendered_objects.append(self.magnet_obj)
 
-    def terminate(self):
+    def terminate(self, we_won):
         """
         user wants to terminate the game
         """
         self.game_status = -1
         print("\nGame over!")
+        if we_won == 0:
+            print("You lost!")
+        elif we_won == 1:
+            print("You won!")
         self.info_print()
 
     def handle_input(self):
@@ -183,7 +187,7 @@ class Game():
         cin = get_key_pressed(inputted)
 
         if cin == -1:
-            self.terminate()
+            self.terminate(-1)
         elif cin != 0:
             if cin in '1234' and config.DEBUG:
                 if cin == '1':
@@ -232,7 +236,9 @@ class Game():
             last_key_pressed = self.handle_input()
 
             if self.player.lifes <= 0 or self.get_time_remaining() <= 0:
-                self.terminate()
+                self.terminate(0)
+            if self.boss_obj and self.boss_obj.health <= 0:
+                self.terminate(1)
 
             while time.time() - last < self._refresh_time:
                 pass
