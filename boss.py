@@ -57,7 +57,11 @@ class Boss(GenericFrameObject):
         velx = vel * x_dist / hyp
         vely = vel * y_dist / hyp
 
-        vely = self._direction() * vely
+        # y_dist appears lesser than it actually is
+        # so we need to increase the vely otherwise
+        y_scaling = 2.01
+        vely *= self._direction() * y_scaling
+        # print(vely, y_dist, x_dist)
 
         self.game_obj.rendered_objects.append(
             BossLaser(vely, -velx, self.x, self.y - self.height / 2))

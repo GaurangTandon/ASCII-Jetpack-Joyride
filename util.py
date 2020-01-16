@@ -31,7 +31,7 @@ def tiler(elm, row, col):
             res2.append(elm)
         res.append(res2)
 
-    return res[0] if row == 1 or res
+    return res[0] if row == 1 else res
 
 
 def delay(delay_time=0.):
