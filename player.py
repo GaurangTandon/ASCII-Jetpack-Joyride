@@ -24,9 +24,6 @@ class Player(GenericFrameObject):
     X_IMPULSE = 1
     Y_IMPULSE = 1
     TYPE = "player"
-    INITIAL_HEALTH = 100
-    BOSS_LASER_DAMAGE = 0.3 * INITIAL_HEALTH
-    FIREBEAM_DAMAGE = 0.2 * INITIAL_HEALTH
 
     def __init__(self, obj_game):
         super().__init__()
@@ -48,7 +45,6 @@ class Player(GenericFrameObject):
         self.w_key = False
 
         self.lifes = 3
-        self.health = 100
 
     def _get_middle(self):
         return self.y - self.height / 2
@@ -90,7 +86,7 @@ class Player(GenericFrameObject):
             self.x_vel += self.X_IMPULSE
             self.__class__.stringRepr[-1] = "\\\\\\\\"
 
-        if last_key_pressed in 'sw':
+        if str(last_key_pressed) in 'sw':
             self.__class__.color[-1] = tiler([Fore.RED,
                                               Back.MAGENTA], 1, self.width)
 
@@ -143,34 +139,30 @@ class Player(GenericFrameObject):
             self.x_vel = 0
 
         list_to_delete = []
-        i = 0
+        i = -1
         for obj in self.game_obj.rendered_objects:
+            i += 1
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
 
-            # # if these two collide
+            to_delete = False
+
             if obj.TYPE == "coin":
                 for point in common_points:
-                    # play sound
-                    # remove that point from object body
+                    # TODO: play sound
                     pass
-                list_to_delete.append(i)
-            elif obj.TYPE == "firebeam":
-                self.health -= self.FIREBEAM_DAMAGE
-                list_to_delete.append(i)
-            elif obj.TYPE == "bosslaser":
-                self.health -= self.BOSS_LASER_DAMAGE
-                list_to_delete.append(i)
+                to_delete = True
+            elif obj.TYPE in ["firebeam", "bosslaser"]:
+                self.lifes -= 1
+                to_delete = True
 
-            i += 1
+            if to_delete:
+                list_to_delete.append(i)
 
         list_to_delete.reverse()
         for j in list_to_delete:
             self.game_obj.rendered_objects.pop(j)
-
-        if self.lifes == 0:
-            self.dead()
 
 
 class Laser(GenericFrameObject):
@@ -196,7 +188,6 @@ class Laser(GenericFrameObject):
                 continue
 
             if obj.TYPE == "boss":
-                # decrease health by number of points touched and remove that fire beam
                 pass
             elif obj.TYPE == "bosslaser":
                 # destroy both

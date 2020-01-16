@@ -97,7 +97,6 @@ class Game():
         padding = ' '*10
         print(
             f"Time remaining \u23f1 {self.get_time_remaining()} seconds{padding}")
-        print(f"Health remaining {self.player.health}{padding}")
         print(f"Lives remaining \u2764 {self.player.lifes}{padding}")
         print(f"Score {self.score}{padding}")
         if not self.has_boss_spawned:
@@ -232,7 +231,7 @@ class Game():
             last = time.time()
             last_key_pressed = self.handle_input()
 
-            if self.player.lifes == 0 or self.get_time_remaining() <= 0:
+            if self.player.lifes <= 0 or self.get_time_remaining() <= 0:
                 self.terminate()
 
             while time.time() - last < self._refresh_time:
