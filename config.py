@@ -1,3 +1,7 @@
+"""
+Constants related to the frame and the game
+"""
+
 GROUND_HEIGHT = 2
 
 # TODO: should be based on terminal height
@@ -23,13 +27,3 @@ COIN_VALUE = 1
 FIREBEAM_LENGTH = 5
 
 DEBUG = True
-
-GRID_CONSTS = {
-    "player": 1,
-    "background": 2,
-    "ground": 3,
-    "coin": 4,
-    "magnet": 5,
-    "firebeam": 6,
-    "playerlaser": 7
-}

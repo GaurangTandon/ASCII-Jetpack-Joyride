@@ -1,3 +1,7 @@
+"""
+Coin group class
+"""
+
 import random
 import numpy as np
 from colorama import Fore

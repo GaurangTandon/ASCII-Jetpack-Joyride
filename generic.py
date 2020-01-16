@@ -1,3 +1,6 @@
+"""
+Module for generic frame object on render screen
+"""
 import random
 from colorama import Back, Fore
 import numpy as np
@@ -5,33 +8,36 @@ import config
 from util import tiler
 
 
-def mapper(grid, ht, wt, color):
+def mapper(grid, hgt, wdt, color):
     res = np.array([])
 
-    for row in range(ht):
-        for col in range(wt):
+    for row in range(hgt):
+        for col in range(wdt):
             curr_str = ""
-            colorElm = color[row][col]
+            color_elm = color[row][col]
 
-            if colorElm[0]:
-                curr_str += colorElm[0]
+            if color_elm[0]:
+                curr_str += color_elm[0]
             else:
                 curr_str += Fore.BLACK
 
-            if colorElm[1]:
-                curr_str += colorElm[1]
+            if color_elm[1]:
+                curr_str += color_elm[1]
             else:
                 curr_str += Back.BLUE
 
             curr_str += grid[row][col]
             res = np.append(res, curr_str)
 
-    res = res.reshape((ht, wt))
+    res = res.reshape((hgt, wdt))
 
     return res
 
 
 class GenericFrameObject:
+    """
+    Generic frame object that can be rendered on the screen
+    """
     currently_active = 0
     DEAD_FLAG = 1
 
@@ -48,7 +54,10 @@ class GenericFrameObject:
             self.__class__.height = hgt = len(self.__class__.stringRepr)
             self.__class__.width = wdt = len(self.__class__.stringRepr[0])
 
-            if len(self.__class__.color) != hgt or not isinstance(self.__class__.color[0], list) or len(self.__class__.color[0]) != wdt:
+            cond1 = len(self.__class__.color) != hgt
+            cond2 = not isinstance(self.__class__.color[0], list)
+            cond3 = len(self.__class__.color[0]) != wdt
+            if cond1 or cond2 or cond3:
                 self.__class__.color = tiler(
                     self.__class__.color, hgt, wdt, True)
 
@@ -67,9 +76,9 @@ class GenericFrameObject:
         }]
 
     @classmethod
-    def spawn_probability(self):
+    def spawn_probability(cls):
         try:
-            c_a = self.currently_active
+            c_a = cls.currently_active
 
             # TODO: improve random spawning, still not nice
             ca2 = c_a*c_a

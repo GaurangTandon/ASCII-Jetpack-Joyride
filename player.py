@@ -131,8 +131,7 @@ class Player(GenericFrameObject):
         if touched_bottom or touched_ceil:
             self.y_vel = 0
             self.y_acc = 0
-            if touched_ceil:
-                self.was_touching_ceiling += 1
+            self.was_touching_ceiling += int(touched_ceil)
         else:
             self.was_touching_ceiling = 0
 
@@ -206,7 +205,8 @@ class Laser(GenericFrameObject):
                 self.game_obj.boss_obj.health -= self.BOSS_DAMAGE
                 delete_self = True
                 break
-            elif obj.TYPE in ["bosslaser", "firebeam"]:
+
+            if obj.TYPE in ["bosslaser", "firebeam"]:
                 to_delete = i
                 delete_self = True
                 break

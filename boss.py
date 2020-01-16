@@ -1,12 +1,18 @@
-from math import sqrt
+"""
+Boss related functions
+"""
+
+
 import time
 from colorama import Fore, Back
-import random
 import config
 from generic import GenericFrameObject
 
 
 class Boss(GenericFrameObject):
+    """
+    Main enemy which the player needs to fight off
+    """
     X_THRESHOLD = 15
     Y_VEL = 1
     START_Y = round(config.FRAME_HEIGHT / 2)
@@ -47,9 +53,9 @@ class Boss(GenericFrameObject):
         return (-1 if self.y > self.game_obj.player.y else 0 if self.y ==
                 self.game_obj.player.y else 1)
 
-    def fire_gun(self):
-        self.game_obj.rendered_objects.append(
-            BossLaser(self.x, self.y - self.height / 2, self.game_obj))
+    def _fire_gun(self):
+        boss_laser = BossLaser(self.x, self.y - self.height / 2, self.game_obj)
+        self.game_obj.rendered_objects.append(boss_laser)
 
         self.last_fired = time.time()
 
@@ -62,10 +68,13 @@ class Boss(GenericFrameObject):
         # get the player's coordinates and move towards it
 
         if time.time() - self.last_fired >= self.FIRE_INTERVAL:
-            self.fire_gun()
+            self._fire_gun()
 
 
 class BossLaser(GenericFrameObject):
+    """
+    Weapon fired by the main enemy
+    """
     stringRepr = [
         "-^-",
         "<O>",
@@ -90,9 +99,6 @@ class BossLaser(GenericFrameObject):
 
     def update(self):
         self.x += round(self.vel_x)
-
-        # with a probability, do not follow the player
-        shouldFollow = 1 if random.random() <= 0.9 else -1
 
         self.vel_y += config.GRAVITY_ACC
         self.y += round(self.vel_y)

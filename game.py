@@ -1,3 +1,8 @@
+"""
+The actual game and rendering related functions
+"""
+
+
 import os
 import random
 import time
@@ -7,7 +12,7 @@ from player import Player
 from kbhit import KBHit
 from util import clear_terminal_screen, get_key_pressed, reposition_cursor
 import config
-from config import GRID_CONSTS, FRAME_RATE
+from config import FRAME_RATE
 from ground import Ground
 from coin import CoinGroup
 from obstacle import FireBeam, Magnet
@@ -16,12 +21,15 @@ from boss import Boss
 
 
 class Game():
+    """
+    The actual game and rendering related functions
+    """
     _refresh_time = 1 / FRAME_RATE
     # TODO: improve rendering with multiple parts of the same object having different colors
 
     # info bounding indices are inclusive
 
-    def draw_in_range(self, info, obj):
+    def _draw_in_range(self, info, obj):
         to_row = round(info["coord"][0])
         from_row = to_row - info["size"][0] + 1
 
@@ -57,17 +65,17 @@ class Game():
         self.keys = KBHit()
         clear_terminal_screen()
 
-        self.loop()
+        self._loop()
 
-    def get_time_remaining(self):
+    def _get_time_remaining(self):
         time_remaining = (self.end_time - time.time())
         return int(np.round(time_remaining))
 
-    def info_print(self):
+    def _info_print(self):
         # required padding since we are not clearing screen and just resetting carat pos
         padding = ' '*10
         print(
-            f"Time remaining \u23f1 {self.get_time_remaining()} seconds{padding}")
+            f"Time remaining \u23f1 {self._get_time_remaining()} seconds{padding}")
         print(f"Lives remaining \u2764 {self.player.lifes}{padding}")
         print(f"Score {self.score}{padding}")
         if not self.boss_obj:
@@ -76,18 +84,18 @@ class Game():
         else:
             print(f"Boss health: {self.boss_obj.health}{padding}")
 
-    def draw(self):
+    def _draw(self):
         # TODO: can we fix this to only repaint pixels that changed
         self.grid = np.array([[Fore.WHITE + Back.BLUE + " "
                                for _ in range(config.FRAME_WIDTH)]
                               for _ in range(config.FRAME_HEIGHT)])
 
-        self.info_print()
+        self._info_print()
 
         for obj in self.rendered_objects:
             info_objs = obj.draw()
             for info in info_objs:
-                self.draw_in_range(info, obj.obj)
+                self._draw_in_range(info, obj.obj)
 
         # to avoid fringing
         padding = " " * 10
@@ -99,7 +107,7 @@ class Game():
         # only a single print at the end makes rendering efficient
         os.write(1, str.encode(grid_str))
 
-    def update(self):
+    def _update(self):
         i = -1
         list_of_idxs_to_delete = []
 
@@ -149,11 +157,11 @@ class Game():
             print("You lost!")
         elif we_won == 1:
             print("You won!")
-        self.info_print()
+        self._info_print()
 
         os.system('setterm -cursor on')
 
-    def handle_input(self):
+    def _handle_input(self):
         inputted = ""
 
         if self.keys.kbhit():
@@ -180,7 +188,7 @@ class Game():
 
         return cin
 
-    def loop(self):
+    def _loop(self):
         self.game_status = 1
 
         last_key_pressed = ""
@@ -191,15 +199,15 @@ class Game():
             reposition_cursor()
             # clear_terminal_screen()
 
-            debugStr = f"[{self.player.x} {self.player.y}] \
+            debug_str = f"[{self.player.x} {self.player.y}] \
 [{self.player.x_vel} {self.player.y_vel}] \
 [{self.player.x_acc} {self.player.y_acc}]" + " " * 50
 
             if config.DEBUG:
-                print(debugStr)
+                print(debug_str)
 
-            self.draw()
-            self.update()
+            self._draw()
+            self._update()
             self.player.update_overriden(last_key_pressed)
 
             if not self.boss_obj and self.player.x >= Boss.X_THRESHOLD:
@@ -210,9 +218,9 @@ class Game():
                     self.magnet_obj.destroy()
 
             last = time.time()
-            last_key_pressed = self.handle_input()
+            last_key_pressed = self._handle_input()
 
-            if self.player.lifes <= 0 or self.get_time_remaining() <= 0:
+            if self.player.lifes <= 0 or self._get_time_remaining() <= 0:
                 self.terminate(0)
             if self.boss_obj and self.boss_obj.health <= 0:
                 self.terminate(1)
