@@ -84,8 +84,9 @@ class BossLaser(GenericFrameObject):
         self.game_obj = game_obj
         self.y = initY
         self.x = initX
-        self.vel_y = 1
-        self.vel_x = -2
+
+        self.vel_y = -1.5
+        self.vel_x = -4
 
     def update(self):
         self.x += round(self.vel_x)
@@ -93,10 +94,9 @@ class BossLaser(GenericFrameObject):
         # with a probability, do not follow the player
         shouldFollow = 1 if random.random() <= 0.9 else -1
 
-        self.y += round(self.vel_y * self._direction() * shouldFollow)
-        # do not fall off-bounds
-        self.y = max(self.y, self.height - 1)
-        self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
+        self.vel_y += config.GRAVITY_ACC
+        self.y += round(self.vel_y)
+        self.y = max(self.y, self.height)
 
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG
