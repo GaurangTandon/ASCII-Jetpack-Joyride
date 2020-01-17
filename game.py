@@ -217,13 +217,12 @@ class Game():
             reposition_cursor()
             # clear_terminal_screen()
 
-            if self.player.TYPE == "player":
+            if self.player.TYPE == "player" and config.DEBUG:
                 debug_str = f"[{self.player.x} {self.player.y}] \
     [{self.player.x_vel} {self.player.y_vel}] \
     [{self.player.x_acc} {self.player.y_acc}]" + " " * 50
 
-                if config.DEBUG:
-                    print(debug_str)
+                print(debug_str)
 
             self._draw()
             self._update()

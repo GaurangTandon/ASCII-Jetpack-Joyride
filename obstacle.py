@@ -13,7 +13,7 @@ class FireBeam(GenericFrameObject):
     """
     Your usual fire!!
     """
-    stringRepr = ["🔥"]
+    stringRepr = ["F"]
     color = [Fore.RED, None]
     TYPE = "firebeam"
 
