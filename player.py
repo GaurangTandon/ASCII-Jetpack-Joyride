@@ -2,6 +2,9 @@
 Module for the player and his/her laser
 """
 
+# requires module gi which is present in py3.6 but not in py3.7
+# no idea why :/ gotta setup virtual env i guess -_-
+# from playsound import playsound
 import time
 from math import sqrt
 from colorama import Fore, Back
@@ -197,7 +200,7 @@ class Player(GenericFrameObject):
 
             if obj.TYPE == "coin":
                 for point in common_points:
-                    # TODO: play sound
+                    # playsound("coin_pickup.wav")
                     pass
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:

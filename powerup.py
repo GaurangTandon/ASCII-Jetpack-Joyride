@@ -40,6 +40,9 @@ class DragonPowerup(GenericFrameObject):
         self.current_bullets = 0
         self.game_obj = game
 
+    def wiggle(self):
+        pass
+
     def update(self, last_key_pressed):
         """
         Boss has no velocity, not affected by gravity
@@ -51,6 +54,7 @@ class DragonPowerup(GenericFrameObject):
         elif last_key_pressed == 's':
             self.y += 1
 
+        self.wiggle()
         self._check_bounds()
 
     def _get_middle(self):
