@@ -84,7 +84,7 @@ class Player(GenericFrameObject):
     def _get_top(self):
         return self.y - self.height + 1
 
-    def update_overriden(self, last_key_pressed):
+    def update(self, last_key_pressed):
         """
         Called by Game to update the player stuff
         """

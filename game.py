@@ -19,6 +19,7 @@ from coin import CoinGroup
 from obstacle import FireBeam, Magnet
 from generic import GenericFrameObject
 from boss import Boss
+from powerup import DragonPowerup
 
 
 class Game():
@@ -52,7 +53,6 @@ class Game():
 
         self.player = Player(self)
         ground = Ground()
-        self.rendered_objects.append(self.player)
         self.rendered_objects.append(ground)
 
         self.end_time = time.time() + self.GAME_LENGTH
@@ -67,6 +67,9 @@ class Game():
 
         self._loop()
 
+    def _speed_powerup(self):
+        config.FRAME_MOVE_SPEED *= 2
+
     def _get_time_remaining(self):
         time_remaining = (self.end_time - time.time())
         return int(np.round(time_remaining))
@@ -78,14 +81,16 @@ class Game():
             f"Time remaining \u23f1 {self._get_time_remaining()} seconds{padding}")
         print(f"Lives remaining \u2764 {self.player.lifes}{padding}")
         print(f"Score {self.score}{padding}")
-        remain_time = self.player.get_remaining_shield_time()
 
-        if self.player.shield_activated:
-            print(f"Shield activated")
-        elif remain_time:
-            print(f"Shield available in {math.ceil(remain_time)} seconds")
-        else:
-            print("Shield available")
+        if self.player.TYPE == "player":
+            remain_time = self.player.get_remaining_shield_time()
+
+            if self.player.shield_activated:
+                print(f"Shield activated")
+            elif remain_time:
+                print(f"Shield available in {math.ceil(remain_time)} seconds")
+            else:
+                print("Shield available")
 
         if not self.boss_obj:
             print(
@@ -105,6 +110,7 @@ class Game():
             for info in info_objs:
                 self._draw_in_range(info, obj.obj)
 
+        self._draw_in_range(self.player.draw()[0], self.player.obj)
         # to avoid fringing
         padding = " " * 10
         # offset by 10: since otherwise the whole coin group disappears even if a
@@ -121,8 +127,6 @@ class Game():
 
         for obj in self.rendered_objects:
             i += 1
-            if obj == self.player:
-                continue
             if obj.update() == GenericFrameObject.DEAD_FLAG:
                 list_of_idxs_to_delete.append(i)
 
@@ -193,8 +197,12 @@ class Game():
                 laser = self.player.fire_laser()
                 if laser:
                     self.rendered_objects.append(laser)
-            if cin == ' ':
+            if cin == ' ' and self.player.TYPE == "player":
                 self.player.activate_shield()
+
+            if cin == 'y' and self.player.TYPE == "player":
+                # replace player with dragon
+                self.player = DragonPowerup(self)
 
         return cin
 
@@ -209,16 +217,17 @@ class Game():
             reposition_cursor()
             # clear_terminal_screen()
 
-            debug_str = f"[{self.player.x} {self.player.y}] \
-[{self.player.x_vel} {self.player.y_vel}] \
-[{self.player.x_acc} {self.player.y_acc}]" + " " * 50
+            if self.player.TYPE == "player":
+                debug_str = f"[{self.player.x} {self.player.y}] \
+    [{self.player.x_vel} {self.player.y_vel}] \
+    [{self.player.x_acc} {self.player.y_acc}]" + " " * 50
 
-            if config.DEBUG:
-                print(debug_str)
+                if config.DEBUG:
+                    print(debug_str)
 
             self._draw()
             self._update()
-            self.player.update_overriden(last_key_pressed)
+            self.player.update(last_key_pressed)
 
             if not self.boss_obj and self.player.x >= Boss.X_THRESHOLD:
                 self.boss_obj = Boss(self)

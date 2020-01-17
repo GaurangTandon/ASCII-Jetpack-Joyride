@@ -16,7 +16,7 @@ class Boss(GenericFrameObject):
     X_THRESHOLD = 15
     Y_VEL = 1
     START_Y = round(config.FRAME_HEIGHT / 2)
-    FIRE_INTERVAL = 2
+    FIRE_INTERVAL = 1
     TYPE = "boss"
 
     # create an aura around him, basically make him a rectangular box to ease collision detection :P
