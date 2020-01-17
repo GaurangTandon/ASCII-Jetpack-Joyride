@@ -96,7 +96,7 @@ class Game():
             print(
                 f"Distance to boss {Boss.X_THRESHOLD - self.player.x}{padding}")
         else:
-            print(f"Boss health: {self.boss_obj.health}{padding}")
+            print(f"Boss health: {max(0, self.boss_obj.health)}{padding}")
 
     def _draw(self):
         self.grid = np.array([[Fore.WHITE + Back.BLUE + " "
@@ -194,8 +194,8 @@ class Game():
                     self.rendered_objects.append(FireBeam())
 
             if cin == 'b':
-                laser = self.player.fire_laser()
-                if laser:
+                laserList = self.player.fire_laser()
+                for laser in laserList:
                     self.rendered_objects.append(laser)
             if cin == ' ' and self.player.TYPE == "player":
                 self.player.activate_shield()

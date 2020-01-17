@@ -1,4 +1,3 @@
-- use private variables correctly
 - add sound to footsteps, background music, coin collection, missile launch (files present in music and sound directories)
 - how to add polymorphism?
 - fix all TODO comments

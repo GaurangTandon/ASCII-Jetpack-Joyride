@@ -11,29 +11,25 @@ from player import Laser
 class DragonPowerup(GenericFrameObject):
     """
     Dragon powerup
+    - more bullets per shot
+    - lesser damage per bullet
+    - also wiggles
+    - same number of lives
+    - moves slowly, easier target for boss bullets
+    - bullets follow the dragon with 100% accuracy
     """
     stringRepr = [
-        "           ``==                                ",
-        "            )  `==                             ",
-        "             )    `==                          ",
-        "             )       `=                        ",
-        "             )         }                       ",
-        "            )         ,|                       ",
-        "           )      , == |                       ",
-        "          )    ,==     |            ,----      ",
-        "), == |,     `~~~~\\                            ",
-        "        ),==           `         ,   `-------- ",
-        "         `)             \\       ,   /          ",
-        " _____      )            \\    ,    /           ",
-        " ` ._ `      )      ______\\_,     ,            ",
-        "      \\ \\    ,)----'             /             ",
-        "       \\ \\__/      ____        ,=              ",
-        "        `     ,_.--    --- -==`                ",
-        "         `---'                                 ",
+        "-  -          ------              ",
+        " -  -        -  --  -        -----",
+        "  -  -      -  -  -  -      - .. =",
+        "   -  -    -  -    -  -    -  -=  ",
+        "    -  -  -  -      -  -  -  -    ",
+        "     -  --  -        -  --  -     ",
+        "      ------          ------      "
     ]
 
     color = [Fore.WHITE, None]
-    MAX_BULLETS = 10
+    MAX_BULLETS = 20
     TYPE = "playerdragon"
 
     def __init__(self, game):
@@ -64,14 +60,16 @@ class DragonPowerup(GenericFrameObject):
         """
         Called by Game when user presses Space
         """
-        if self.current_bullets >= self.MAX_BULLETS:
-            return None
+        if self.current_bullets + 3 >= self.MAX_BULLETS:
+            return []
 
         right_point = self.x + self.width
-        laser = Laser(right_point, self._get_middle(), self.game_obj)
-        self.current_bullets += 1
+        l1 = Laser(right_point, self._get_middle(), self.game_obj)
+        l2 = Laser(right_point, self.y, self.game_obj)
+        l3 = Laser(right_point, self.y - self.height + 1, self.game_obj)
+        self.current_bullets += 3
 
-        return laser
+        return [l1, l2, l3]
 
     def _check_bounds(self):
         self.y = max(self.y, self.height - 1)

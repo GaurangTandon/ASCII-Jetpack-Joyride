@@ -98,11 +98,15 @@ class BossLaser(GenericFrameObject):
         self.vel_x = -3
 
     def update(self):
-        shouldFollow = 1 if random.random() <= 0.9 else -1
+        # for a dragon player, guns should follow less since boss laser
+        # is not ver specific
+        if self.game_obj.player.TYPE == "player":
+            shouldFollow = 1 if random.random() <= 0.8 else -1
+        else:
+            shouldFollow = 1
 
         # get the player's coordinates and move towards it
         self.y += round(self.vel_y * self._direction() * shouldFollow)
-
         self.x += round(self.vel_x)
 
         self.y = max(self.y, self.height-1)

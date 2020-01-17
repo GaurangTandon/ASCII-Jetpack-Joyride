@@ -154,7 +154,7 @@ class Player(GenericFrameObject):
         laser = Laser(self.x, self._get_middle(), self.game_obj)
         self.current_bullets += 1
 
-        return laser
+        return [laser]
 
     def _check_bounds(self):
         touched_ceil = self.y <= self.height - 1
@@ -220,7 +220,8 @@ class Laser(GenericFrameObject):
     stringRepr = ["==>"]
     color = [Fore.RED, None]
     TYPE = "laser"
-    BOSS_DAMAGE = 10
+    BOSS_DAMAGE_PLAYER = 10
+    BOSS_DAMAGE_DRAGON = 5
 
     def __init__(self, x, y, game_obj):
         super().__init__()
@@ -251,7 +252,11 @@ class Laser(GenericFrameObject):
                 continue
 
             if obj.TYPE == "boss":
-                self.game_obj.boss_obj.health -= self.BOSS_DAMAGE
+                if self.game_obj.player.TYPE == "player":
+                    self.game_obj.boss_obj.health -= self.BOSS_DAMAGE_PLAYER
+                else:
+                    self.game_obj.boss_obj.health -= self.BOSS_DAMAGE_DRAGON
+
                 delete_self = True
                 break
 
