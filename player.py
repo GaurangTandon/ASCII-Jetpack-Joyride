@@ -106,8 +106,13 @@ class Player(GenericFrameObject):
             self.x_acc = 0
             self.y_acc = 0
 
+        if self.shield_activated and time.time() - self.last_used_shield >= self.SHIELD_TIME:
+            self.shield_activated = False
+
+        colorVal = Fore.BLACK if self.shield_activated else Fore.RED
+
         self.__class__.stringRepr[-1] = "||||"
-        self.__class__.color[-1] = tiler([Fore.RED, None], 1, self.width)
+        self.__class__.color = tiler([colorVal, None], self.height, self.width)
 
         # keypress gives an impulse, not an accn
         if last_key_pressed == 'w':
@@ -122,7 +127,7 @@ class Player(GenericFrameObject):
             self.__class__.stringRepr[-1] = "\\\\\\\\"
 
         if str(last_key_pressed) in 'sw':
-            self.__class__.color[-1] = tiler([Fore.RED,
+            self.__class__.color[-1] = tiler([colorVal,
                                               Back.MAGENTA], 1, self.width)
 
         self._generate_draw_obj()
@@ -135,9 +140,6 @@ class Player(GenericFrameObject):
 
         self.x += round(self.x_vel)
         self.y += round(self.y_vel)
-
-        if self.shield_activated and time.time() - self.last_used_shield >= self.SHIELD_TIME:
-            self.shield_activated = False
 
         self._check_bounds()
 
