@@ -1,10 +1,17 @@
+"""
+Dragon powerup and the boss laser implemented
+"""
+
+from colorama import Fore
 import config
-from colorama import Fore, Back
 from generic import GenericFrameObject
 from player import Laser
 
 
 class DragonPowerup(GenericFrameObject):
+    """
+    Dragon powerup
+    """
     stringRepr = [
         "           ``==                                ",
         "            )  `==                             ",
@@ -14,13 +21,13 @@ class DragonPowerup(GenericFrameObject):
         "            )         ,|                       ",
         "           )      , == |                       ",
         "          )    ,==     |            ,----      ",
-        "), == |,     `~~~~\                            ",
+        "), == |,     `~~~~\\                            ",
         "        ),==           `         ,   `-------- ",
-        "         `)             \       ,   /          ",
-        " _____      )            \    ,    /           ",
-        " ` ._ `      )      ______\_,     ,            ",
-        "      \ \    ,)----'             /             ",
-        "       \ \__/      ____        ,=              ",
+        "         `)             \\       ,   /          ",
+        " _____      )            \\    ,    /           ",
+        " ` ._ `      )      ______\\_,     ,            ",
+        "      \\ \\    ,)----'             /             ",
+        "       \\ \\__/      ____        ,=              ",
         "        `     ,_.--    --- -==`                ",
         "         `---'                                 ",
     ]

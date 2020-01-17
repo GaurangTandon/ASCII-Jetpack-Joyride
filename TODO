@@ -2,7 +2,5 @@
 - add sound to footsteps, background music, coin collection, missile launch (files present in music and sound directories)
 - how to add polymorphism?
 - fix all TODO comments
-- screen gets fringed when fire spawns on the end
-- boss's fire often not aligned with player sincne attempted parabolic
 - improve rendering with multiple parts of the same object having different colors
 - fix Game._draw to only repaint pixels that changed

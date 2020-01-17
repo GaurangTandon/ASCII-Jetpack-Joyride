@@ -2,7 +2,7 @@
 Boss related functions
 """
 
-
+import random
 import time
 from colorama import Fore, Back
 import config
@@ -94,15 +94,19 @@ class BossLaser(GenericFrameObject):
         self.y = initY
         self.x = initX
 
-        self.vel_y = -1.5
-        self.vel_x = -4
+        self.vel_y = 1
+        self.vel_x = -3
 
     def update(self):
+        shouldFollow = 1 if random.random() <= 0.9 else -1
+
+        # get the player's coordinates and move towards it
+        self.y += round(self.vel_y * self._direction() * shouldFollow)
+
         self.x += round(self.vel_x)
 
-        self.vel_y += config.GRAVITY_ACC
-        self.y += round(self.vel_y)
-        self.y = max(self.y, self.height)
+        self.y = max(self.y, self.height-1)
+        self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
 
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG
