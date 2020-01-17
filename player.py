@@ -2,6 +2,7 @@
 Module for the player and his/her laser
 """
 
+import time
 from math import sqrt
 from colorama import Fore, Back
 from util import tiler
@@ -32,6 +33,9 @@ class Player(GenericFrameObject):
     Y_IMPULSE = 1
     TYPE = "player"
     MAX_BULLETS = 10
+    last_used_shield = -1
+    SHIELD_TIME = 10
+    SHIELD_REGEN_TIME = 60
 
     def __init__(self, obj_game):
         super().__init__()
@@ -54,6 +58,25 @@ class Player(GenericFrameObject):
         self.w_key = False
 
         self.lifes = 3
+        self.shield_activated = False
+
+    def get_remaining_shield_time(self):
+        """
+        Calculate how much time left until next shield is available
+        """
+        curr = time.time()
+
+        diff = curr - self.last_used_shield
+        diff = self.SHIELD_REGEN_TIME + self.SHIELD_TIME - diff
+        return max(0, diff)
+
+    def activate_shield(self):
+        """
+        Activates player shield if it is available
+        """
+        if self.get_remaining_shield_time() == 0:
+            self.shield_activated = True
+            self.last_used_shield = time.time()
 
     def _get_middle(self):
         return self.y - self.height / 2
@@ -112,6 +135,9 @@ class Player(GenericFrameObject):
 
         self.x += round(self.x_vel)
         self.y += round(self.y_vel)
+
+        if self.shield_activated and time.time() - self.last_used_shield >= self.SHIELD_TIME:
+            self.shield_activated = False
 
         self._check_bounds()
 
@@ -172,8 +198,9 @@ class Player(GenericFrameObject):
                     pass
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:
-                self.lifes -= 1
-                to_delete = True
+                if not self.shield_activated:
+                    self.lifes -= 1
+                    to_delete = True
 
             if to_delete:
                 list_to_delete.append(i)

@@ -6,3 +6,4 @@
 - boss's fire often not aligned with player sincne attempted parabolic
 - improve rendering with multiple parts of the same object having different colors
 - fix Game._draw to only repaint pixels that changed
+- change player color with shield

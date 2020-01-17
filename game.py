@@ -5,6 +5,7 @@ The actual game and rendering related functions
 
 import os
 import random
+import math
 import time
 import numpy as np
 from colorama import init as coloramaInit, Fore, Back, Style
@@ -77,6 +78,15 @@ class Game():
             f"Time remaining \u23f1 {self._get_time_remaining()} seconds{padding}")
         print(f"Lives remaining \u2764 {self.player.lifes}{padding}")
         print(f"Score {self.score}{padding}")
+        remain_time = self.player.get_remaining_shield_time()
+
+        if self.player.shield_activated:
+            print(f"Shield activated")
+        elif remain_time:
+            print(f"Shield available in {math.ceil(remain_time)} seconds")
+        else:
+            print("Shield available")
+
         if not self.boss_obj:
             print(
                 f"Distance to boss {Boss.X_THRESHOLD - self.player.x}{padding}")
@@ -179,10 +189,12 @@ class Game():
                 if cin == '3':
                     self.rendered_objects.append(FireBeam())
 
-            if cin == ' ':
+            if cin == 'b':
                 laser = self.player.fire_laser()
                 if laser:
                     self.rendered_objects.append(laser)
+            if cin == ' ':
+                self.player.activate_shield()
 
         return cin
 
