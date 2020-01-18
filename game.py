@@ -28,6 +28,7 @@ class Game():
     """
     _refresh_time = 1 / FRAME_RATE
     GAME_LENGTH = 120
+    SPEED_TIME = 10
 
     # info bounding indices are inclusive
 
@@ -62,6 +63,7 @@ class Game():
         self.boss_obj = None
         self.magnet_obj = None
 
+        self.speed_on_time = -1
         self.delete_id_list = []
 
         self.keys = KBHit()
@@ -69,8 +71,12 @@ class Game():
 
         self._loop()
 
-    def _speed_powerup(self):
-        config.FRAME_MOVE_SPEED *= 2
+    def _speed_powerup(self, activate=True):
+        factor = 2
+        if activate:
+            config.FRAME_MOVE_SPEED *= factor
+        else:
+            config.FRAME_MOVE_SPEED //= factor
 
     def _get_time_remaining(self):
         time_remaining = (self.end_time - time.time())
@@ -94,6 +100,11 @@ class Game():
                 print(f"Shield available in {math.ceil(remain_time)} seconds")
             else:
                 print(f"Shield available{padding}")
+
+        if self.speed_on_time > 0:
+            print(f"Game sped up!{padding}")
+        else:
+            print(f"Game at normal speed")
 
         if not self.boss_obj:
             print(
@@ -166,6 +177,11 @@ class Game():
                     self.magnet_obj = Magnet()
                     self.rendered_objects.append(self.magnet_obj)
 
+        if self.speed_on_time > 0 and time.time() - self.speed_on_time >= self.SPEED_TIME:
+            self._speed_powerup(False)
+            # can only use once
+            self.speed_on_time = -2
+
     def _terminate(self, we_won):
         """
         user wants to terminate the game
@@ -215,6 +231,11 @@ class Game():
             if cin == 'y' and self.player.TYPE == "player":
                 # replace player with dragon
                 self.player = DragonPowerup(self)
+
+            if cin == 't':
+                if self.speed_on_time == -1:
+                    self._speed_powerup()
+                    self.speed_on_time = time.time()
 
         return cin
 

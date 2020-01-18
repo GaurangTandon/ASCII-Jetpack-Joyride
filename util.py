@@ -43,7 +43,7 @@ def get_key_pressed(keyin):
     """
     keyin = keyin.lower()
 
-    if not keyin in ('q', ' ', 'y', 'w', 'a', 's', 'd', 'b', '1', '2', '3', '4'):
+    if not keyin in ('q', ' ', 'y', 'w', 'a', 's', 'd', 'b', '1', '2', '3', '4', 't'):
         return 0
     if keyin == 'q':
         return -1

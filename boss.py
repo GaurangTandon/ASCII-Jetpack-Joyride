@@ -95,7 +95,7 @@ class BossLaser(GenericFrameObject):
         self.x = initX
 
         self.vel_y = 1
-        self.vel_x = -3
+        self.vel_x = -config.FRAME_MOVE_SPEED
 
     def update(self):
         # for a dragon player, guns should follow less since boss laser
