@@ -79,12 +79,7 @@ class DragonPowerup(GenericFrameObject):
         self.y = max(self.y, self.height - 1)
         self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
 
-        list_to_delete = []
-        i = -1
-
         for obj in self.game_obj.rendered_objects:
-            i += 1
-
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
@@ -101,8 +96,4 @@ class DragonPowerup(GenericFrameObject):
                 to_delete = True
 
             if to_delete:
-                list_to_delete.append(i)
-
-        list_to_delete.reverse()
-        for j in list_to_delete:
-            self.game_obj.rendered_objects.pop(j)
+                self.game_obj.delete_id_list.append(obj.id)

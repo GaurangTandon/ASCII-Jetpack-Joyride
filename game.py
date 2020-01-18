@@ -62,6 +62,8 @@ class Game():
         self.boss_obj = None
         self.magnet_obj = None
 
+        self.delete_id_list = []
+
         self.keys = KBHit()
         clear_terminal_screen()
 
@@ -122,10 +124,10 @@ class Game():
         # only a single print at the end makes rendering efficient
         os.write(1, str.encode(grid_str))
 
-    def _delete_objects(self, id_list):
-        for i in range(0, len(id_list), -1):
+    def _delete_objects(self):
+        for i in range(0, len(self.rendered_objects), -1):
             o = self.rendered_objects[i]
-            if not o.id in id_list:
+            if not o.id in self.delete_id_list:
                 continue
 
             if o.cleanup():
@@ -135,14 +137,12 @@ class Game():
 
     def _update(self):
         i = -1
-        list_of_ids_to_delete = []
+        self.delete_id_list = []
 
         for obj in self.rendered_objects:
             i += 1
             if obj.update() == GenericFrameObject.DEAD_FLAG:
-                list_of_ids_to_delete.append(obj.id)
-
-        self._delete_objects(list_of_ids_to_delete)
+                self.delete_id_list.append(obj.id)
 
         # make spawning random somehow
         # make two slots in y axis as well
@@ -237,6 +237,7 @@ class Game():
             self._draw()
             self._update()
             self.player.update(last_key_pressed)
+            self._delete_objects()
 
             if not self.boss_obj and self.player.x >= Boss.X_THRESHOLD:
                 self.boss_obj = Boss(self)

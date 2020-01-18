@@ -63,8 +63,6 @@ class Player(GenericFrameObject):
         self.lifes = 3
         self.shield_activated = False
 
-        self.last_hit = -1
-
     def get_remaining_shield_time(self):
         """
         Calculate how much time left until next shield is available
@@ -191,11 +189,9 @@ class Player(GenericFrameObject):
             self.x_vel = 0
 
         list_to_delete = []
-        i = -1
 
         player_hit = False
         for obj in self.game_obj.rendered_objects:
-            i += 1
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
@@ -212,15 +208,10 @@ class Player(GenericFrameObject):
                     to_delete = True
 
             if to_delete:
-                list_to_delete.append(i)
+                self.game_obj.delete_id_list.append(obj.id)
 
         if player_hit:
             self.lifes -= 1
-            self.last_hit = time.time()
-
-        list_to_delete.reverse()
-        for j in list_to_delete:
-            self.game_obj.rendered_objects.pop(j)
 
 
 class Laser(GenericFrameObject):
@@ -251,12 +242,9 @@ class Laser(GenericFrameObject):
 
         # bullet can only delete one object
         to_delete = None
-        i = -1
         delete_self = False
 
         for obj in self.game_obj.rendered_objects:
-            i += 1
-
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
@@ -271,15 +259,9 @@ class Laser(GenericFrameObject):
                 break
 
             if obj.TYPE in ["bosslaser", "firebeam"]:
-                to_delete = i
+                self.game_obj.delete_id_list.append(obj.id)
                 delete_self = True
                 break
-
-        if to_delete:
-            # todo: this can lead to undefined behavior since
-            # we are popping objects while looping over the list
-            # occassionaly i can reproduce this behavior
-            self.game_obj.rendered_objects.pop(to_delete)
 
         if delete_self:
             self.game_obj.player.current_bullets -= 1
