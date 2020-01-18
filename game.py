@@ -86,11 +86,12 @@ class Game():
             remain_time = self.player.get_remaining_shield_time()
 
             if self.player.shield_activated:
-                print(f"Shield activated")
+                print(
+                    f"Shield time remaining: {self.player.SHIELD_TIME - int(time.time() - self.player.last_used_shield)}{padding}")
             elif remain_time:
                 print(f"Shield available in {math.ceil(remain_time)} seconds")
             else:
-                print("Shield available")
+                print(f"Shield available{padding}")
 
         if not self.boss_obj:
             print(
