@@ -7,6 +7,76 @@ import config
 from generic import GenericFrameObject
 from player import Laser
 
+frames = [
+    [
+        "-  -          ------              ",
+        " -  -        -  --  -        -----",
+        "  -  -      -  -  -  -      - .. =",
+        "   -  -    -  -    -  -    -  -=  ",
+        "    -  -  -  -      -  -  -  -    ",
+        "     -  --  -        -  --  -     ",
+        "      ------          ------      "
+    ],
+    [
+        "  -  -        --------            ",
+        "   -  -      -  - -  -      ------",
+        "    -  -    -  -   -  -    -  .. =",
+        "     -  -  -  -     -  -  -   -=  ",
+        "      -  --  -       -  --  -     ",
+        "       ------         ------      "
+    ],
+    [
+        "-  -              ----                ",
+        " -  -            - -- -               ",
+        "  -  -          -  --  -              ",
+        "   -  -        -  -  -  -             ",
+        "    -  -      -  -    -  -      ------",
+        "     -  -    -  -      -  -    -  .. =",
+        "      -  -  -  -        -  -  -   -=  ",
+        "       --------          ---------    "
+    ],
+    [
+        "-  -            -----               ",
+        " -  -          -  -  -              ",
+        "  -  -        -  - -  -             ",
+        "   -  -      -  -   -  -      ------",
+        "    -  -    -  -     -  -    -  .. =",
+        "     -  -  -  -       -  -  -   -=  ",
+        "      -  --  -         -  --  -     ",
+        "       ------           ------      "
+    ],
+    [
+        "-  -            -----               ",
+        " -  -          -  -  -              ",
+        "  -  -        -  - -  -             ",
+        "   -  -      -  -   -  -      ------",
+        "    -  -    -  -     -  -    -  .. =",
+        "     -  -  -  -       -  -  -   -=  ",
+        "      -  --  -         -  --  -     ",
+        "       ------           ------      "
+    ],
+    [
+        "-  -            -----                 ",
+        " -  -          -  -  -          ------",
+        "  -  -        -  - -  -        -  .. =",
+        "   -  -      -  -   -  -      -   -=  ",
+        "    -  -    -  -     -  -    -  -     ",
+        "     -  -  -  -       -  -  -  -      ",
+        "      --------         --------       "
+    ],
+    [
+        "-  -               ----                     ",
+        " -  -             -    -              ------",
+        "  -  -           -  -   -            -  .. =",
+        "   -  -         -  -  -  -          -   -=  ",
+        "    -  -       -  -    -  -        -  -     ",
+        "     -  -     -  -      -  -      -  -      ",
+        "      -  -   -  -        -  -    -  -       ",
+        "       -  -  -  -         -  -  -  -        ",
+        "        --------           --------         "
+    ]
+]
+
 
 class DragonPowerup(GenericFrameObject):
     """
@@ -18,21 +88,15 @@ class DragonPowerup(GenericFrameObject):
     - moves slowly, easier target for boss bullets
     - bullets follow the dragon with 100% accuracy
     """
-    stringRepr = [
-        "-  -          ------              ",
-        " -  -        -  --  -        -----",
-        "  -  -      -  -  -  -      - .. =",
-        "   -  -    -  -    -  -    -  -=  ",
-        "    -  -  -  -      -  -  -  -    ",
-        "     -  --  -        -  --  -     ",
-        "      ------          ------      "
-    ]
 
-    color = [Fore.WHITE, None]
     MAX_BULLETS = 20
     TYPE = "playerdragon"
 
     def __init__(self, game):
+        self.frame = 0
+        self.count = 0
+        self.__class__.stringRepr = frames[0]
+        self.__class__.color = [Fore.WHITE, None]
         super().__init__()
         self.y = config.FRAME_HEIGHT / 2
         self.x = 15
@@ -41,13 +105,20 @@ class DragonPowerup(GenericFrameObject):
         self.game_obj = game
 
     def wiggle(self):
-        pass
+        if self.count % 5 == 0:
+            self.__class__.stringRepr = frames[self.frame]
+            self.__class__.color = [Fore.WHITE, None]
+            self._generate_draw_obj()
+            self.frame += 1
+            self.frame %= len(frames)
+        self.count += 1
 
     def update(self, last_key_pressed):
         """
-        Boss has no velocity, not affected by gravity
-        Boss is not affected by magnet
+            Boss has no velocity, not affected by gravity
+            Boss is not affected by magnet
         """
+
         # keypress gives an impulse, not an accn
         if last_key_pressed == 'w':
             self.y -= 1
@@ -88,8 +159,7 @@ class DragonPowerup(GenericFrameObject):
 
             if obj.TYPE == "coin":
                 for point in common_points:
-                    # TODO: play sound
-                    pass
+                    self.game_obj.score += 1
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:
                 self.lifes -= 1
