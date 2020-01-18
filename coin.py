@@ -29,6 +29,5 @@ def get_coin_group():
         for j in range(y - height + 1, y + 1):
             c = Coin(i, j)
             lst.append(c)
-            c.id = CID
 
     return lst

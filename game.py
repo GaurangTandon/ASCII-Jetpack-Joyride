@@ -125,7 +125,7 @@ class Game():
         os.write(1, str.encode(grid_str))
 
     def _delete_objects(self):
-        for i in range(0, len(self.rendered_objects), -1):
+        for i in range(len(self.rendered_objects) - 1, -1, -1):
             o = self.rendered_objects[i]
             if not o.id in self.delete_id_list:
                 continue
@@ -136,12 +136,9 @@ class Game():
             self.rendered_objects.pop(i)
 
     def _update(self):
-        i = -1
-        self.delete_id_list = []
-
         for obj in self.rendered_objects:
-            i += 1
             if obj.update() == GenericFrameObject.DEAD_FLAG:
+                assert obj.id is not None
                 self.delete_id_list.append(obj.id)
 
         # make spawning random somehow
@@ -234,6 +231,7 @@ class Game():
 
                 print(debug_str)
 
+            self.delete_id_list = []
             self._draw()
             self._update()
             self.player.update(last_key_pressed)

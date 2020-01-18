@@ -50,7 +50,7 @@ class GenericFrameObject:
     def __init__(self):
         # this technique has been verified on this repl https://repl.it/@bountyhedge/mvce
         self.__class__.currently_active += 1
-        self.id = random.random()
+        self.id = int(random.random() * 10000000)
 
         self._generate_draw_obj()
 
