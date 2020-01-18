@@ -63,6 +63,8 @@ class Player(GenericFrameObject):
         self.lifes = 3
         self.shield_activated = False
 
+        self.last_hit = -1
+
     def get_remaining_shield_time(self):
         """
         Calculate how much time left until next shield is available
@@ -190,6 +192,8 @@ class Player(GenericFrameObject):
 
         list_to_delete = []
         i = -1
+
+        player_hit = False
         for obj in self.game_obj.rendered_objects:
             i += 1
             common_points = self.check_collision(obj)
@@ -200,16 +204,19 @@ class Player(GenericFrameObject):
 
             if obj.TYPE == "coin":
                 for point in common_points:
-                    # playsound("coin_pickup.wav")
-                    pass
+                    self.game_obj.score += 1
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:
                 if not self.shield_activated:
-                    self.lifes -= 1
+                    player_hit = True
                     to_delete = True
 
             if to_delete:
                 list_to_delete.append(i)
+
+        if player_hit:
+            self.lifes -= 1
+            self.last_hit = time.time()
 
         list_to_delete.reverse()
         for j in list_to_delete:

@@ -53,7 +53,7 @@ class GenericFrameObject:
 
         self._generate_draw_obj()
 
-        self.x, self.y = self.get_spawn_coordinates()
+        self.x, self.y = get_spawn_coordinates(self.height)
 
     def _generate_draw_obj(self):
         try:
@@ -121,12 +121,6 @@ class GenericFrameObject:
             return GenericFrameObject.DEAD_FLAG
         return None
 
-    def get_spawn_coordinates(self):
-        """
-        Randomly return a valid spawn coordinate for things
-        """
-        return config.FRAME_SPAWN_X, random.randint(self.height, config.FRAME_BOTTOM_BOUNDARY)
-
     @staticmethod
     def _generate_coords(obj):
         points = set([])
@@ -150,3 +144,27 @@ class GenericFrameObject:
         coords_obj = GenericFrameObject._generate_coords(obj)
 
         return coords_obj & coords_self
+
+
+def get_spawn_coordinates(height):
+    """
+    Randomly return a valid spawn coordinate for things
+    """
+    return config.FRAME_SPAWN_X, random.randint(height, config.FRAME_BOTTOM_BOUNDARY)
+
+
+class GroupedObject(GenericFrameObject):
+    """
+    Coins and firebeams that occur in groups
+    """
+
+    def __init__(self, x, y):
+        super().__init__()
+        self.x = x
+        self.y = y
+
+    def draw(self):
+        return [{
+            "coord": [self.y, self.x],
+            "size": [1, 1]
+        }]

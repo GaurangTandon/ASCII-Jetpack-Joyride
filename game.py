@@ -15,8 +15,8 @@ from util import clear_terminal_screen, get_key_pressed, reposition_cursor
 import config
 from config import FRAME_RATE
 from ground import Ground
-from coin import CoinGroup
-from obstacle import FireBeam, Magnet
+from coin import get_coin_group
+from obstacle import get_firebeam_group, Magnet
 from generic import GenericFrameObject
 from boss import Boss
 from powerup import DragonPowerup
@@ -142,12 +142,15 @@ class Game():
         # make two slots in y axis as well
         if not config.DEBUG:
             if self.player.x + config.FRAME_WIDTH > self.next_spawn_point:
-                for random_spawn in [FireBeam, CoinGroup]:
-                    threshold = random_spawn.spawn_probability()
+                for random_spawn in [get_coin_group, get_firebeam_group]:
+                    # TODO
+                    threshold = 0.1  # random_spawn.spawn_probability()
 
                     if random.random() < threshold:
-                        obj = random_spawn()
-                        self.rendered_objects.append(obj)
+                        objs = random_spawn()
+                        for o in objs:
+                            self.rendered_objects.append(o)
+
                         self.next_spawn_point = max(
                             self.next_spawn_point, obj.x + obj.width)
                         break

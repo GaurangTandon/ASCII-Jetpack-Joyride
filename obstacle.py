@@ -6,46 +6,38 @@ import time
 import random
 from colorama import Fore, Back
 import config
-from generic import GenericFrameObject
+from generic import GenericFrameObject, get_spawn_coordinates, GroupedObject
 
 
-class FireBeam(GenericFrameObject):
-    """
-    Your usual fire!!
-    """
+class FireBeam(GroupedObject):
     stringRepr = ["F"]
     color = [Fore.RED, None]
     TYPE = "firebeam"
+    damage = 10
 
-    def __init__(self):
-        super().__init__()
-        self.damage = 10
-        # enum {horizontal, vertical, diagonal}
-        self.type = random.randint(1, 3)
 
-    def draw(self):
-        objs = []
-        # TODO: collide of laser with any one block should delete all five blocks of the firebeam
-        c_x = 0
-        c_y = 0
+def get_firebeam_group():
+    # enum {horizontal, vertical, diagonal}
+    typer = random.randint(1, 3)
+    objs = []
+    c_x = 0
+    c_y = 0
 
-        if self.type & 1:
-            c_x = 1
-        if self.type & 2:
-            c_y = 1
+    if typer & 1:
+        c_x = 1
+    if typer & 2:
+        c_y = 1
 
-        x_coord = self.x
-        y_coord = self.y
+    x_coord, y_coord = get_spawn_coordinates(config.FIREBEAM_LENGTH)
 
-        for _ in range(config.FIREBEAM_LENGTH):
-            info = {}
-            info["coord"] = [y_coord, x_coord]
-            info["size"] = [1, 1]
-            x_coord += c_x
-            y_coord -= c_y
-            objs.append(info)
+    for _ in range(config.FIREBEAM_LENGTH):
+        o = FireBeam(x_coord, y_coord)
 
-        return objs
+        x_coord += c_x
+        y_coord -= c_y
+        objs.append(o)
+
+    return objs
 
 
 class Magnet(GenericFrameObject):
