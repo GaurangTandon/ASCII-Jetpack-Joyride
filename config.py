@@ -25,4 +25,4 @@ COIN_VALUE = 1
 
 FIREBEAM_LENGTH = 5
 
-DEBUG = False
+DEBUG = True

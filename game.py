@@ -15,7 +15,7 @@ from util import clear_terminal_screen, get_key_pressed, reposition_cursor
 import config
 from config import FRAME_RATE
 from ground import Ground
-from coin import get_coin_group
+from coin import get_coin_group, Coin
 from obstacle import get_firebeam_group, Magnet
 from generic import GenericFrameObject
 from boss import Boss
@@ -193,17 +193,22 @@ class Game():
         elif cin != 0:
             if cin in '1234' and config.DEBUG:
                 if cin == '1':
-                    self.rendered_objects.append(CoinGroup())
+                    objs = get_coin_group()
+                    for o in objs:
+                        self.rendered_objects.append(o)
                 if cin == '2':
                     self.magnet_obj = Magnet()
                     self.rendered_objects.append(self.magnet_obj)
                 if cin == '3':
-                    self.rendered_objects.append(FireBeam())
+                    objs = get_firebeam_group()
+                    for o in objs:
+                        self.rendered_objects.append(o)
 
             if cin == 'b':
                 laserList = self.player.fire_laser()
                 for laser in laserList:
                     self.rendered_objects.append(laser)
+
             if cin == ' ' and self.player.TYPE == "player":
                 self.player.activate_shield()
 

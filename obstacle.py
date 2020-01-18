@@ -37,6 +37,7 @@ def get_firebeam_group():
         x_coord += c_x
         y_coord -= c_y
         objs.append(o)
+        o.id = CID
 
     return objs
 

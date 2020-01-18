@@ -152,7 +152,7 @@ class Player(GenericFrameObject):
         Called by Game when user presses Space
         """
         if self.current_bullets >= self.MAX_BULLETS:
-            return None
+            return []
 
         laser = Laser(self.x, self._get_middle(), self.game_obj)
         self.current_bullets += 1
