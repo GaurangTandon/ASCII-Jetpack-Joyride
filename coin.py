@@ -24,7 +24,11 @@ def get_coin_group():
     x, y = get_spawn_coordinates(height)
 
     lst = []
+    CID = random.random()
     for i in range(x, x + width):
         for j in range(y - height + 1, y + 1):
-            lst.append(Coin(i, j))
+            c = Coin(i, j)
+            lst.append(c)
+            c.id = CID
+
     return lst

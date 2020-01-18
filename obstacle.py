@@ -30,12 +30,14 @@ def get_firebeam_group():
 
     x_coord, y_coord = get_spawn_coordinates(config.FIREBEAM_LENGTH)
 
+    CID = random.random()
     for _ in range(config.FIREBEAM_LENGTH):
         o = FireBeam(x_coord, y_coord)
 
         x_coord += c_x
         y_coord -= c_y
         objs.append(o)
+        o.id = CID
 
     return objs
 

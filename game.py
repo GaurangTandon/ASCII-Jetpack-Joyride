@@ -93,10 +93,6 @@ class Game():
             else:
                 print(f"Shield available{padding}")
 
-            rm = int(self.player.recovery_time_remaining())
-            if rm:
-                print(f"Recovery time remaining {rm}")
-
         if not self.boss_obj:
             print(
                 f"Distance to boss {Boss.X_THRESHOLD - self.player.x}{padding}")
@@ -126,21 +122,27 @@ class Game():
         # only a single print at the end makes rendering efficient
         os.write(1, str.encode(grid_str))
 
+    def _delete_objects(self, id_list):
+        for i in range(0, len(id_list), -1):
+            o = self.rendered_objects[i]
+            if not o.id in id_list:
+                continue
+
+            if o.cleanup():
+                self.magnet_obj = None
+
+            self.rendered_objects.pop(i)
+
     def _update(self):
         i = -1
-        list_of_idxs_to_delete = []
+        list_of_ids_to_delete = []
 
         for obj in self.rendered_objects:
             i += 1
             if obj.update() == GenericFrameObject.DEAD_FLAG:
-                list_of_idxs_to_delete.append(i)
+                list_of_ids_to_delete.append(obj.id)
 
-        list_of_idxs_to_delete.reverse()
-
-        for i in list_of_idxs_to_delete:
-            if self.rendered_objects[i].cleanup():
-                self.magnet_obj = None
-            self.rendered_objects.pop(i)
+        self._delete_objects(list_of_ids_to_delete)
 
         # make spawning random somehow
         # make two slots in y axis as well
