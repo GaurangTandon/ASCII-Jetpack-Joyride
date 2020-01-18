@@ -39,6 +39,7 @@ class Player(GenericFrameObject):
     last_used_shield = -1
     SHIELD_TIME = 10
     SHIELD_REGEN_TIME = 60
+    RECOVERY_TIME = 3
 
     def __init__(self, obj_game):
         super().__init__()
@@ -161,6 +162,9 @@ class Player(GenericFrameObject):
 
         return [laser]
 
+    def recovery_time_remaining(self):
+        return max(0, self.RECOVERY_TIME - (time.time() - self.last_hit))
+
     def _check_bounds(self):
         touched_ceil = self.y <= self.height - 1
         touched_bottom = self.y >= self.startYCoord
@@ -207,7 +211,7 @@ class Player(GenericFrameObject):
                     self.game_obj.score += 1
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:
-                if not self.shield_activated:
+                if not self.shield_activated and not self.recovery_time_remaining():
                     player_hit = True
                     to_delete = True
 

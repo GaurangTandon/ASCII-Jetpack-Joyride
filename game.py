@@ -93,6 +93,10 @@ class Game():
             else:
                 print(f"Shield available{padding}")
 
+            rm = int(self.player.recovery_time_remaining())
+            if rm:
+                print(f"Recovery time remaining {rm}")
+
         if not self.boss_obj:
             print(
                 f"Distance to boss {Boss.X_THRESHOLD - self.player.x}{padding}")
