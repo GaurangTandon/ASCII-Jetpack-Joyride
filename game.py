@@ -15,7 +15,7 @@ from util import clear_terminal_screen, get_key_pressed, reposition_cursor
 import config
 from config import FRAME_RATE
 from ground import Ground
-from coin import get_coin_group, Coin
+from coin import get_coin_group
 from obstacle import get_firebeam_group, Magnet
 from generic import GenericFrameObject
 from boss import Boss
@@ -94,8 +94,10 @@ class Game():
             remain_time = self.player.get_remaining_shield_time()
 
             if self.player.shield_activated:
+                remain = self.player.SHIELD_TIME - \
+                    int(time.time() - self.player.last_used_shield)
                 print(
-                    f"Shield time remaining: {self.player.SHIELD_TIME - int(time.time() - self.player.last_used_shield)}{padding}")
+                    f"Shield time remaining: {remain}{padding}")
             elif remain_time:
                 print(f"Shield available in {math.ceil(remain_time)} seconds")
             else:
@@ -137,11 +139,11 @@ class Game():
 
     def _delete_objects(self):
         for i in range(len(self.rendered_objects) - 1, -1, -1):
-            o = self.rendered_objects[i]
-            if not o.id in self.delete_id_list:
+            obj = self.rendered_objects[i]
+            if not obj.id in self.delete_id_list:
                 continue
 
-            if o.cleanup():
+            if obj.cleanup():
                 self.magnet_obj = None
 
             self.rendered_objects.pop(i)
@@ -162,11 +164,11 @@ class Game():
 
                     if random.random() < threshold:
                         objs = random_spawn()
-                        for o in objs:
-                            self.rendered_objects.append(o)
+                        for obj in objs:
+                            self.rendered_objects.append(obj)
+                            self.next_spawn_point = max(
+                                self.next_spawn_point, obj.x + obj.width)
 
-                        self.next_spawn_point = max(
-                            self.next_spawn_point, obj.x + obj.width)
                         break
 
             # there should be no magnet if there is a boss
@@ -210,19 +212,19 @@ class Game():
             if cin in '1234' and config.DEBUG:
                 if cin == '1':
                     objs = get_coin_group()
-                    for o in objs:
-                        self.rendered_objects.append(o)
+                    for obj in objs:
+                        self.rendered_objects.append(obj)
                 if cin == '2':
                     self.magnet_obj = Magnet()
                     self.rendered_objects.append(self.magnet_obj)
                 if cin == '3':
                     objs = get_firebeam_group()
-                    for o in objs:
-                        self.rendered_objects.append(o)
+                    for obj2 in objs:
+                        self.rendered_objects.append(obj2)
 
             if cin == 'b':
-                laserList = self.player.fire_laser()
-                for laser in laserList:
+                laser_list = self.player.fire_laser()
+                for laser in laser_list:
                     self.rendered_objects.append(laser)
 
             if cin == ' ' and self.player.TYPE == "player":

@@ -3,9 +3,8 @@ Coin group class
 """
 
 import random
-import numpy as np
 from colorama import Fore
-from generic import GenericFrameObject, get_spawn_coordinates, GroupedObject
+from generic import get_spawn_coordinates, GroupedObject
 
 
 class Coin(GroupedObject):
@@ -18,16 +17,18 @@ class Coin(GroupedObject):
 
 
 def get_coin_group():
+    """
+    Returns a group of coins sitting together
+    """
     height = random.randint(3, 4)
     width = random.randint(3, 4)
 
-    x, y = get_spawn_coordinates(height)
+    x_coord, y_coord = get_spawn_coordinates(height)
 
     lst = []
-    CID = random.random()
-    for i in range(x, x + width):
-        for j in range(y - height + 1, y + 1):
-            c = Coin(i, j)
-            lst.append(c)
+    for i in range(x_coord, x_coord + width):
+        for j in range(y_coord - height + 1, y_coord + 1):
+            coin_obj = Coin(i, j)
+            lst.append(coin_obj)
 
     return lst

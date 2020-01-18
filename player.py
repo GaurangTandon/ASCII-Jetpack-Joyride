@@ -188,8 +188,6 @@ class Player(GenericFrameObject):
             self.x = config.FRAME_LEFT_BOUNDARY
             self.x_vel = 0
 
-        list_to_delete = []
-
         player_hit = False
         for obj in self.game_obj.rendered_objects:
             common_points = self.check_collision(obj)
@@ -199,7 +197,7 @@ class Player(GenericFrameObject):
             to_delete = False
 
             if obj.TYPE == "coin":
-                for point in common_points:
+                for _ in common_points:
                     self.game_obj.score += 1
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:
@@ -241,7 +239,6 @@ class Laser(GenericFrameObject):
             return GenericFrameObject.DEAD_FLAG
 
         # bullet can only delete one object
-        to_delete = None
         delete_self = False
 
         for obj in self.game_obj.rendered_objects:

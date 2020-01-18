@@ -7,7 +7,7 @@ import config
 from generic import GenericFrameObject
 from player import Laser
 
-frames = [
+FRAMES = [
     [
         "-  -          ------              ",
         " -  -        -  --  -        -----",
@@ -95,7 +95,7 @@ class DragonPowerup(GenericFrameObject):
     def __init__(self, game):
         self.frame = 0
         self.count = 0
-        self.__class__.stringRepr = frames[0]
+        self.__class__.stringRepr = FRAMES[0]
         self.__class__.color = [Fore.WHITE, None]
         super().__init__()
         self.y = config.FRAME_HEIGHT / 2
@@ -105,12 +105,15 @@ class DragonPowerup(GenericFrameObject):
         self.game_obj = game
 
     def wiggle(self):
+        """
+        Changes frame of the dragon every 5 frames
+        """
         if self.count % 5 == 0:
-            self.__class__.stringRepr = frames[self.frame]
+            self.__class__.stringRepr = FRAMES[self.frame]
             self.__class__.color = [Fore.WHITE, None]
             self._generate_draw_obj()
             self.frame += 1
-            self.frame %= len(frames)
+            self.frame %= len(FRAMES)
         self.count += 1
 
     def update(self, last_key_pressed):
@@ -139,12 +142,12 @@ class DragonPowerup(GenericFrameObject):
             return []
 
         right_point = self.x + self.width
-        l1 = Laser(right_point, self._get_middle(), self.game_obj)
-        l2 = Laser(right_point, self.y, self.game_obj)
-        l3 = Laser(right_point, self.y - self.height + 1, self.game_obj)
+        laser1 = Laser(right_point, self._get_middle(), self.game_obj)
+        laser2 = Laser(right_point, self.y, self.game_obj)
+        laser3 = Laser(right_point, self.y - self.height + 1, self.game_obj)
         self.current_bullets += 3
 
-        return [l1, l2, l3]
+        return [laser1, laser2, laser3]
 
     def _check_bounds(self):
         self.y = max(self.y, self.height - 1)
@@ -158,7 +161,7 @@ class DragonPowerup(GenericFrameObject):
             to_delete = False
 
             if obj.TYPE == "coin":
-                for point in common_points:
+                for _ in common_points:
                     self.game_obj.score += 1
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:

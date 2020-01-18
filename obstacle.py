@@ -10,6 +10,9 @@ from generic import GenericFrameObject, get_spawn_coordinates, GroupedObject
 
 
 class FireBeam(GroupedObject):
+    """
+    The usual fire!
+    """
     stringRepr = ["F"]
     color = [Fore.RED, None]
     TYPE = "firebeam"
@@ -17,6 +20,10 @@ class FireBeam(GroupedObject):
 
 
 def get_firebeam_group():
+    """
+    Returns a firebeam object of individual firebeams
+    all having the same id
+    """
     # enum {horizontal, vertical, diagonal}
     typer = random.randint(1, 3)
     objs = []
@@ -30,14 +37,14 @@ def get_firebeam_group():
 
     x_coord, y_coord = get_spawn_coordinates(config.FIREBEAM_LENGTH)
 
-    CID = random.random()
+    const_id = random.random()
     for _ in range(config.FIREBEAM_LENGTH):
-        o = FireBeam(x_coord, y_coord)
+        obj = FireBeam(x_coord, y_coord)
 
         x_coord += c_x
         y_coord -= c_y
-        objs.append(o)
-        o.id = CID
+        objs.append(obj)
+        obj.id = const_id
 
     return objs
 
