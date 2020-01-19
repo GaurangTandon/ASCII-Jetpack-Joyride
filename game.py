@@ -115,7 +115,7 @@ class Game():
             print(f"Boss health: {max(0, self.boss_obj.health)}{padding}")
 
     def _draw(self):
-        self.grid = np.array([[Fore.WHITE + Back.BLUE + " "
+        self.grid = np.array([[Fore.WHITE + config.BACK_COLOR + " "
                                for _ in range(config.FRAME_WIDTH)]
                               for _ in range(config.FRAME_HEIGHT)])
 

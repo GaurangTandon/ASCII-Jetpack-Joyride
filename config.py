@@ -1,6 +1,7 @@
 """
 Constants related to the frame and the game
 """
+from colorama import Back
 
 GROUND_HEIGHT = 2
 
@@ -26,3 +27,4 @@ COIN_VALUE = 1
 FIREBEAM_LENGTH = 5
 
 DEBUG = False
+BACK_COLOR = Back.CYAN

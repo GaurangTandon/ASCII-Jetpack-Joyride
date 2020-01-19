@@ -12,7 +12,7 @@ class Coin(GroupedObject):
     Coins occur in groups
     """
     TYPE = "coin"
-    stringRepr = ["C"]
+    stringRepr = ["$"]
     color = [Fore.WHITE, None]
 
 

@@ -30,7 +30,7 @@ def mapper(grid, height, width, color):
             if color_elm[1]:
                 curr_str += color_elm[1]
             else:
-                curr_str += Back.BLUE
+                curr_str += config.BACK_COLOR
 
             curr_str += grid[row][col]
             res = np.append(res, curr_str)
