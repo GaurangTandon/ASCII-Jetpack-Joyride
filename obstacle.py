@@ -13,8 +13,8 @@ class FireBeam(GroupedObject):
     """
     The usual fire!
     """
-    stringRepr = ["F"]
-    color = [Fore.RED, None]
+    stringRepr = [" "]
+    color = [None, Back.RED]
     TYPE = "firebeam"
     damage = 10
 

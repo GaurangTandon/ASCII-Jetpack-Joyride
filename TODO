@@ -2,3 +2,6 @@
 - how to add polymorphism?
 - improve rendering with multiple parts of the same object having different colors
 - fix Game._draw to only repaint pixels that changed
+- coins render inside boss
+- boss threshold does not come automatically, player has to move
+- bullet goes through fire sometimes
