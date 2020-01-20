@@ -208,7 +208,8 @@ class Player(GenericFrameObject):
                     player_hit = True
                     to_delete = True
             elif obj.TYPE == "speed":
-
+                self.game_obj._speed_powerup()
+                self.game_obj.speed_on_time = time.time()
                 to_delete = True
 
             if to_delete:
