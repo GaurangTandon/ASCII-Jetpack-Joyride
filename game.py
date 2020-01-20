@@ -188,7 +188,7 @@ class Game():
         if self.speed_on_time > 0 and time.time() - self.speed_on_time >= self.SPEED_TIME:
             self._speed_powerup(False)
             # can only use once
-            self.speed_on_time = -1
+            self.speed_on_time = -2
 
     def _terminate(self, we_won):
         """
@@ -239,6 +239,11 @@ class Game():
             if cin == 'y' and self.player.TYPE == "player":
                 # replace player with dragon
                 self.player = DragonPowerup(self)
+
+            if cin == 't':
+                if self.speed_on_time == -1:
+                    self._speed_powerup()
+                    self.speed_on_time = time.time()
 
         return cin
 

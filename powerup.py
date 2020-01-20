@@ -170,13 +170,3 @@ class DragonPowerup(GenericFrameObject):
 
             if to_delete:
                 self.game_obj.delete_id_list.append(obj.id)
-
-
-class Speed(GenericFrameObject):
-    stringRepr = [
-        "SS",
-        "SS"
-    ]
-
-    color = [Fore.MAGENTA, Back.BLUE]
-    TYPE = "speed"
