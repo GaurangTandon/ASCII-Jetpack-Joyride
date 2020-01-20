@@ -96,15 +96,13 @@ class Player(GenericFrameObject):
         """
         if self.game_obj.magnet_obj:
             # TODO: messed up
-            num = Magnet.FORCE_CONSTANT
             x_dist = self.game_obj.magnet_obj.x - self.x
             y_dist = self.game_obj.magnet_obj.y - self.y
             hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
 
             if hyp != 0:
-                force = num / (hyp * hyp)
-                self.x_acc = (x_dist / hyp) * force
-                self.y_acc = (y_dist / hyp) * force
+                self.x_acc = (x_dist / hyp) * Magnet.FORCE_CONSTANT
+                self.y_acc = (y_dist / hyp) * Magnet.FORCE_CONSTANT
             else:
                 self.x_acc = 0
                 self.y_acc = 0
@@ -141,9 +139,11 @@ class Player(GenericFrameObject):
         self.y_vel += config.GRAVITY_ACC
         self.y_vel += self.y_acc
         self.x_vel += self.x_acc
+        print(self.x_vel)
         drag_value = min(self.DRAG_CONSTANT * self.x_vel *
-                         self.x_vel, abs(self.x_vel))
+                         self.x_vel, abs(1))
         self.x_vel += (-1 if self.x_vel > 0 else 1) * drag_value
+        print(self.x_vel)
 
         self.x += round(self.x_vel)
         self.y += round(self.y_vel)
