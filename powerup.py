@@ -2,7 +2,7 @@
 Dragon powerup and the boss laser implemented
 """
 
-from colorama import Fore
+from colorama import Fore, Back
 import config
 from generic import GenericFrameObject
 from player import Laser
@@ -170,3 +170,13 @@ class DragonPowerup(GenericFrameObject):
 
             if to_delete:
                 self.game_obj.delete_id_list.append(obj.id)
+
+
+class Speed(GenericFrameObject):
+    stringRepr = [
+        "SS",
+        "SS"
+    ]
+
+    color = [Fore.MAGENTA, Back.BLUE]
+    TYPE = "speed"

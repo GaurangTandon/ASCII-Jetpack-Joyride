@@ -207,6 +207,9 @@ class Player(GenericFrameObject):
                 if not self.shield_activated:
                     player_hit = True
                     to_delete = True
+            elif obj.TYPE == "speed":
+
+                to_delete = True
 
             if to_delete:
                 self.game_obj.delete_id_list.append(obj.id)
