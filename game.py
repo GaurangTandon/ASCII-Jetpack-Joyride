@@ -66,6 +66,8 @@ class Game():
         self.speed_on_time = -1
         self.delete_id_list = []
 
+        self.x_travelled = 0
+
         self.keys = KBHit()
         clear_terminal_screen()
 
@@ -110,7 +112,7 @@ class Game():
 
         if not self.boss_obj:
             print(
-                f"Distance to boss {Boss.X_THRESHOLD - self.player.x}{padding}")
+                f"Distance to boss {Boss.X_THRESHOLD - self.x_travelled}{padding}")
         else:
             print(f"Boss health: {max(0, self.boss_obj.health)}{padding}")
 
@@ -149,6 +151,8 @@ class Game():
             self.rendered_objects.pop(i)
 
     def _update(self):
+        self.x_travelled += 1
+
         for obj in self.rendered_objects:
             if obj.update() == GenericFrameObject.DEAD_FLAG:
                 assert obj.id is not None
@@ -265,7 +269,7 @@ class Game():
             self.player.update(last_key_pressed)
             self._delete_objects()
 
-            if not self.boss_obj and self.player.x >= Boss.X_THRESHOLD:
+            if not self.boss_obj and self.x_travelled >= Boss.X_THRESHOLD:
                 self.boss_obj = Boss(self)
                 self.rendered_objects.append(self.boss_obj)
                 # TODO: see other TODO comment
