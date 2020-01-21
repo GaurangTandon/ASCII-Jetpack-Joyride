@@ -61,7 +61,7 @@ class Magnet(GenericFrameObject):
 
     # magnetic attraction is modeled as Gm1m2/r^2 or Kq1q2/r^2 in real life
     # i have not added the r^2 term here, since it made the effect extremely bizzare
-    FORCE_CONSTANT = 10
+    FORCE_CONSTANT = 0.5
 
     def __init__(self):
         super().__init__()
