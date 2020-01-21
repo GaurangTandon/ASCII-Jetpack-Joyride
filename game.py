@@ -111,8 +111,10 @@ class Game():
             print(f"Game at normal speed")
 
         if not self.boss_obj:
+            x_vel_factor = 2 if self.speed_on_time != -1 else 1
+
             print(
-                f"Distance to boss {Boss.X_THRESHOLD - self.x_travelled}{padding}")
+                f"Distance to boss {(Boss.X_THRESHOLD - self.x_travelled) // x_vel_factor}{padding}")
         else:
             print(f"Boss health: {max(0, self.boss_obj.health)}{padding}")
 
@@ -271,7 +273,8 @@ class Game():
             self.player.update(last_key_pressed)
             self._delete_objects()
 
-            if not self.boss_obj and self.x_travelled >= Boss.X_THRESHOLD:
+            x_vel_factor = 2 if self.speed_on_time != -1 else 1
+            if not self.boss_obj and self.x_travelled * x_vel_factor >= Boss.X_THRESHOLD:
                 self.boss_obj = Boss(self)
                 self.rendered_objects.append(self.boss_obj)
                 # TODO: see other TODO comment

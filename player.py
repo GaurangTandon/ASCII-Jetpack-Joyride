@@ -95,7 +95,6 @@ class Player(GenericFrameObject):
         Called by Game to update the player stuff
         """
         if self.game_obj.magnet_obj:
-            # TODO: messed up
             x_dist = self.game_obj.magnet_obj.x - self.x
             y_dist = (self.game_obj.magnet_obj.y - self.y)*2
             hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
@@ -119,16 +118,18 @@ class Player(GenericFrameObject):
         self.__class__.color = tiler(
             [color_val, None], self.height, self.width)
 
+        x_vel_factor = 2 if self.game_obj.speed_on_time != -1 else 1
+
         # keypress gives an impulse, not an accn
         if last_key_pressed == 'w':
             self.y_vel -= self.Y_IMPULSE
         elif last_key_pressed == 's':
             self.y_vel += self.Y_IMPULSE
         elif last_key_pressed == 'a':
-            self.x_vel -= self.X_IMPULSE
+            self.x_vel -= self.X_IMPULSE * x_vel_factor
             self.__class__.stringRepr[-1] = "////"
         elif last_key_pressed == 'd':
-            self.x_vel += self.X_IMPULSE
+            self.x_vel += self.X_IMPULSE * x_vel_factor
             self.__class__.stringRepr[-1] = "\\\\\\\\"
 
         if str(last_key_pressed) in 'sw':
