@@ -2,7 +2,7 @@
 Module for generic frame object on render screen
 """
 import random
-from colorama import Back, Fore
+from colorama import Fore
 import numpy as np
 import config
 from util import tiler

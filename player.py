@@ -14,7 +14,7 @@ from generic import GenericFrameObject
 from obstacle import Magnet
 
 
-player_color = Fore.WHITE
+PLAYER_COLOR = Fore.WHITE
 
 
 class Player(GenericFrameObject):
@@ -32,7 +32,7 @@ class Player(GenericFrameObject):
         "||||",
     ]
 
-    color = [player_color, None]
+    color = [PLAYER_COLOR, None]
 
     DRAG_CONSTANT = 0.1
     X_IMPULSE = 1
@@ -90,6 +90,15 @@ class Player(GenericFrameObject):
     def _get_top(self):
         return self.y - self.height + 1
 
+    def get_lives(self):
+        return self.lifes
+
+    def get_shield_activated(self):
+        return self.shield_activated
+
+    def get_last_used_shield(self):
+        return self.last_used_shield
+
     def update(self, last_key_pressed):
         """
         Called by Game to update the player stuff
@@ -112,7 +121,7 @@ class Player(GenericFrameObject):
         if self.shield_activated and time.time() - self.last_used_shield >= self.SHIELD_TIME:
             self.shield_activated = False
 
-        color_val = Fore.BLUE if self.shield_activated else player_color
+        color_val = Fore.BLUE if self.shield_activated else PLAYER_COLOR
 
         self.__class__.stringRepr[-1] = "||||"
         self.__class__.color = tiler(

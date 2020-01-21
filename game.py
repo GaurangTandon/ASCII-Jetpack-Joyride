@@ -8,7 +8,7 @@ import random
 import math
 import time
 import numpy as np
-from colorama import init as coloramaInit, Fore, Back, Style
+from colorama import init as coloramaInit, Fore, Style
 from player import Player
 from kbhit import KBHit
 from util import clear_terminal_screen, get_key_pressed, reposition_cursor
@@ -73,31 +73,74 @@ class Game():
 
         self._loop()
 
-    def _speed_powerup(self, activate=True):
+    @classmethod
+    def _speed_powerup(cls, activate=True):
         factor = 2
         if activate:
             config.FRAME_MOVE_SPEED *= factor
         else:
             config.FRAME_MOVE_SPEED //= factor
 
+    def get_end_time(self):
+        """
+        getter
+        """
+        return self.end_time
+
     def _get_time_remaining(self):
-        time_remaining = (self.end_time - time.time())
+        time_remaining = (self.get_end_time() - time.time())
         return int(np.round(time_remaining))
+
+    def get_score(self):
+        """
+        getter
+        """
+        return self.score
+
+    def get_speed_on_time(self):
+        """
+        getter
+        """
+        return self.speed_on_time
+
+    def get_x_travelled(self):
+        """
+        getter
+        """
+        return self.x_travelled
+
+    def get_rendered_objects(self):
+        """
+        getter
+        """
+        return self.rendered_objects
+
+    def get_grid(self):
+        """
+        getter
+        """
+        return self.grid
+
+    def set_x_travelled(self, val):
+        """
+        setter
+        """
+        self.x_travelled = val
 
     def _info_print(self):
         # required padding since we are not clearing screen and just resetting carat pos
         padding = ' '*10
         print(
             f"Time remaining \u23f1 {self._get_time_remaining()} seconds{padding}")
-        print(f"Lives remaining \u2764 {self.player.lifes}{padding}")
-        print(f"Score {self.score}{padding}")
+        print(f"Lives remaining \u2764 {self.player.get_lives()}{padding}")
+        print(f"Score {self.get_score()}{padding}")
 
         if self.player.TYPE == "player":
             remain_time = self.player.get_remaining_shield_time()
 
-            if self.player.shield_activated:
-                remain = self.player.SHIELD_TIME - \
-                    int(time.time() - self.player.last_used_shield)
+            if self.player.get_shield_activated():
+                remain = Player.SHIELD_TIME - \
+                    int(time.time() - self.player.get_last_used_shield())
                 print(
                     f"Shield time remaining: {remain}{padding}")
             elif remain_time:
@@ -111,10 +154,11 @@ class Game():
             print(f"Game at normal speed")
 
         if not self.boss_obj:
-            x_vel_factor = 2 if self.speed_on_time != -1 else 1
+            x_vel_factor = 2 if self.get_speed_on_time() != -1 else 1
+            distance = (Boss.X_THRESHOLD -
+                        self.get_x_travelled()) // x_vel_factor
 
-            print(
-                f"Distance to boss {(Boss.X_THRESHOLD - self.x_travelled) // x_vel_factor}{padding}")
+            print(f"Distance to boss {distance}{padding}")
         else:
             print(f"Boss health: {max(0, self.boss_obj.health)}{padding}")
 
@@ -125,7 +169,7 @@ class Game():
 
         self._info_print()
 
-        for obj in self.rendered_objects:
+        for obj in self.get_rendered_objects():
             info_objs = obj.draw()
             for info in info_objs:
                 self._draw_in_range(info, obj.obj)
@@ -136,7 +180,7 @@ class Game():
         # offset by 10: since otherwise the whole coin group disappears even if a
         # single coin touches the boundary
         grid_str = "\n".join([str(Style.RESET_ALL).join(row[10:]) + Style.RESET_ALL + padding
-                              for row in self.grid])
+                              for row in self.get_grid()])
 
         # only a single print at the end makes rendering efficient
         os.write(1, str.encode(grid_str))
@@ -153,7 +197,7 @@ class Game():
             self.rendered_objects.pop(i)
 
     def _update(self):
-        self.x_travelled += 1
+        self.set_x_travelled(self.get_x_travelled() + 1)
 
         for obj in self.rendered_objects:
             if obj.update() == GenericFrameObject.DEAD_FLAG:
@@ -177,9 +221,6 @@ class Game():
 
                         break
 
-            # there should be no magnet if there is a boss
-            # since otherwise it is almost impossible to win
-            # TODO: see if necessary
             if not self.magnet_obj and not self.boss_obj:
                 if random.random() < Magnet.SPAWN_PROBABILITY:
                     self.magnet_obj = Magnet()
@@ -216,36 +257,30 @@ class Game():
 
         if cin == -1:
             self._terminate(-1)
-        elif cin != 0:
-            if cin in '1234' and config.DEBUG:
-                if cin == '1':
-                    objs = get_coin_group()
-                    for obj in objs:
-                        self.rendered_objects.append(obj)
-                if cin == '2':
-                    self.magnet_obj = Magnet()
-                    self.rendered_objects.append(self.magnet_obj)
-                if cin == '3':
-                    objs = get_firebeam_group()
-                    for obj2 in objs:
-                        self.rendered_objects.append(obj2)
-
-            if cin == 'b':
-                laser_list = self.player.fire_laser()
-                for laser in laser_list:
-                    self.rendered_objects.append(laser)
-
-            if cin == ' ' and self.player.TYPE == "player":
-                self.player.activate_shield()
-
-            if cin == 'y' and self.player.TYPE == "player":
-                # replace player with dragon
-                self.player = DragonPowerup(self)
-
-            if cin == 't':
-                if self.speed_on_time == -1:
-                    self._speed_powerup()
-                    self.speed_on_time = time.time()
+        elif cin in '1234' and config.DEBUG:
+            if cin == '1':
+                objs = get_coin_group()
+                for obj in objs:
+                    self.rendered_objects.append(obj)
+            if cin == '2':
+                self.magnet_obj = Magnet()
+                self.rendered_objects.append(self.magnet_obj)
+            if cin == '3':
+                objs = get_firebeam_group()
+                for obj2 in objs:
+                    self.rendered_objects.append(obj2)
+        elif cin == 'b':
+            laser_list = self.player.fire_laser()
+            for laser in laser_list:
+                self.rendered_objects.append(laser)
+        elif cin == ' ' and self.player.TYPE == "player":
+            self.player.activate_shield()
+        elif cin == 'y' and self.player.TYPE == "player":
+            # replace player with dragon
+            self.player = DragonPowerup(self)
+        elif cin == 't' and self.speed_on_time == -1:
+            self._speed_powerup()
+            self.speed_on_time = time.time()
 
         return cin
 
