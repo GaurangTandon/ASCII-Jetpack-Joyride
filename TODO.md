@@ -1,6 +1,5 @@
-- player goes outside right frame boundary
+- player gets stuck at the top
 - coin and flame overlap
 - flame and flame overlap
-- magnet ka time reduce on speed boost
 - sys stdout stdin flush
 - venv requirements file
