@@ -22,7 +22,7 @@ class Mountain(BackgroundObject):
     A large mountain with a house in it that looks dope
     """
     stringRepr = [
-        r"                                       /\                                ",
+        r"                                                                         ",
         r"                              /\  //\\                                   ",
         r"                       /\    //\\///\\\        /\                        ",
         r"                      //\\  ///\////\\\\  /\  //\\                       ",

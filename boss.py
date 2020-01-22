@@ -42,7 +42,7 @@ class Boss(GenericFrameObject):
         self.y_vel = -1
 
         self.y = self.START_Y
-        self.x = config.FRAME_SPAWN_X
+        self.x = config.FRAME_SPAWN_X - 20
 
         self.game_obj = game_obj
 

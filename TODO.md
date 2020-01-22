@@ -1,0 +1,6 @@
+- player goes outside right frame boundary
+- coin and flame overlap
+- flame and flame overlap
+- magnet ka time reduce on speed boost
+- sys stdout stdin flush
+- venv requirements file

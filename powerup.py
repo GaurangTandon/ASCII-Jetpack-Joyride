@@ -72,7 +72,7 @@ class DragonPowerup(GenericFrameObject):
     - bullets follow the dragon with 100% accuracy
     """
 
-    MAX_BULLETS = 20
+    MAX_BULLETS = 6
     TYPE = "playerdragon"
 
     def __init__(self, game):
@@ -82,8 +82,8 @@ class DragonPowerup(GenericFrameObject):
         self.__class__.color = [Fore.WHITE, None]
         super().__init__()
         self.y = config.FRAME_HEIGHT / 2
-        self.x = 15
-        self.lifes = 3
+        self.x = 5 + config.FRAME_LEFT_BOUNDARY
+        self.lifes = 1
         self.current_bullets = 0
         self.game_obj = game
 
@@ -121,7 +121,7 @@ class DragonPowerup(GenericFrameObject):
         """
         Called by Game when user presses Space
         """
-        if self.current_bullets + 3 >= self.MAX_BULLETS:
+        if self.current_bullets + 3 > self.MAX_BULLETS:
             return []
 
         right_point = self.x + self.width
@@ -144,12 +144,29 @@ class DragonPowerup(GenericFrameObject):
             to_delete = False
 
             if obj.TYPE == "coin":
-                for _ in common_points:
-                    self.game_obj.score += 1
+                self.game_obj.score += len(common_points)
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:
                 self.lifes -= 1
                 to_delete = True
 
             if to_delete:
-                self.game_obj.delete_id_list.append(obj.id)
+                self.game_obj.append_to_delete_list(obj.id)
+
+    def decrement_bullets(self):
+        """
+        setter
+        """
+        self.current_bullets -= 1
+
+    def get_lives(self):
+        """
+        getter
+        """
+        return self.lifes
+
+    def decrease_lives(self):
+        """
+        setter
+        """
+        self.lifes -= 1

@@ -146,6 +146,8 @@ class Player(GenericFrameObject):
 
         self.x += round(self.x_vel)
         self.y += round(self.y_vel)
+        self.x = min(self.x, 2 * config.FRAME_SPAWN_OFFSET +
+                     config.FRAME_RIGHT_BOUNARY)
 
         self._check_bounds()
 

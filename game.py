@@ -122,7 +122,7 @@ class Game():
 
         if not self.boss_obj:
             distance = (Boss.X_THRESHOLD -
-                        self.get_x_travelled()) // config.X_VEL_FACTOR
+                        self.get_x_travelled())
 
             print(f"Distance to boss {distance}{padding}")
         else:
@@ -169,7 +169,7 @@ class Game():
 
     def _update(self):
         self.ticks += 1
-        self.set_x_travelled(self.get_x_travelled() + 1)
+        self.set_x_travelled(self.get_x_travelled() + config.X_VEL_FACTOR)
 
         # use insert(0) since these objects should render before all other objects
         if self.ticks % 75 == 0:
@@ -255,6 +255,7 @@ class Game():
         elif cin == 'y' and self.player.get_type() == "player":
             # replace player with dragon
             self.player = DragonPowerup(self)
+            Boss.FIRE_INTERVAL = 0.5
         elif cin == 't' and not self.is_sped_up():
             self.speed_powerup()
             self.speed_on_time = time.time()
@@ -279,7 +280,7 @@ class Game():
             self.player.update(last_key_pressed)
             self._delete_objects()
 
-            if not self.boss_obj and self.x_travelled * config.X_VEL_FACTOR >= Boss.X_THRESHOLD:
+            if not self.boss_obj and self.x_travelled >= Boss.X_THRESHOLD:
                 self.boss_obj = Boss(self)
                 self.rendered_objects.append(self.boss_obj)
 
