@@ -255,7 +255,7 @@ class Game():
         elif cin == 'y' and self.player.get_type() == "player":
             # replace player with dragon
             self.player = DragonPowerup(self)
-            Boss.FIRE_INTERVAL = 0.5
+            Boss.FIRE_INTERVAL = 0.75
         elif cin == 't' and not self.is_sped_up():
             self.speed_powerup()
             self.speed_on_time = time.time()

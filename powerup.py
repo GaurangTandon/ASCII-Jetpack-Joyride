@@ -121,16 +121,29 @@ class DragonPowerup(GenericFrameObject):
         """
         Called by Game when user presses Space
         """
-        if self.current_bullets + 3 > self.MAX_BULLETS:
-            return []
+        res = []
 
         right_point = self.x + self.width
-        laser1 = Laser(right_point, self._get_middle(), self.game_obj)
-        laser2 = Laser(right_point, self.y, self.game_obj)
-        laser3 = Laser(right_point, self.y - self.height + 1, self.game_obj)
-        self.current_bullets += 3
+        if self.current_bullets >= self.MAX_BULLETS:
+            return res
 
-        return [laser1, laser2, laser3]
+        laser1 = Laser(right_point, self._get_middle(), self.game_obj)
+        res.append(laser1)
+        self.current_bullets += 1
+        if self.current_bullets >= self.MAX_BULLETS:
+            return res
+
+        laser2 = Laser(right_point, self.y, self.game_obj)
+        res.append(laser2)
+        self.current_bullets += 1
+        if self.current_bullets >= self.MAX_BULLETS:
+            return res
+
+        laser3 = Laser(right_point, self.y - self.height + 1, self.game_obj)
+        res.append(laser3)
+        self.current_bullets += 1
+
+        return res
 
     def _check_bounds(self):
         self.y = max(self.y, self.height - 1)
