@@ -95,23 +95,6 @@ class GenericFrameObject:
         """
         return self.TYPE
 
-    @classmethod
-    def spawn_probability(cls):
-        """
-        Returns a fraction denoting probability with which
-        an object of this class should be spawned
-        """
-        try:
-            c_a = cls.currently_active
-
-            # TODO: improve random spawning, still not nice
-            ca2 = c_a*c_a
-            ca4 = ca2*ca2
-
-            return 1 / ca4
-        except ArithmeticError:
-            return 0.1
-
     def exceeds_bounds(self):
         """
         If this object exceeds top or bottom bounds of the frame

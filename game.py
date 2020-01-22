@@ -187,8 +187,7 @@ class Game():
         if not config.DEBUG:
             if self.player.x + config.FRAME_WIDTH > self.next_spawn_point:
                 for random_spawn in [get_coin_group, get_firebeam_group]:
-                    # TODO
-                    threshold = 0.1  # random_spawn.spawn_probability()
+                    threshold = 0.05
 
                     if random.random() < threshold:
                         objs = random_spawn()
@@ -282,7 +281,7 @@ class Game():
             if not self.boss_obj and self.x_travelled * config.X_VEL_FACTOR >= Boss.X_THRESHOLD:
                 self.boss_obj = Boss(self)
                 self.rendered_objects.append(self.boss_obj)
-                # TODO: see other TODO comment
+
                 if self.magnet_obj:
                     self.magnet_obj.destroy()
 

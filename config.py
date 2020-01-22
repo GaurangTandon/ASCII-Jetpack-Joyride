@@ -26,7 +26,7 @@ COIN_VALUE = 1
 
 FIREBEAM_LENGTH = 5
 
-DEBUG = True
+DEBUG = False
 BACK_COLOR = Back.BLACK
 
 # for the speed up

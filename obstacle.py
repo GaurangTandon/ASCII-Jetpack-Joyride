@@ -60,7 +60,7 @@ class Magnet(GenericFrameObject):
     ]
     color = [Fore.RED, Back.WHITE]
     LIFETIME = 10
-    SPAWN_PROBABILITY = 0.01
+    SPAWN_PROBABILITY = 0.005
     TYPE = "magnet"
 
     # magnetic attraction is modeled as Gm1m2/r^2 or Kq1q2/r^2 in real life

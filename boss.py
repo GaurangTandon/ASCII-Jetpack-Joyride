@@ -13,7 +13,7 @@ class Boss(GenericFrameObject):
     """
     Main enemy which the player needs to fight off
     """
-    X_THRESHOLD = 10  # 1000  # comes out to be about 60secs
+    X_THRESHOLD = 1000  # comes out to be about 60secs
     Y_VEL = 1
     START_Y = round(config.FRAME_HEIGHT / 2)
     FIRE_INTERVAL = 1
@@ -64,8 +64,6 @@ class Boss(GenericFrameObject):
         self.y += round(self.y_vel)
         self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
         self.y = max(self.y, self.height)
-
-        # get the player's coordinates and move towards it
 
         if time.time() - self.last_fired >= self.FIRE_INTERVAL:
             self._fire_gun()
