@@ -103,9 +103,11 @@ class Player(GenericFrameObject):
         """
         Called by Game to update the player stuff
         """
-        if self.game_obj.magnet_obj:
-            x_dist = self.game_obj.magnet_obj.x - self.x
-            y_dist = (self.game_obj.magnet_obj.y - self.y)*2
+        magnet_x, magnet_y = self.game_obj.get_magnet_coords()
+
+        if magnet_x != None:
+            x_dist = magnet_x - self.x
+            y_dist = (magnet_y - self.y)*2
             hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
 
             if hyp != 0:
@@ -127,7 +129,7 @@ class Player(GenericFrameObject):
         self.__class__.color = tiler(
             [color_val, None], self.height, self.width)
 
-        x_vel_factor = 2 if self.game_obj.speed_on_time != -1 else 1
+        x_vel_factor = 2 if self.game_obj.get_speed_on_time() != -1 else 1
 
         # keypress gives an impulse, not an accn
         if last_key_pressed == 'w':
@@ -200,7 +202,7 @@ class Player(GenericFrameObject):
             self.x_vel = 0
 
         player_hit = False
-        for obj in self.game_obj.rendered_objects:
+        for obj in self.game_obj.get_rendered_objects():
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
@@ -209,7 +211,7 @@ class Player(GenericFrameObject):
 
             if obj.TYPE == "coin":
                 for _ in common_points:
-                    self.game_obj.score += 1
+                    self.game_obj.increment_score()
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:
                 if not self.shield_activated:
@@ -217,11 +219,11 @@ class Player(GenericFrameObject):
                     to_delete = True
             elif obj.TYPE == "speed":
                 self.game_obj._speed_powerup()
-                self.game_obj.speed_on_time = time.time()
+                self.game_obj.set_speed_on_time(time.time())
                 to_delete = True
 
             if to_delete:
-                self.game_obj.delete_id_list.append(obj.id)
+                self.game_obj.append_to_delete_list(obj.id)
 
         if player_hit:
             self.lifes -= 1
@@ -250,33 +252,32 @@ class Laser(GenericFrameObject):
         self.x += config.LASER_VEL
 
         if self.exceeds_bounds():
-            self.game_obj.player.current_bullets -= 1
+            self.game_obj.decrement_player_bullets()
             return GenericFrameObject.DEAD_FLAG
 
         # bullet can only delete one object
         delete_self = False
 
-        for obj in self.game_obj.rendered_objects:
+        for obj in self.game_obj.get_rendered_objects():
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
 
             if obj.TYPE == "boss":
-                if self.game_obj.player.TYPE == "player":
-                    self.game_obj.boss_obj.health -= self.BOSS_DAMAGE_PLAYER
-                else:
-                    self.game_obj.boss_obj.health -= self.BOSS_DAMAGE_DRAGON
+                is_player = self.game_obj.get_player_type() == "player"
+                self.game_obj.decrement_boss_health(
+                    self.BOSS_DAMAGE_PLAYER if is_player else self.BOSS_DAMAGE_DRAGON)
 
                 delete_self = True
                 break
 
             if obj.TYPE in ["bosslaser", "firebeam"]:
-                self.game_obj.delete_id_list.append(obj.id)
+                self.game_obj.append_to_delete_list(obj.id)
                 delete_self = True
                 break
 
         if delete_self:
-            self.game_obj.player.current_bullets -= 1
+            self.game_obj.decrement_player_bullets()
             return GenericFrameObject.DEAD_FLAG
 
         return None

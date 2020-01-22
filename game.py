@@ -335,3 +335,30 @@ class Game():
 
             while time.time() - last < self._refresh_time:
                 pass
+
+    def set_speed_on_time(self, val):
+        self.speed_on_time = val
+
+    def get_speed_on_time(self):
+        return self.speed_on_time
+
+    def append_to_delete_list(self, id):
+        self.delete_id_list.append(id)
+
+    def increment_score(self):
+        self.score += 1
+
+    def get_rendered_objects(self):
+        return self.rendered_objects
+
+    def decrement_player_bullets(self):
+        self.player.current_bullets -= 1
+
+    def get_player_type(self):
+        return self.player.TYPE
+
+    def decrement_boss_health(self, val):
+        self.boss_obj.health -= val
+
+    def get_magnet_coords(self):
+        return (None, None) if not self.magnet_obj else (self.magnet_obj.x, self.magnet_obj.y)
