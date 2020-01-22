@@ -57,7 +57,6 @@ class KBHit:
         '''
 
         reader = sys.stdin.read(1)
-        # sys.stdin.flush()
         return reader
 
     @staticmethod

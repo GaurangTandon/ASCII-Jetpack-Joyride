@@ -1,4 +1,3 @@
 - player gets stuck at the top
-- sys stdout stdin flush
 - venv requirements file
 - do not render space characters on the grid

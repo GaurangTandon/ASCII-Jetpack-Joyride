@@ -71,6 +71,8 @@ class Game():
 
         self.x_travelled = 0
 
+        self._last_key_pressed = ""
+
         self.keys = KBHit()
         clear_terminal_screen()
 
@@ -264,41 +266,41 @@ class Game():
 
         return cin
 
+    def _keyinputupdates(self):
+        self.player.update(self._last_key_pressed)
+
+        self._last_key_pressed = self._handle_input()
+
     def _loop(self):
         self.game_status = 1
 
-        last_key_pressed = ""
         clear_terminal_screen()
 
         while self.game_status == 1:
-            # switch to non terminal clearing later
             reposition_cursor()
-            # clear_terminal_screen()
 
             self.delete_id_list = []
-            self._draw()
             self._update()
-            self.player.update(last_key_pressed)
             self._delete_objects()
+
+            self._keyinputupdates()
+            self._draw()
+            self._keyinputupdates()
 
             if not self.boss_obj and self.x_travelled >= Boss.X_THRESHOLD:
                 self.boss_obj = Boss(self)
                 self.rendered_objects.append(self.boss_obj)
 
-                if self.magnet_obj:
-                    self.magnet_obj.destroy()
-
-            last = time.time()
-            last_key_pressed = self._handle_input()
+            if self.magnet_obj:
+                self.magnet_obj.destroy()
 
             if self.player.get_lives() <= 0 or self._get_time_remaining() <= 0:
                 self._terminate(0)
             if self.boss_obj and self.boss_obj.get_health() <= 0:
                 self._terminate(1)
 
+            last = time.time()
             while time.time() - last < self._refresh_time:
-                sys.stdin.flush()
-                sys.stdout.flush()
                 pass
 
     def set_speed_on_time(self, val):
