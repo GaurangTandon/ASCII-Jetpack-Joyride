@@ -4,6 +4,7 @@ The actual game and rendering related functions
 
 
 import os
+import sys
 import random
 import math
 import time
@@ -294,6 +295,8 @@ class Game():
                 self._terminate(1)
 
             while time.time() - last < self._refresh_time:
+                sys.stdin.flush()
+                sys.stdout.flush()
                 pass
 
     def set_speed_on_time(self, val):

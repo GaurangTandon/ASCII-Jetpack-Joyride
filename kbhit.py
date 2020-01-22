@@ -25,7 +25,7 @@ from select import select
 
 class KBHit:
     """
-    To take input, whoever wrote this is awesome
+    To take input
     """
 
     def __init__(self):
@@ -46,7 +46,7 @@ class KBHit:
         atexit.register(self.set_normal_term)
 
     def set_normal_term(self):
-        ''' Resets to normal terminal.  On Windows this is a no-op.
+        ''' Resets to normal terminal
         '''
 
         termios.tcsetattr(self.fdd, termios.TCSAFLUSH, self.old_term)
@@ -54,10 +54,11 @@ class KBHit:
     @staticmethod
     def getch():
         ''' Returns a keyboard character after kbhit() has been called.
-            Should not be called in the same program as getarrow().
         '''
 
-        return sys.stdin.read(1)
+        reader = sys.stdin.read(1)
+        # sys.stdin.flush()
+        return reader
 
     @staticmethod
     def kbhit():

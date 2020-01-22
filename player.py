@@ -252,7 +252,10 @@ class Laser(GenericFrameObject):
     """
     Laser fired by our hero
     """
-    stringRepr = ["   ==>"]
+    stringRepr = [
+        r"      ==\\",
+        r"      ==//"
+    ]
     color = [Fore.RED, None]
     TYPE = "laser"
     BOSS_DAMAGE_PLAYER = 10
