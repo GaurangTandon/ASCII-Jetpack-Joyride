@@ -120,18 +120,16 @@ class Player(GenericFrameObject):
         self.__class__.color = tiler(
             [color_val, None], self.height, self.width)
 
-        x_vel_factor = 2 if self.game_obj.get_speed_on_time() != -1 else 1
-
         # keypress gives an impulse, not an accn
         if last_key_pressed == 'w':
             self.y_vel -= self.Y_IMPULSE
         elif last_key_pressed == 's':
             self.y_vel += self.Y_IMPULSE
         elif last_key_pressed == 'a':
-            self.x_vel -= self.X_IMPULSE * x_vel_factor
+            self.x_vel -= self.X_IMPULSE * config.X_VEL_FACTOR
             self.__class__.stringRepr[-1] = "////"
         elif last_key_pressed == 'd':
-            self.x_vel += self.X_IMPULSE * x_vel_factor
+            self.x_vel += self.X_IMPULSE * config.X_VEL_FACTOR
             self.__class__.stringRepr[-1] = "\\\\\\\\"
 
         if str(last_key_pressed) in 'sw':
@@ -270,7 +268,7 @@ class Laser(GenericFrameObject):
         """
         Override of the generic update function
         """
-        self.x += config.LASER_VEL
+        self.x += config.LASER_VEL * config.X_VEL_FACTOR
 
         if self.exceeds_bounds():
             self.game_obj.decrement_player_bullets()

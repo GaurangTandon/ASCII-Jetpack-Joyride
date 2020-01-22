@@ -123,7 +123,7 @@ class GenericFrameObject:
         """
         Generic update function for moving things left
         """
-        self.x -= config.FRAME_MOVE_SPEED
+        self.x -= config.FRAME_MOVE_SPEED * config.X_VEL_FACTOR
 
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG

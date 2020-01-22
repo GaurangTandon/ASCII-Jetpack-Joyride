@@ -83,6 +83,9 @@ class Game():
         else:
             config.FRAME_MOVE_SPEED //= factor
 
+    def is_sped_up(self):
+        return self.speed_on_time > 0
+
     def _info_print(self):
         # required padding since we are not clearing screen and just resetting carat pos
         padding = ' '*10
@@ -104,15 +107,15 @@ class Game():
             else:
                 print(f"Shield available{padding}")
 
-        if self.speed_on_time > 0:
-            print(f"Game sped up!{padding}")
+        if self.is_sped_up():
+            print(
+                f"Game sped up for {int(self.SPEED_TIME - (time.time() - self.speed_on_time))}!{padding}")
         else:
             print(f"Game at normal speed")
 
         if not self.boss_obj:
-            x_vel_factor = 2 if self.get_speed_on_time() != -1 else 1
             distance = (Boss.X_THRESHOLD -
-                        self.get_x_travelled()) // x_vel_factor
+                        self.get_x_travelled()) // config.X_VEL_FACTOR
 
             print(f"Distance to boss {distance}{padding}")
         else:
@@ -195,10 +198,11 @@ class Game():
                     self.magnet_obj = Magnet()
                     self.rendered_objects.append(self.magnet_obj)
 
-        if self.speed_on_time > 0 and time.time() - self.speed_on_time >= self.SPEED_TIME:
+        if self.is_sped_up() and time.time() - self.speed_on_time >= self.SPEED_TIME:
             self.speed_powerup(False)
             # can only use once
             self.speed_on_time = -2
+            config.X_VEL_FACTOR = 1
 
     def _terminate(self, we_won):
         """
@@ -245,9 +249,10 @@ class Game():
         elif cin == 'y' and self.player.get_type() == "player":
             # replace player with dragon
             self.player = DragonPowerup(self)
-        elif cin == 't' and self.speed_on_time == -1:
+        elif cin == 't' and not self.is_sped_up():
             self.speed_powerup()
             self.speed_on_time = time.time()
+            config.X_VEL_FACTOR = 2
 
         return cin
 
@@ -268,8 +273,7 @@ class Game():
             self.player.update(last_key_pressed)
             self._delete_objects()
 
-            x_vel_factor = 2 if self.speed_on_time != -1 else 1
-            if not self.boss_obj and self.x_travelled * x_vel_factor >= Boss.X_THRESHOLD:
+            if not self.boss_obj and self.x_travelled * config.X_VEL_FACTOR >= Boss.X_THRESHOLD:
                 self.boss_obj = Boss(self)
                 self.rendered_objects.append(self.boss_obj)
                 # TODO: see other TODO comment
@@ -292,12 +296,7 @@ class Game():
         setter
         """
         self.speed_on_time = val
-
-    def get_speed_on_time(self):
-        """
-        getter
-        """
-        return self.speed_on_time
+        config.X_VEL_FACTOR = 2
 
     def append_to_delete_list(self, idd):
         """

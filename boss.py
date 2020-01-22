@@ -119,7 +119,7 @@ class BossLaser(GenericFrameObject):
 
         # get the player's coordinates and move towards it
         self.y += round(self.vel_y * self._direction() * should_follow)
-        self.x += round(self.vel_x)
+        self.x += round(self.vel_x) * config.X_VEL_FACTOR
 
         self.y = max(self.y, self.height-1)
         self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)

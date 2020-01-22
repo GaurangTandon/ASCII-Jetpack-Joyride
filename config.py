@@ -28,3 +28,6 @@ FIREBEAM_LENGTH = 5
 
 DEBUG = True
 BACK_COLOR = Back.BLACK
+
+# for the speed up
+X_VEL_FACTOR = 1
