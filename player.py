@@ -171,7 +171,7 @@ class Player(GenericFrameObject):
         self.y = min(self.y, self.startYCoord)
 
         # low value makes it very awkward
-        remain_at_the_top_threshold = 5
+        remain_at_the_top_threshold = 10
         # without this jetpack gets stuck at the top
         if touched_ceil and self.was_touching_ceiling >= remain_at_the_top_threshold:
             # do not add a fractional quantity
