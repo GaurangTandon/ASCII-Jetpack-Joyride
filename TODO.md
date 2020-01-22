@@ -1,5 +1,4 @@
 - player gets stuck at the top
-- coin and flame overlap
-- flame and flame overlap
 - sys stdout stdin flush
 - venv requirements file
+- do not render space characters on the grid

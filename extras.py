@@ -36,7 +36,7 @@ class Mountain(BackgroundObject):
         r"  /^ ^  ^ ^^  ^    ||___|___||||||||||||___|__|||      /||o||||||\       ",
         r" / ^   ^   ^    ^  ||___|___||||||||||||___|__|||          | |           ",
         r"/ ^ ^ ^  ^  ^  ^   ||||||||||||||||||||||||||||||oooooooooo| |ooooooo    ",
-        r"ooooooooooooooooooooooooooooooooooooooooooooooooooooooooo                "
+        r"ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo"
     ]
     color = [Fore.WHITE, None]
     TYPE = "mountain"
