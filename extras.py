@@ -37,7 +37,7 @@ class Mountain(BackgroundObject):
     def __init__(self):
         super().__init__()
 
-        self.x = config.FRAME_SPAWN_X - self.width
+        self.x = config.FRAME_WIDTH - self.width
         self.y = config.FRAME_BOTTOM_BOUNDARY
 
 
@@ -56,5 +56,5 @@ class Cloud(BackgroundObject):
 
     def __init__(self):
         super().__init__()
-        self.x = config.FRAME_SPAWN_X - self.width
+        self.x = config.FRAME_WIDTH - self.width
         self.y = self.height

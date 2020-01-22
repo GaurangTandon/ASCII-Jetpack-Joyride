@@ -181,7 +181,7 @@ class Game():
         padding = " " * 10
         # offset by 10: since otherwise the whole coin group disappears even if a
         # single coin touches the boundary
-        grid_str = "\n".join([str(Style.RESET_ALL).join(row[10:]) + Style.RESET_ALL + padding
+        grid_str = "\n".join([str(Style.RESET_ALL).join(row[config.FRAME_LEFT_BOUNDARY:config.FRAME_RIGHT_BOUNARY+1]) + Style.RESET_ALL + padding
                               for row in self.get_grid()])
 
         # only a single print at the end makes rendering efficient
@@ -202,11 +202,12 @@ class Game():
         self.ticks += 1
         self.set_x_travelled(self.get_x_travelled() + 1)
 
+        # use insert(0) since these objects should render before all other objects
         if self.ticks % 75 == 0:
-            self.rendered_objects.append(Cloud())
+            self.rendered_objects.insert(0, Cloud())
 
         if self.ticks % 150 == 0:
-            self.rendered_objects.append(Mountain())
+            self.rendered_objects.insert(0, Mountain())
 
         for obj in self.rendered_objects:
             if obj.update() == GenericFrameObject.DEAD_FLAG:

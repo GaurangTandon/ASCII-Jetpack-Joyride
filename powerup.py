@@ -2,7 +2,7 @@
 Dragon powerup and the boss laser implemented
 """
 
-from colorama import Fore, Back
+from colorama import Fore
 import config
 from generic import GenericFrameObject
 from player import Laser

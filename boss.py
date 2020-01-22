@@ -13,7 +13,7 @@ class Boss(GenericFrameObject):
     """
     Main enemy which the player needs to fight off
     """
-    X_THRESHOLD = 50
+    X_THRESHOLD = 10  # 1000  # comes out to be about 60secs
     Y_VEL = 1
     START_Y = round(config.FRAME_HEIGHT / 2)
     FIRE_INTERVAL = 1
