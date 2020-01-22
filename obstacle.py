@@ -46,7 +46,7 @@ def get_firebeam_group():
         objs.append(obj)
         obj.id = const_id
 
-    return objs
+    return objs, config.FIREBEAM_LENGTH
 
 
 class Magnet(GenericFrameObject):

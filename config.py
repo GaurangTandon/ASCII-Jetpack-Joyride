@@ -5,13 +5,13 @@ from colorama import Back
 
 GROUND_HEIGHT = 2
 
-FRAME_WIDTH = 300
+FRAME_WIDTH = 500
 FRAME_HEIGHT = 40
 FRAME_X_VELOCITY = 10
 FRAME_RATE = 20
 FRAME_LEFT_BOUNDARY = 110
 # enemies can spawn in this region
-FRAME_RIGHT_BOUNARY = FRAME_WIDTH - 40
+FRAME_RIGHT_BOUNARY = 260
 FRAME_SPAWN_OFFSET = -20
 # spawn some point outside the visible frame
 FRAME_SPAWN_X = FRAME_RIGHT_BOUNARY

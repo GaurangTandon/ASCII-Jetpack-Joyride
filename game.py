@@ -61,7 +61,7 @@ class Game():
 
         self.end_time = time.time() + self.GAME_LENGTH
 
-        self.next_spawn_point = 0
+        self.next_spawn_ticks = 0
 
         self.boss_obj = None
         self.magnet_obj = None
@@ -168,14 +168,14 @@ class Game():
             self.rendered_objects.pop(i)
 
     def _update(self):
-        self.ticks += 1
+        self.ticks += config.X_VEL_FACTOR
         self.set_x_travelled(self.get_x_travelled() + config.X_VEL_FACTOR)
 
         # use insert(0) since these objects should render before all other objects
         if self.ticks % 75 == 0:
             self.rendered_objects.insert(0, Cloud())
 
-        if self.ticks % 150 == 0:
+        if self.ticks % 100 == 0:
             self.rendered_objects.insert(0, Mountain())
 
         for obj in self.rendered_objects:
@@ -186,16 +186,17 @@ class Game():
         # make spawning random somehow
         # make two slots in y axis as well
         if not config.DEBUG:
-            if self.player.x + config.FRAME_WIDTH > self.next_spawn_point:
+            if self.ticks > self.next_spawn_ticks:
                 for random_spawn in [get_coin_group, get_firebeam_group]:
                     threshold = 0.05
 
                     if random.random() < threshold:
-                        objs = random_spawn()
+                        objs, width = random_spawn()
                         for obj in objs:
                             self.rendered_objects.append(obj)
-                            self.next_spawn_point = max(
-                                self.next_spawn_point, obj.x + obj.width)
+
+                        self.next_spawn_ticks = max(
+                            self.next_spawn_ticks, self.ticks + obj.width)
 
                         break
 

@@ -31,4 +31,4 @@ def get_coin_group():
             coin_obj = Coin(i, j)
             lst.append(coin_obj)
 
-    return lst
+    return lst, width
