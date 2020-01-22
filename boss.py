@@ -92,7 +92,7 @@ class BossLaser(GenericFrameObject):
         "<O>",
         "-v-"
     ]
-    color = [Fore.WHITE, Back.BLACK]
+    color = [Fore.WHITE, Back.BLUE]
     TYPE = "bosslaser"
 
     def _direction(self):
