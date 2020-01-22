@@ -77,6 +77,9 @@ class Game():
 
     @classmethod
     def speed_powerup(cls, activate=True):
+        """
+        Activation or deactivation of the speed powerup
+        """
         factor = 2
         if activate:
             config.FRAME_MOVE_SPEED *= factor
@@ -84,6 +87,9 @@ class Game():
             config.FRAME_MOVE_SPEED //= factor
 
     def is_sped_up(self):
+        """
+        Checks if the game has speed powerup
+        """
         return self.speed_on_time > 0
 
     def _info_print(self):
@@ -108,8 +114,8 @@ class Game():
                 print(f"Shield available{padding}")
 
         if self.is_sped_up():
-            print(
-                f"Game sped up for {int(self.SPEED_TIME - (time.time() - self.speed_on_time))}!{padding}")
+            trm = int(self.SPEED_TIME - (time.time() - self.speed_on_time))
+            print(f"Game sped up for {trm}!{padding}")
         else:
             print(f"Game at normal speed")
 
