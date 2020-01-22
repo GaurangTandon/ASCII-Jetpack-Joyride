@@ -295,6 +295,8 @@ class Laser(GenericFrameObject):
 
             if obj.TYPE in ["bosslaser", "firebeam"]:
                 self.game_obj.append_to_delete_list(obj.id)
+                # you get points for destroying opposition too
+                self.game_obj.increment_score()
                 delete_self = True
                 break
 
