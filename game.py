@@ -20,6 +20,7 @@ from obstacle import get_firebeam_group, Magnet
 from generic import GenericFrameObject
 from boss import Boss
 from powerup import DragonPowerup
+from extras import Mountain, Cloud
 
 
 class Game():
@@ -46,6 +47,7 @@ class Game():
         coloramaInit()
 
         self.score = 0
+        self.ticks = 0
 
         self.grid = [[]]
         self.rendered_objects = []
@@ -197,7 +199,14 @@ class Game():
             self.rendered_objects.pop(i)
 
     def _update(self):
+        self.ticks += 1
         self.set_x_travelled(self.get_x_travelled() + 1)
+
+        if self.ticks % 75 == 0:
+            self.rendered_objects.append(Cloud())
+
+        if self.ticks % 150 == 0:
+            self.rendered_objects.append(Mountain())
 
         for obj in self.rendered_objects:
             if obj.update() == GenericFrameObject.DEAD_FLAG:
@@ -257,7 +266,7 @@ class Game():
 
         if cin == -1:
             self._terminate(-1)
-        elif cin in '1234' and config.DEBUG:
+        elif str(cin) in '1234' and config.DEBUG:
             if cin == '1':
                 objs = get_coin_group()
                 for obj in objs:
@@ -299,7 +308,6 @@ class Game():
                 debug_str = f"[{self.player.x} {self.player.y}] \
     [{self.player.x_vel} {self.player.y_vel}] \
     [{self.player.x_acc} {self.player.y_acc}]" + " " * 50
-
                 print(debug_str)
 
             self.delete_id_list = []
