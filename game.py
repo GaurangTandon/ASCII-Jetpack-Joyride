@@ -76,58 +76,12 @@ class Game():
         self._loop()
 
     @classmethod
-    def _speed_powerup(cls, activate=True):
+    def speed_powerup(cls, activate=True):
         factor = 2
         if activate:
             config.FRAME_MOVE_SPEED *= factor
         else:
             config.FRAME_MOVE_SPEED //= factor
-
-    def get_end_time(self):
-        """
-        getter
-        """
-        return self.end_time
-
-    def _get_time_remaining(self):
-        time_remaining = (self.get_end_time() - time.time())
-        return int(np.round(time_remaining))
-
-    def get_score(self):
-        """
-        getter
-        """
-        return self.score
-
-    def get_speed_on_time(self):
-        """
-        getter
-        """
-        return self.speed_on_time
-
-    def get_x_travelled(self):
-        """
-        getter
-        """
-        return self.x_travelled
-
-    def get_rendered_objects(self):
-        """
-        getter
-        """
-        return self.rendered_objects
-
-    def get_grid(self):
-        """
-        getter
-        """
-        return self.grid
-
-    def set_x_travelled(self, val):
-        """
-        setter
-        """
-        self.x_travelled = val
 
     def _info_print(self):
         # required padding since we are not clearing screen and just resetting carat pos
@@ -137,7 +91,7 @@ class Game():
         print(f"Lives remaining \u2764 {self.player.get_lives()}{padding}")
         print(f"Score {self.get_score()}{padding}")
 
-        if self.player.TYPE == "player":
+        if self.player.get_type() == "player":
             remain_time = self.player.get_remaining_shield_time()
 
             if self.player.get_shield_activated():
@@ -162,7 +116,8 @@ class Game():
 
             print(f"Distance to boss {distance}{padding}")
         else:
-            print(f"Boss health: {max(0, self.boss_obj.health)}{padding}")
+            print(
+                f"Boss health: {max(0, self.boss_obj.get_health())}{padding}")
 
     def _draw(self):
         self.grid = np.array([[Fore.WHITE + config.BACK_COLOR + " "
@@ -181,8 +136,12 @@ class Game():
         padding = " " * 10
         # offset by 10: since otherwise the whole coin group disappears even if a
         # single coin touches the boundary
-        grid_str = "\n".join([str(Style.RESET_ALL).join(row[config.FRAME_LEFT_BOUNDARY:config.FRAME_RIGHT_BOUNARY+1]) + Style.RESET_ALL + padding
-                              for row in self.get_grid()])
+        sra = str(Style.RESET_ALL)
+        ender = sra + padding
+        start = config.FRAME_LEFT_BOUNDARY
+        end = config.FRAME_RIGHT_BOUNARY
+        grid_str = "\n".join(
+            [sra.join(row[start:end+1]) + ender for row in self.get_grid()])
 
         # only a single print at the end makes rendering efficient
         os.write(1, str.encode(grid_str))
@@ -236,10 +195,8 @@ class Game():
                     self.magnet_obj = Magnet()
                     self.rendered_objects.append(self.magnet_obj)
 
-        # TODO: randomly spawn speed powerup
-
         if self.speed_on_time > 0 and time.time() - self.speed_on_time >= self.SPEED_TIME:
-            self._speed_powerup(False)
+            self.speed_powerup(False)
             # can only use once
             self.speed_on_time = -2
 
@@ -283,13 +240,13 @@ class Game():
             laser_list = self.player.fire_laser()
             for laser in laser_list:
                 self.rendered_objects.append(laser)
-        elif cin == ' ' and self.player.TYPE == "player":
+        elif cin == ' ' and self.player.get_type() == "player":
             self.player.activate_shield()
-        elif cin == 'y' and self.player.TYPE == "player":
+        elif cin == 'y' and self.player.get_type() == "player":
             # replace player with dragon
             self.player = DragonPowerup(self)
         elif cin == 't' and self.speed_on_time == -1:
-            self._speed_powerup()
+            self.speed_powerup()
             self.speed_on_time = time.time()
 
         return cin
@@ -304,12 +261,6 @@ class Game():
             # switch to non terminal clearing later
             reposition_cursor()
             # clear_terminal_screen()
-
-            if self.player.TYPE == "player" and config.DEBUG:
-                debug_str = f"[{self.player.x} {self.player.y}] \
-    [{self.player.x_vel} {self.player.y_vel}] \
-    [{self.player.x_acc} {self.player.y_acc}]" + " " * 50
-                print(debug_str)
 
             self.delete_id_list = []
             self._draw()
@@ -328,37 +279,98 @@ class Game():
             last = time.time()
             last_key_pressed = self._handle_input()
 
-            if self.player.lifes <= 0 or self._get_time_remaining() <= 0:
+            if self.player.get_lives() <= 0 or self._get_time_remaining() <= 0:
                 self._terminate(0)
-            if self.boss_obj and self.boss_obj.health <= 0:
+            if self.boss_obj and self.boss_obj.get_health() <= 0:
                 self._terminate(1)
 
             while time.time() - last < self._refresh_time:
                 pass
 
     def set_speed_on_time(self, val):
+        """
+        setter
+        """
         self.speed_on_time = val
 
     def get_speed_on_time(self):
+        """
+        getter
+        """
         return self.speed_on_time
 
-    def append_to_delete_list(self, id):
-        self.delete_id_list.append(id)
+    def append_to_delete_list(self, idd):
+        """
+        setter
+        """
+        self.delete_id_list.append(idd)
 
     def increment_score(self):
+        """
+        setter
+        """
         self.score += 1
 
     def get_rendered_objects(self):
+        """
+        getter
+        """
         return self.rendered_objects
 
     def decrement_player_bullets(self):
-        self.player.current_bullets -= 1
+        """
+        setter
+        """
+        self.player.decrement_bullets()
 
     def get_player_type(self):
-        return self.player.TYPE
+        """
+        getter
+        """
+        return self.player.get_type()
 
     def decrement_boss_health(self, val):
-        self.boss_obj.health -= val
+        """
+        setter
+        """
+        self.boss_obj.decrease_health(val)
 
     def get_magnet_coords(self):
+        """
+        getter
+        """
         return (None, None) if not self.magnet_obj else (self.magnet_obj.x, self.magnet_obj.y)
+
+    def get_end_time(self):
+        """
+        getter
+        """
+        return self.end_time
+
+    def _get_time_remaining(self):
+        time_remaining = (self.get_end_time() - time.time())
+        return int(np.round(time_remaining))
+
+    def get_score(self):
+        """
+        getter
+        """
+        return self.score
+
+    def get_x_travelled(self):
+        """
+        getter
+        """
+        return self.x_travelled
+
+    def get_grid(self):
+        """
+        getter
+        """
+        return self.grid
+
+    def set_x_travelled(self, val):
+        """
+        setter
+        """
+        self.x_travelled = val

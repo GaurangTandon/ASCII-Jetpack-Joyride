@@ -90,22 +90,13 @@ class Player(GenericFrameObject):
     def _get_top(self):
         return self.y - self.height + 1
 
-    def get_lives(self):
-        return self.lifes
-
-    def get_shield_activated(self):
-        return self.shield_activated
-
-    def get_last_used_shield(self):
-        return self.last_used_shield
-
     def update(self, last_key_pressed):
         """
         Called by Game to update the player stuff
         """
         magnet_x, magnet_y = self.game_obj.get_magnet_coords()
 
-        if magnet_x != None:
+        if magnet_x is not None:
             x_dist = magnet_x - self.x
             y_dist = (magnet_y - self.y)*2
             hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
@@ -218,7 +209,7 @@ class Player(GenericFrameObject):
                     player_hit = True
                     to_delete = True
             elif obj.TYPE == "speed":
-                self.game_obj._speed_powerup()
+                self.game_obj.speed_powerup()
                 self.game_obj.set_speed_on_time(time.time())
                 to_delete = True
 
@@ -227,6 +218,36 @@ class Player(GenericFrameObject):
 
         if player_hit:
             self.lifes -= 1
+
+    def decrement_bullets(self):
+        """
+        setter
+        """
+        self.current_bullets -= 1
+
+    def get_lives(self):
+        """
+        getter
+        """
+        return self.lifes
+
+    def decrease_lives(self):
+        """
+        setter
+        """
+        self.lifes -= 1
+
+    def get_shield_activated(self):
+        """
+        getter
+        """
+        return self.shield_activated
+
+    def get_last_used_shield(self):
+        """
+        getter
+        """
+        return self.last_used_shield
 
 
 class Laser(GenericFrameObject):

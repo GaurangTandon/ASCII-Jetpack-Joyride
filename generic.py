@@ -46,6 +46,7 @@ class GenericFrameObject:
     """
     currently_active = 0
     DEAD_FLAG = 1
+    TYPE = "generic"
 
     def __init__(self):
         # this technique has been verified on this repl https://repl.it/@bountyhedge/mvce
@@ -87,6 +88,12 @@ class GenericFrameObject:
             "coord": [self.y, self.x],
             "size": [self.height, self.width]
         }]
+
+    def get_type(self):
+        """
+        the TYPE variable is overriden by individual subclasses
+        """
+        return self.TYPE
 
     @classmethod
     def spawn_probability(cls):

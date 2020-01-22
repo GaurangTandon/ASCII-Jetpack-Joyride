@@ -1,3 +1,7 @@
+"""
+The usual scenery around you
+"""
+
 from colorama import Fore
 from generic import GenericFrameObject
 import config
@@ -14,6 +18,9 @@ class BackgroundObject(GenericFrameObject):
 
 
 class Mountain(BackgroundObject):
+    """
+    A large mountain with a house in it that looks dope
+    """
     stringRepr = [
         r"                                       /\                                ",
         r"                              /\  //\\                                   ",
@@ -42,12 +49,15 @@ class Mountain(BackgroundObject):
 
 
 class Cloud(BackgroundObject):
+    """
+    Sweet cloud
+    """
     stringRepr = [
         "                  .-~~~-.     ",
         "  .- ~ ~-(       )_         _ ",
         " /                     ~ -.   ",
-        "|                           \\ ",
-        " \                         .' ",
+        r"|                           \ ",
+        r" \                         .' ",
         "   ~- . _____________ . -~    "
     ]
 

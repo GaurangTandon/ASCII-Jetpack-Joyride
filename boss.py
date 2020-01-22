@@ -70,6 +70,18 @@ class Boss(GenericFrameObject):
         if time.time() - self.last_fired >= self.FIRE_INTERVAL:
             self._fire_gun()
 
+    def get_health(self):
+        """
+        getter
+        """
+        return self.health
+
+    def decrease_health(self, val):
+        """
+        setter
+        """
+        self.health -= val
+
 
 class BossLaser(GenericFrameObject):
     """
@@ -100,7 +112,7 @@ class BossLaser(GenericFrameObject):
     def update(self):
         # for a dragon player, guns should follow less since boss laser
         # is not ver specific
-        if self.game_obj.player.TYPE == "player":
+        if self.game_obj.get_player_type() == "player":
             should_follow = 1 if random.random() <= 0.8 else -1
         else:
             should_follow = 1
