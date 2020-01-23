@@ -83,7 +83,7 @@ class DragonPowerup(GenericFrameObject):
         super().__init__()
         self.y = config.FRAME_HEIGHT / 2
         self.x = 5 + config.FRAME_LEFT_BOUNDARY
-        self.lifes = 1
+        self.__lifes = 1
         self.current_bullets = 0
         self.game_obj = game
 
@@ -149,7 +149,7 @@ class DragonPowerup(GenericFrameObject):
         self.y = max(self.y, self.height - 1)
         self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
 
-        for obj in self.game_obj.rendered_objects:
+        for obj in self.game_obj.get_rendered_objects():
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
@@ -157,10 +157,10 @@ class DragonPowerup(GenericFrameObject):
             to_delete = False
 
             if obj.TYPE == "coin":
-                self.game_obj.score += len(common_points)
+                self.game_obj.inc_score(len(common_points))
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:
-                self.lifes -= 1
+                self.__lifes -= 1
                 to_delete = True
 
             if to_delete:
@@ -176,10 +176,10 @@ class DragonPowerup(GenericFrameObject):
         """
         getter
         """
-        return self.lifes
+        return self.__lifes
 
     def decrease_lives(self):
         """
         setter
         """
-        self.lifes -= 1
+        self.__lifes -= 1

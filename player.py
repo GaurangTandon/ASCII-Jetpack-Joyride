@@ -53,7 +53,7 @@ class Player(GenericFrameObject):
         # number of frames for which the player is touching the ceiling
         self.was_touching_ceiling = 0
 
-        self.y_vel = 0
+        self.__y_vel = 0
         self.x_vel = 0
         self.game_obj = obj_game
 
@@ -63,7 +63,7 @@ class Player(GenericFrameObject):
         self.current_bullets = 0
         self.w_key = False
 
-        self.lifes = 3
+        self.__lifes = 3
         self.shield_activated = False
 
     def get_remaining_shield_time(self):
@@ -122,9 +122,9 @@ class Player(GenericFrameObject):
 
         # keypress gives an impulse, not an accn
         if last_key_pressed == 'w':
-            self.y_vel -= self.Y_IMPULSE
+            self.__y_vel -= self.Y_IMPULSE
         elif last_key_pressed == 's':
-            self.y_vel += self.Y_IMPULSE
+            self.__y_vel += self.Y_IMPULSE
         elif last_key_pressed == 'a':
             self.x_vel -= self.X_IMPULSE * config.X_VEL_FACTOR
             self.__class__.stringRepr[-1] = "////"
@@ -137,15 +137,15 @@ class Player(GenericFrameObject):
                                               Back.MAGENTA], 1, self.width)
 
         self._generate_draw_obj()
-        self.y_vel += config.GRAVITY_ACC
-        self.y_vel += self.y_acc
+        self.__y_vel += config.GRAVITY_ACC
+        self.__y_vel += self.y_acc
         self.x_vel += self.x_acc
         drag_value = min(self.DRAG_CONSTANT * self.x_vel *
                          self.x_vel, abs(1))
         self.x_vel += (-1 if self.x_vel > 0 else 1) * drag_value
 
         self.x += round(self.x_vel)
-        self.y += round(self.y_vel)
+        self.y += round(self.__y_vel)
         self.x = min(self.x, 2 * config.FRAME_SPAWN_OFFSET +
                      config.FRAME_RIGHT_BOUNARY)
 
@@ -179,7 +179,7 @@ class Player(GenericFrameObject):
 
         # can't move anymore
         if touched_bottom or touched_ceil:
-            self.y_vel = 0
+            self.__y_vel = 0
             self.y_acc = 0
             self.was_touching_ceiling += int(touched_ceil)
         else:
@@ -218,7 +218,7 @@ class Player(GenericFrameObject):
                 self.game_obj.append_to_delete_list(obj.id)
 
         if player_hit:
-            self.lifes -= 1
+            self.__lifes -= 1
 
     def decrement_bullets(self):
         """
@@ -230,13 +230,13 @@ class Player(GenericFrameObject):
         """
         getter
         """
-        return self.lifes
+        return self.__lifes
 
     def decrease_lives(self):
         """
         setter
         """
-        self.lifes -= 1
+        self.__lifes -= 1
 
     def get_shield_activated(self):
         """

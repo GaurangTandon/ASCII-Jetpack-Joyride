@@ -39,29 +39,28 @@ class Boss(GenericFrameObject):
 
     def __init__(self, game_obj):
         super().__init__()
-        self.y_vel = -1
+        self.__y_vel = -1
 
         self.y = self.START_Y
         self.x = config.FRAME_SPAWN_X - 20
 
         self.game_obj = game_obj
 
-        self.health = 100
+        self.__health = 100
         self.last_fired = -1
 
     def _direction(self):
-        return (-1 if self.y > self.game_obj.player.y else 0 if self.y ==
-                self.game_obj.player.y else 1)
+        return self.game_obj.get_direction(self.y)
 
     def _fire_gun(self):
         boss_laser = BossLaser(self.x, self.y - self.height / 2, self.game_obj)
-        self.game_obj.rendered_objects.append(boss_laser)
+        self.game_obj.append_to_rendered_objects(boss_laser)
 
         self.last_fired = time.time()
 
     def update(self):
-        self.y_vel = self._direction() * self.Y_VEL
-        self.y += round(self.y_vel)
+        self.__y_vel = self._direction() * self.Y_VEL
+        self.y += round(self.__y_vel)
         self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
         self.y = max(self.y, self.height)
 
@@ -72,13 +71,13 @@ class Boss(GenericFrameObject):
         """
         getter
         """
-        return self.health
+        return self.__health
 
     def decrease_health(self, val):
         """
         setter
         """
-        self.health -= val
+        self.__health -= val
 
 
 class BossLaser(GenericFrameObject):
@@ -93,9 +92,8 @@ class BossLaser(GenericFrameObject):
     color = [Fore.WHITE, Back.BLUE]
     TYPE = "bosslaser"
 
-    def _direction(self):
-        return (-1 if self.y > self.game_obj.player.y else 0 if self.y ==
-                self.game_obj.player.y else 1)
+    def _direction(self, y_val):
+        return self.game_obj.get_direction(y_val)
 
     def __init__(self, initX, initY, game_obj):
         super().__init__()
