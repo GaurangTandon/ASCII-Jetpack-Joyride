@@ -54,7 +54,7 @@ class Player(GenericFrameObject):
         self.__was_touching_ceiling = 0
 
         self.__y_vel = 0
-        self.x_vel = 0
+        self.__x_vel = 0
         self.__game_obj = obj_game
 
         self.__y_acc = 0
@@ -125,10 +125,10 @@ class Player(GenericFrameObject):
         elif last_key_pressed == 's':
             self.__y_vel += self.Y_IMPULSE
         elif last_key_pressed == 'a':
-            self.x_vel -= self.X_IMPULSE * config.X_VEL_FACTOR
+            self.__x_vel -= self.X_IMPULSE * config.X_VEL_FACTOR
             self.__class__.stringRepr[-1] = "////"
         elif last_key_pressed == 'd':
-            self.x_vel += self.X_IMPULSE * config.X_VEL_FACTOR
+            self.__x_vel += self.X_IMPULSE * config.X_VEL_FACTOR
             self.__class__.stringRepr[-1] = "\\\\\\\\"
 
         if str(last_key_pressed) in 'sw':
@@ -138,12 +138,12 @@ class Player(GenericFrameObject):
         self._generate_draw_obj()
         self.__y_vel += config.GRAVITY_ACC
         self.__y_vel += self.__y_acc
-        self.x_vel += self.__x_acc
-        drag_value = min(self.DRAG_CONSTANT * self.x_vel *
-                         self.x_vel, abs(1))
-        self.x_vel += (-1 if self.x_vel > 0 else 1) * drag_value
+        self.__x_vel += self.__x_acc
+        drag_value = min(self.DRAG_CONSTANT * self.__x_vel *
+                         self.__x_vel, abs(1))
+        self.__x_vel += (-1 if self.__x_vel > 0 else 1) * drag_value
 
-        self.x += round(self.x_vel)
+        self.x += round(self.__x_vel)
         self.y += round(self.__y_vel)
         self.x = min(self.x, 2 * config.FRAME_SPAWN_OFFSET +
                      config.FRAME_RIGHT_BOUNARY)
@@ -186,11 +186,11 @@ class Player(GenericFrameObject):
 
         if self.x >= config.FRAME_RIGHT_BOUNARY:
             self.x = config.FRAME_RIGHT_BOUNARY
-            self.x_vel = 0
+            self.__x_vel = 0
 
         if self.x <= config.FRAME_LEFT_BOUNDARY:
             self.x = config.FRAME_LEFT_BOUNDARY
-            self.x_vel = 0
+            self.__x_vel = 0
 
         player_hit = False
         for obj in self.__game_obj.get_rendered_objects():
@@ -214,7 +214,7 @@ class Player(GenericFrameObject):
                 to_delete = True
 
             if to_delete:
-                self.__game_obj.append_to_delete_list(obj.id)
+                self.__game_obj.append_to_delete_list(obj.get_id())
 
         if player_hit:
             self.__lifes -= 1
@@ -296,7 +296,7 @@ class Laser(GenericFrameObject):
                 break
 
             if obj.TYPE in ["bosslaser", "firebeam"]:
-                self.__game_obj.append_to_delete_list(obj.id)
+                self.__game_obj.append_to_delete_list(obj.get_id())
                 # you get points for destroying opposition too
                 self.__game_obj.increment_score()
                 delete_self = True

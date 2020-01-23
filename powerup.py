@@ -164,7 +164,7 @@ class DragonPowerup(GenericFrameObject):
                 to_delete = True
 
             if to_delete:
-                self.__game_obj.append_to_delete_list(obj.id)
+                self.__game_obj.append_to_delete_list(obj.get_id())
 
     def decrement_bullets(self):
         """

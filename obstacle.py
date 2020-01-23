@@ -44,7 +44,7 @@ def get_firebeam_group():
         x_coord += c_x
         y_coord -= c_y
         objs.append(obj)
-        obj.id = const_id
+        obj.set_id(const_id)
 
     return objs, config.FIREBEAM_LENGTH
 

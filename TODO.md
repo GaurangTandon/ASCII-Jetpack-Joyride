@@ -1,1 +1,1 @@
-bullet rate limitnig is wronged
+bullet rate limitnig is wronged, probably switch to cooldown period?

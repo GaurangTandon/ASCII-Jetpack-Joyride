@@ -159,7 +159,7 @@ class Game():
     def _delete_objects(self):
         for i in range(len(self.__rendered_objects) - 1, -1, -1):
             obj = self.__rendered_objects[i]
-            if not obj.id in self.__delete_id_list:
+            if not obj.get_id() in self.__delete_id_list:
                 continue
 
             if obj.cleanup():
@@ -180,8 +180,8 @@ class Game():
 
         for obj in self.__rendered_objects:
             if obj.update() == GenericFrameObject.DEAD_FLAG:
-                assert obj.id is not None
-                self.__delete_id_list.append(obj.id)
+                assert obj.get_id() is not None
+                self.__delete_id_list.append(obj.get_id())
 
         # make spawning random somehow
         # make two slots in y axis as well

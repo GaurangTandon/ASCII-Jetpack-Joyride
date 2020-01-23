@@ -51,11 +51,17 @@ class GenericFrameObject:
     def __init__(self):
         # this technique has been verified on this repl https://repl.it/@bountyhedge/mvce
         self.__class__.currently_active += 1
-        self.id = int(random.random() * 10000000)
+        self.__id = int(random.random() * 10000000)
 
         self._generate_draw_obj()
 
         self.x, self.y = get_spawn_coordinates(self.height)
+
+    def get_id(self):
+        return self.__id
+
+    def set_id(self, val):
+        self.__id = val
 
     def _generate_draw_obj(self):
         try:
