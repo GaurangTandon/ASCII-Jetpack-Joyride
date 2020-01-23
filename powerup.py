@@ -84,8 +84,8 @@ class DragonPowerup(GenericFrameObject):
         self.y = config.FRAME_HEIGHT / 2
         self.x = 5 + config.FRAME_LEFT_BOUNDARY
         self.__lifes = 1
-        self.current_bullets = 0
-        self.game_obj = game
+        self.__current_bullets = 0
+        self.__game_obj = game
 
     def wiggle(self):
         """
@@ -124,24 +124,24 @@ class DragonPowerup(GenericFrameObject):
         res = []
 
         right_point = self.x + self.width
-        if self.current_bullets >= self.MAX_BULLETS:
+        if self.__current_bullets >= self.MAX_BULLETS:
             return res
 
-        laser1 = Laser(right_point, self._get_middle(), self.game_obj)
+        laser1 = Laser(right_point, self._get_middle(), self.__game_obj)
         res.append(laser1)
-        self.current_bullets += 1
-        if self.current_bullets >= self.MAX_BULLETS:
+        self.__current_bullets += 1
+        if self.__current_bullets >= self.MAX_BULLETS:
             return res
 
-        laser2 = Laser(right_point, self.y, self.game_obj)
+        laser2 = Laser(right_point, self.y, self.__game_obj)
         res.append(laser2)
-        self.current_bullets += 1
-        if self.current_bullets >= self.MAX_BULLETS:
+        self.__current_bullets += 1
+        if self.__current_bullets >= self.MAX_BULLETS:
             return res
 
-        laser3 = Laser(right_point, self.y - self.height + 1, self.game_obj)
+        laser3 = Laser(right_point, self.y - self.height + 1, self.__game_obj)
         res.append(laser3)
-        self.current_bullets += 1
+        self.__current_bullets += 1
 
         return res
 
@@ -149,7 +149,7 @@ class DragonPowerup(GenericFrameObject):
         self.y = max(self.y, self.height - 1)
         self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
 
-        for obj in self.game_obj.get_rendered_objects():
+        for obj in self.__game_obj.get_rendered_objects():
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
@@ -157,20 +157,20 @@ class DragonPowerup(GenericFrameObject):
             to_delete = False
 
             if obj.TYPE == "coin":
-                self.game_obj.inc_score(len(common_points))
+                self.__game_obj.inc_score(len(common_points))
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:
                 self.__lifes -= 1
                 to_delete = True
 
             if to_delete:
-                self.game_obj.append_to_delete_list(obj.id)
+                self.__game_obj.append_to_delete_list(obj.id)
 
     def decrement_bullets(self):
         """
         setter
         """
-        self.current_bullets -= 1
+        self.__current_bullets -= 1
 
     def get_lives(self):
         """

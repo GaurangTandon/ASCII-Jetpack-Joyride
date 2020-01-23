@@ -51,20 +51,19 @@ class Player(GenericFrameObject):
         self.y = self.startYCoord
 
         # number of frames for which the player is touching the ceiling
-        self.was_touching_ceiling = 0
+        self.__was_touching_ceiling = 0
 
         self.__y_vel = 0
         self.x_vel = 0
-        self.game_obj = obj_game
+        self.__game_obj = obj_game
 
-        self.y_acc = 0
-        self.x_acc = 0
+        self.__y_acc = 0
+        self.__x_acc = 0
 
-        self.current_bullets = 0
-        self.w_key = False
+        self.__current_bullets = 0
 
         self.__lifes = 3
-        self.shield_activated = False
+        self.__shield_activated = False
 
     def get_remaining_shield_time(self):
         """
@@ -81,7 +80,7 @@ class Player(GenericFrameObject):
         Activates player shield if it is available
         """
         if self.get_remaining_shield_time() == 0:
-            self.shield_activated = True
+            self.__shield_activated = True
             self.last_used_shield = time.time()
 
     def _get_middle(self):
@@ -94,7 +93,7 @@ class Player(GenericFrameObject):
         """
         Called by Game to update the player stuff
         """
-        magnet_x, magnet_y = self.game_obj.get_magnet_coords()
+        magnet_x, magnet_y = self.__game_obj.get_magnet_coords()
 
         if magnet_x is not None:
             x_dist = magnet_x - self.x
@@ -102,19 +101,19 @@ class Player(GenericFrameObject):
             hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
 
             if hyp != 0:
-                self.x_acc = (x_dist / hyp) * Magnet.FORCE_CONSTANT
-                self.y_acc = (y_dist / hyp) * Magnet.FORCE_CONSTANT
+                self.__x_acc = (x_dist / hyp) * Magnet.FORCE_CONSTANT
+                self.__y_acc = (y_dist / hyp) * Magnet.FORCE_CONSTANT
             else:
-                self.x_acc = 0
-                self.y_acc = 0
+                self.__x_acc = 0
+                self.__y_acc = 0
         else:
-            self.x_acc = 0
-            self.y_acc = 0
+            self.__x_acc = 0
+            self.__y_acc = 0
 
-        if self.shield_activated and time.time() - self.last_used_shield >= self.SHIELD_TIME:
-            self.shield_activated = False
+        if self.__shield_activated and time.time() - self.last_used_shield >= self.SHIELD_TIME:
+            self.__shield_activated = False
 
-        color_val = Fore.BLUE if self.shield_activated else PLAYER_COLOR
+        color_val = Fore.BLUE if self.__shield_activated else PLAYER_COLOR
 
         self.__class__.stringRepr[-1] = "||||"
         self.__class__.color = tiler(
@@ -138,8 +137,8 @@ class Player(GenericFrameObject):
 
         self._generate_draw_obj()
         self.__y_vel += config.GRAVITY_ACC
-        self.__y_vel += self.y_acc
-        self.x_vel += self.x_acc
+        self.__y_vel += self.__y_acc
+        self.x_vel += self.__x_acc
         drag_value = min(self.DRAG_CONSTANT * self.x_vel *
                          self.x_vel, abs(1))
         self.x_vel += (-1 if self.x_vel > 0 else 1) * drag_value
@@ -155,11 +154,11 @@ class Player(GenericFrameObject):
         """
         Called by Game when user presses Space
         """
-        if self.current_bullets >= self.MAX_BULLETS:
+        if self.__current_bullets >= self.MAX_BULLETS:
             return []
 
-        laser = Laser(self.x, self._get_middle(), self.game_obj)
-        self.current_bullets += 1
+        laser = Laser(self.x, self._get_middle(), self.__game_obj)
+        self.__current_bullets += 1
 
         return [laser]
 
@@ -173,17 +172,17 @@ class Player(GenericFrameObject):
         # low value makes it very awkward
         remain_at_the_top_threshold = 10
         # without this jetpack gets stuck at the top
-        if touched_ceil and self.was_touching_ceiling >= remain_at_the_top_threshold:
+        if touched_ceil and self.__was_touching_ceiling >= remain_at_the_top_threshold:
             # do not add a fractional quantity
             self.y += 1
 
         # can't move anymore
         if touched_bottom or touched_ceil:
             self.__y_vel = 0
-            self.y_acc = 0
-            self.was_touching_ceiling += int(touched_ceil)
+            self.__y_acc = 0
+            self.__was_touching_ceiling += int(touched_ceil)
         else:
-            self.was_touching_ceiling = 0
+            self.__was_touching_ceiling = 0
 
         if self.x >= config.FRAME_RIGHT_BOUNARY:
             self.x = config.FRAME_RIGHT_BOUNARY
@@ -194,7 +193,7 @@ class Player(GenericFrameObject):
             self.x_vel = 0
 
         player_hit = False
-        for obj in self.game_obj.get_rendered_objects():
+        for obj in self.__game_obj.get_rendered_objects():
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
@@ -203,19 +202,19 @@ class Player(GenericFrameObject):
 
             if obj.TYPE == "coin":
                 for _ in common_points:
-                    self.game_obj.increment_score()
+                    self.__game_obj.increment_score()
                 to_delete = True
             elif obj.TYPE in ["firebeam", "bosslaser"]:
-                if not self.shield_activated:
+                if not self.__shield_activated:
                     player_hit = True
                     to_delete = True
             elif obj.TYPE == "speed":
-                self.game_obj.speed_powerup()
-                self.game_obj.set_speed_on_time(time.time())
+                self.__game_obj.speed_powerup()
+                self.__game_obj.set_speed_on_time(time.time())
                 to_delete = True
 
             if to_delete:
-                self.game_obj.append_to_delete_list(obj.id)
+                self.__game_obj.append_to_delete_list(obj.id)
 
         if player_hit:
             self.__lifes -= 1
@@ -224,7 +223,7 @@ class Player(GenericFrameObject):
         """
         setter
         """
-        self.current_bullets -= 1
+        self.__current_bullets -= 1
 
     def get_lives(self):
         """
@@ -242,7 +241,7 @@ class Player(GenericFrameObject):
         """
         getter
         """
-        return self.shield_activated
+        return self.__shield_activated
 
     def get_last_used_shield(self):
         """
@@ -268,7 +267,7 @@ class Laser(GenericFrameObject):
         super().__init__()
         self.x = round(x)
         self.y = round(y)
-        self.game_obj = game_obj
+        self.__game_obj = game_obj
 
     def update(self):
         """
@@ -277,34 +276,34 @@ class Laser(GenericFrameObject):
         self.x += config.LASER_VEL * config.X_VEL_FACTOR
 
         if self.exceeds_bounds():
-            self.game_obj.decrement_player_bullets()
+            self.__game_obj.decrement_player_bullets()
             return GenericFrameObject.DEAD_FLAG
 
         # bullet can only delete one object
         delete_self = False
 
-        for obj in self.game_obj.get_rendered_objects():
+        for obj in self.__game_obj.get_rendered_objects():
             common_points = self.check_collision(obj)
             if len(common_points) == 0:
                 continue
 
             if obj.TYPE == "boss":
-                is_player = self.game_obj.get_player_type() == "player"
-                self.game_obj.decrement_boss_health(
+                is_player = self.__game_obj.get_player_type() == "player"
+                self.__game_obj.decrement_boss_health(
                     self.BOSS_DAMAGE_PLAYER if is_player else self.BOSS_DAMAGE_DRAGON)
 
                 delete_self = True
                 break
 
             if obj.TYPE in ["bosslaser", "firebeam"]:
-                self.game_obj.append_to_delete_list(obj.id)
+                self.__game_obj.append_to_delete_list(obj.id)
                 # you get points for destroying opposition too
-                self.game_obj.increment_score()
+                self.__game_obj.increment_score()
                 delete_self = True
                 break
 
         if delete_self:
-            self.game_obj.decrement_player_bullets()
+            self.__game_obj.decrement_player_bullets()
             return GenericFrameObject.DEAD_FLAG
 
         return None

@@ -44,19 +44,20 @@ class Boss(GenericFrameObject):
         self.y = self.START_Y
         self.x = config.FRAME_SPAWN_X - 20
 
-        self.game_obj = game_obj
+        self.__game_obj = game_obj
 
         self.__health = 100
-        self.last_fired = -1
+        self.__last_fired = -1
 
     def _direction(self):
-        return self.game_obj.get_direction(self.y)
+        return self.__game_obj.get_direction(self.y)
 
     def _fire_gun(self):
-        boss_laser = BossLaser(self.x, self.y - self.height / 2, self.game_obj)
-        self.game_obj.append_to_rendered_objects(boss_laser)
+        boss_laser = BossLaser(
+            self.x, self.y - self.height / 2, self.__game_obj)
+        self.__game_obj.append_to_rendered_objects(boss_laser)
 
-        self.last_fired = time.time()
+        self.__last_fired = time.time()
 
     def update(self):
         self.__y_vel = self._direction() * self.Y_VEL
@@ -64,7 +65,7 @@ class Boss(GenericFrameObject):
         self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
         self.y = max(self.y, self.height)
 
-        if time.time() - self.last_fired >= self.FIRE_INTERVAL:
+        if time.time() - self.__last_fired >= self.FIRE_INTERVAL:
             self._fire_gun()
 
     def get_health(self):
@@ -93,12 +94,12 @@ class BossLaser(GenericFrameObject):
     TYPE = "bosslaser"
 
     def _direction(self, y_val):
-        return self.game_obj.get_direction(y_val)
+        return self.__game_obj.get_direction(y_val)
 
     def __init__(self, initX, initY, game_obj):
         super().__init__()
 
-        self.game_obj = game_obj
+        self.__game_obj = game_obj
         self.y = initY
         self.x = initX
 
@@ -108,7 +109,7 @@ class BossLaser(GenericFrameObject):
     def update(self):
         # for a dragon player, guns should follow less since boss laser
         # is not ver specific
-        if self.game_obj.get_player_type() == "player":
+        if self.__game_obj.get_player_type() == "player":
             should_follow = 1 if random.random() <= 0.8 else -1
         else:
             should_follow = 1
