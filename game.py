@@ -186,7 +186,7 @@ class Game():
         # make two slots in y axis as well
         if not config.DEBUG:
             for random_spawn in [get_coin_group, get_firebeam_group]:
-                threshold = 0.1
+                threshold = 0.1 * config.X_VEL_FACTOR
 
                 if self.__ticks > self.__next_spawn_ticks:
                     if random.random() < threshold:
@@ -310,11 +310,11 @@ class Game():
         """
         self.__delete_id_list.append(idd)
 
-    def increment_score(self):
+    def increment_score(self, val = 1):
         """
         setter
         """
-        self.__score += 1
+        self.__score += val
 
 
     def decrement_player_bullets(self):

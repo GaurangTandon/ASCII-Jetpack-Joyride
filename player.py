@@ -260,8 +260,8 @@ class Laser(GenericFrameObject):
     ]
     color = [Fore.RED, None]
     TYPE = "laser"
-    BOSS_DAMAGE_PLAYER = 10
-    BOSS_DAMAGE_DRAGON = 5
+    BOSS_DAMAGE = 5
+    OBSTACLE_HIT_SCORE = 5
 
     def __init__(self, x, y, game_obj):
         super().__init__()
@@ -293,8 +293,7 @@ class Laser(GenericFrameObject):
 
             if obj.TYPE == "boss":
                 is_player = self.__game_obj.get_player_type() == "player"
-                self.__game_obj.decrement_boss_health(
-                    self.BOSS_DAMAGE_PLAYER if is_player else self.BOSS_DAMAGE_DRAGON)
+                self.__game_obj.decrement_boss_health(self.BOSS_DAMAGE)
 
                 delete_self = True
                 break
@@ -302,7 +301,7 @@ class Laser(GenericFrameObject):
             if obj.TYPE in ["bosslaser", "firebeam"]:
                 self.__game_obj.append_to_delete_list(obj.get_id())
                 # you get points for destroying opposition too
-                self.__game_obj.increment_score()
+                self.__game_obj.increment_score(self.OBSTACLE_HIT_SCORE)
                 delete_self = True
                 break
 

@@ -13,7 +13,7 @@ Special thanks to [zubair's mario console](https://github.com/zubairabid/mario-c
 
 1. **Polymorphism** - both player and dragon have the `fire_laser` but it behaves differently in both of them, however, it is fired in the same way.
 2. **Inheritance** - all frame objects inheit from a generic frame object class gives a common interface for spawn probability, draw, cleanup, exceeds
-3. **Encapsulation** - all variables are protected and they have getters and setters (although this is a Java concept which does not exist in Python but TAs wanted us to please don't hate me :(
+3. **Encapsulation** - most instance variables are private, the inherited ones are protected, and they have getters and setters (although this is a Java concept which does not exist in Python but TAs wanted us to do so please don't hate me :(
 4. **Abstraction** - functions like `check_collision` and `fire_laser` hide underlying implementation and can be used in whatever way since it always works the way you want it to.
 
 **Disclaimer**: This project was only made as a part of IIIT DASS Assingment 1. This project does not endorse the actual game by any means. The developer is NOT liable for ANY and ALL of the waste of your time as a result of playing this addicting implementation.
