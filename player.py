@@ -14,7 +14,7 @@ from generic import GenericFrameObject
 from obstacle import Magnet
 
 
-PLAYER_COLOR = Fore.WHITE
+PLAYER_COLOR =  Fore.YELLOW
 
 
 class Player(GenericFrameObject):
@@ -146,7 +146,7 @@ class Player(GenericFrameObject):
         self._x += round(self.__x_vel)
         self._y += round(self.__y_vel)
         self._x = min(self._x, 2 * config.FRAME_SPAWN_OFFSET +
-                     config.FRAME_RIGHT_BOUNARY)
+                      config.FRAME_RIGHT_BOUNARY)
 
         self._check_bounds()
 
@@ -276,6 +276,10 @@ class Laser(GenericFrameObject):
         self._x += config.LASER_VEL * config.X_VEL_FACTOR
 
         if self.exceeds_bounds():
+            self.__game_obj.decrement_player_bullets()
+            return GenericFrameObject.DEAD_FLAG
+
+        if self._x + self._width >= config.FRAME_RIGHT_BOUNARY:
             self.__game_obj.decrement_player_bullets()
             return GenericFrameObject.DEAD_FLAG
 

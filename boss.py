@@ -50,7 +50,7 @@ class Boss(GenericFrameObject):
         self.__last_fired = -1
 
     def _direction(self):
-        return self.__game_obj.get_direction(self._y)
+        return self.__game_obj._get_direction(self._y)
 
     def _fire_gun(self):
         boss_laser = BossLaser(
@@ -93,8 +93,11 @@ class BossLaser(GenericFrameObject):
     color = [Fore.WHITE, Back.BLUE]
     TYPE = "bosslaser"
 
-    def _direction(self, y_val):
-        return self.__game_obj.get_direction(y_val)
+    def _direction(self):
+        """
+        getter
+        """
+        return self.__game_obj._get_direction(self._y)
 
     def __init__(self, initX, initY, game_obj):
         super().__init__()

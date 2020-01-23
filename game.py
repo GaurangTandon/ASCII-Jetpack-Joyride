@@ -4,7 +4,6 @@ The actual game and rendering related functions
 
 
 import os
-import sys
 import random
 import math
 import time
@@ -186,19 +185,18 @@ class Game():
         # make spawning random somehow
         # make two slots in y axis as well
         if not config.DEBUG:
-            if self.__ticks > self.__next_spawn_ticks:
-                for random_spawn in [get_coin_group, get_firebeam_group]:
-                    threshold = 0.05
+            for random_spawn in [get_coin_group, get_firebeam_group]:
+                threshold = 0.1
 
+                if self.__ticks > self.__next_spawn_ticks:
                     if random.random() < threshold:
                         objs, width = random_spawn()
                         for obj in objs:
                             self.__rendered_objects.append(obj)
 
                         self.__next_spawn_ticks = max(
-                            self.__next_spawn_ticks, self.__ticks + obj._width)
+                            self.__next_spawn_ticks, self.__ticks + width)
 
-                        break
 
             if not self.__magnet_obj and not self.__boss_obj:
                 if random.random() < Magnet.SPAWN_PROBABILITY:
@@ -297,8 +295,6 @@ class Game():
                 self._terminate(1)
 
             while time.time() - last < self._refresh_time:
-                sys.stdin.flush()
-                sys.stdout.flush()
                 pass
 
     def set_speed_on_time(self, val):
@@ -320,11 +316,6 @@ class Game():
         """
         self.__score += 1
 
-    def get_rendered_objects(self):
-        """
-        getter
-        """
-        return self.__rendered_objects
 
     def decrement_player_bullets(self):
         """
@@ -348,7 +339,9 @@ class Game():
         """
         getter
         """
-        return (None, None) if not self.__magnet_obj else (self.__magnet_obj._x, self.__magnet_obj._y)
+        if not self.__magnet_obj:
+            return (None, None)
+        return (self.__magnet_obj._x, self.__magnet_obj._y)
 
     def get_end_time(self):
         """
@@ -385,14 +378,26 @@ class Game():
         self.__x_travelled = val
 
     def inc_score(self, val):
+        """
+        setter
+        """
         self.__score += val
 
     def get_rendered_objects(self):
+        """
+        getter
+        """
         return self.__rendered_objects
 
     def append_to_rendered_objects(self, val):
+        """
+        setter
+        """
         self.__rendered_objects.append(val)
 
     def _get_direction(self, y_coord):
+        """
+        getter
+        """
         return (-1 if y_coord > self.__player._y else 0 if y_coord ==
                 self.__player._y else 1)

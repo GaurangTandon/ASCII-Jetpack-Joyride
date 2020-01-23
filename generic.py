@@ -58,9 +58,15 @@ class GenericFrameObject:
         self._x, self._y = get_spawn_coordinates(self._height)
 
     def get_id(self):
+        """
+        getter
+        """
         return self.__id
 
     def set_id(self, val):
+        """
+        setter
+        """
         self.__id = val
 
     def _generate_draw_obj(self):

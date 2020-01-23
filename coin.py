@@ -13,7 +13,7 @@ class Coin(GroupedObject):
     """
     TYPE = "coin"
     stringRepr = ["$"]
-    color = [Fore.WHITE, None]
+    color = [Fore.GREEN, None]
 
 
 def get_coin_group():
