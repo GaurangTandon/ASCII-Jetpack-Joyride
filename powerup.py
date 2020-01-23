@@ -76,8 +76,8 @@ class DragonPowerup(GenericFrameObject):
     TYPE = "playerdragon"
 
     def __init__(self, game):
-        self.frame = 0
-        self.count = 0
+        self.__frame = 0
+        self.__count = 0
         self.__class__.stringRepr = FRAMES[0]
         self.__class__.color = [Fore.WHITE, None]
         super().__init__()
@@ -91,13 +91,13 @@ class DragonPowerup(GenericFrameObject):
         """
         Changes frame of the dragon every 5 frames
         """
-        if self.count % 5 == 0:
-            self.__class__.stringRepr = FRAMES[self.frame]
+        if self.__count % 5 == 0:
+            self.__class__.stringRepr = FRAMES[self.__frame]
             self.__class__.color = [Fore.WHITE, None]
             self._generate_draw_obj()
-            self.frame += 1
-            self.frame %= len(FRAMES)
-        self.count += 1
+            self.__frame += 1
+            self.__frame %= len(FRAMES)
+        self.__count += 1
 
     def update(self, last_key_pressed):
         """

@@ -33,14 +33,14 @@ class KBHit:
         '''
 
         # Save the terminal settings
-        self.fdd = sys.stdin.fileno()
-        self.new_term = termios.tcgetattr(self.fdd)
-        self.old_term = termios.tcgetattr(self.fdd)
+        self.__fdd = sys.stdin.fileno()
+        self.__new_term = termios.tcgetattr(self.__fdd)
+        self.__old_term = termios.tcgetattr(self.__fdd)
 
         # New terminal setting unbuffered
-        self.new_term[3] = (self.new_term[3] & ~
-                            termios.ICANON & ~termios.ECHO)
-        termios.tcsetattr(self.fdd, termios.TCSAFLUSH, self.new_term)
+        self.__new_term[3] = (self.__new_term[3] & ~
+                              termios.ICANON & ~termios.ECHO)
+        termios.tcsetattr(self.__fdd, termios.TCSAFLUSH, self.__new_term)
 
         # Support normal-terminal reset at exit
         atexit.register(self.set_normal_term)
@@ -49,7 +49,7 @@ class KBHit:
         ''' Resets to normal terminal
         '''
 
-        termios.tcsetattr(self.fdd, termios.TCSAFLUSH, self.old_term)
+        termios.tcsetattr(self.__fdd, termios.TCSAFLUSH, self.__old_term)
 
     @staticmethod
     def getch():
