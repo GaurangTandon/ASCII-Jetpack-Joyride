@@ -41,8 +41,8 @@ class Boss(GenericFrameObject):
         super().__init__()
         self.__y_vel = -1
 
-        self.y = self.START_Y
-        self.x = config.FRAME_SPAWN_X - 20
+        self._y = self.START_Y
+        self._x = config.FRAME_SPAWN_X - 20
 
         self.__game_obj = game_obj
 
@@ -50,20 +50,20 @@ class Boss(GenericFrameObject):
         self.__last_fired = -1
 
     def _direction(self):
-        return self.__game_obj.get_direction(self.y)
+        return self.__game_obj.get_direction(self._y)
 
     def _fire_gun(self):
         boss_laser = BossLaser(
-            self.x, self.y - self.height / 2, self.__game_obj)
+            self._x, self._y - self._height / 2, self.__game_obj)
         self.__game_obj.append_to_rendered_objects(boss_laser)
 
         self.__last_fired = time.time()
 
     def update(self):
         self.__y_vel = self._direction() * self.Y_VEL
-        self.y += round(self.__y_vel)
-        self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
-        self.y = max(self.y, self.height)
+        self._y += round(self.__y_vel)
+        self._y = min(self._y, config.FRAME_BOTTOM_BOUNDARY)
+        self._y = max(self._y, self._height)
 
         if time.time() - self.__last_fired >= self.FIRE_INTERVAL:
             self._fire_gun()
@@ -100,8 +100,8 @@ class BossLaser(GenericFrameObject):
         super().__init__()
 
         self.__game_obj = game_obj
-        self.y = initY
-        self.x = initX
+        self._y = initY
+        self._x = initX
 
         self.vel_y = 1
         self.vel_x = -config.FRAME_MOVE_SPEED
@@ -115,11 +115,11 @@ class BossLaser(GenericFrameObject):
             should_follow = 1
 
         # get the player's coordinates and move towards it
-        self.y += round(self.vel_y * self._direction() * should_follow)
-        self.x += round(self.vel_x) * config.X_VEL_FACTOR
+        self._y += round(self.vel_y * self._direction() * should_follow)
+        self._x += round(self.vel_x) * config.X_VEL_FACTOR
 
-        self.y = max(self.y, self.height-1)
-        self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
+        self._y = max(self._y, self._height-1)
+        self._y = min(self._y, config.FRAME_BOTTOM_BOUNDARY)
 
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG

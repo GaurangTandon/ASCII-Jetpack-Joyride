@@ -47,8 +47,8 @@ class Player(GenericFrameObject):
         super().__init__()
 
         # x and y coordinate of the player's leftmost bottommost point
-        self.x = config.FRAME_LEFT_BOUNDARY
-        self.y = self.startYCoord
+        self._x = config.FRAME_LEFT_BOUNDARY
+        self._y = self.startYCoord
 
         # number of frames for which the player is touching the ceiling
         self.__was_touching_ceiling = 0
@@ -84,10 +84,10 @@ class Player(GenericFrameObject):
             self.last_used_shield = time.time()
 
     def _get_middle(self):
-        return self.y - self.height / 2
+        return self._y - self._height / 2
 
     def _get_top(self):
-        return self.y - self.height + 1
+        return self._y - self._height + 1
 
     def update(self, last_key_pressed):
         """
@@ -96,8 +96,8 @@ class Player(GenericFrameObject):
         magnet_x, magnet_y = self.__game_obj.get_magnet_coords()
 
         if magnet_x is not None:
-            x_dist = magnet_x - self.x
-            y_dist = (magnet_y - self.y)*2
+            x_dist = magnet_x - self._x
+            y_dist = (magnet_y - self._y)*2
             hyp = sqrt(x_dist * x_dist + y_dist * y_dist)
 
             if hyp != 0:
@@ -117,7 +117,7 @@ class Player(GenericFrameObject):
 
         self.__class__.stringRepr[-1] = "||||"
         self.__class__.color = tiler(
-            [color_val, None], self.height, self.width)
+            [color_val, None], self._height, self._width)
 
         # keypress gives an impulse, not an accn
         if last_key_pressed == 'w':
@@ -133,7 +133,7 @@ class Player(GenericFrameObject):
 
         if str(last_key_pressed) in 'sw':
             self.__class__.color[-1] = tiler([color_val,
-                                              Back.MAGENTA], 1, self.width)
+                                              Back.MAGENTA], 1, self._width)
 
         self._generate_draw_obj()
         self.__y_vel += config.GRAVITY_ACC
@@ -143,9 +143,9 @@ class Player(GenericFrameObject):
                          self.__x_vel, abs(1))
         self.__x_vel += (-1 if self.__x_vel > 0 else 1) * drag_value
 
-        self.x += round(self.__x_vel)
-        self.y += round(self.__y_vel)
-        self.x = min(self.x, 2 * config.FRAME_SPAWN_OFFSET +
+        self._x += round(self.__x_vel)
+        self._y += round(self.__y_vel)
+        self._x = min(self._x, 2 * config.FRAME_SPAWN_OFFSET +
                      config.FRAME_RIGHT_BOUNARY)
 
         self._check_bounds()
@@ -157,24 +157,24 @@ class Player(GenericFrameObject):
         if self.__current_bullets >= self.MAX_BULLETS:
             return []
 
-        laser = Laser(self.x, self._get_middle(), self.__game_obj)
+        laser = Laser(self._x, self._get_middle(), self.__game_obj)
         self.__current_bullets += 1
 
         return [laser]
 
     def _check_bounds(self):
-        touched_ceil = self.y <= self.height - 1
-        touched_bottom = self.y >= self.startYCoord
+        touched_ceil = self._y <= self._height - 1
+        touched_bottom = self._y >= self.startYCoord
 
-        self.y = max(self.y, self.height - 1)
-        self.y = min(self.y, self.startYCoord)
+        self._y = max(self._y, self._height - 1)
+        self._y = min(self._y, self.startYCoord)
 
         # low value makes it very awkward
         remain_at_the_top_threshold = 10
         # without this jetpack gets stuck at the top
         if touched_ceil and self.__was_touching_ceiling >= remain_at_the_top_threshold:
             # do not add a fractional quantity
-            self.y += 1
+            self._y += 1
 
         # can't move anymore
         if touched_bottom or touched_ceil:
@@ -184,12 +184,12 @@ class Player(GenericFrameObject):
         else:
             self.__was_touching_ceiling = 0
 
-        if self.x >= config.FRAME_RIGHT_BOUNARY:
-            self.x = config.FRAME_RIGHT_BOUNARY
+        if self._x >= config.FRAME_RIGHT_BOUNARY:
+            self._x = config.FRAME_RIGHT_BOUNARY
             self.__x_vel = 0
 
-        if self.x <= config.FRAME_LEFT_BOUNDARY:
-            self.x = config.FRAME_LEFT_BOUNDARY
+        if self._x <= config.FRAME_LEFT_BOUNDARY:
+            self._x = config.FRAME_LEFT_BOUNDARY
             self.__x_vel = 0
 
         player_hit = False
@@ -265,15 +265,15 @@ class Laser(GenericFrameObject):
 
     def __init__(self, x, y, game_obj):
         super().__init__()
-        self.x = round(x)
-        self.y = round(y)
+        self._x = round(x)
+        self._y = round(y)
         self.__game_obj = game_obj
 
     def update(self):
         """
         Override of the generic update function
         """
-        self.x += config.LASER_VEL * config.X_VEL_FACTOR
+        self._x += config.LASER_VEL * config.X_VEL_FACTOR
 
         if self.exceeds_bounds():
             self.__game_obj.decrement_player_bullets()

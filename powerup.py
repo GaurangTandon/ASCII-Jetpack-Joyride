@@ -81,8 +81,8 @@ class DragonPowerup(GenericFrameObject):
         self.__class__.stringRepr = FRAMES[0]
         self.__class__.color = [Fore.WHITE, None]
         super().__init__()
-        self.y = config.FRAME_HEIGHT / 2
-        self.x = 5 + config.FRAME_LEFT_BOUNDARY
+        self._y = config.FRAME_HEIGHT / 2
+        self._x = 5 + config.FRAME_LEFT_BOUNDARY
         self.__lifes = 1
         self.__current_bullets = 0
         self.__game_obj = game
@@ -107,15 +107,15 @@ class DragonPowerup(GenericFrameObject):
 
         # keypress gives an impulse, not an accn
         if last_key_pressed == 'w':
-            self.y -= 1
+            self._y -= 1
         elif last_key_pressed == 's':
-            self.y += 1
+            self._y += 1
 
         self.wiggle()
         self._check_bounds()
 
     def _get_middle(self):
-        return self.y - self.height / 2
+        return self._y - self._height / 2
 
     def fire_laser(self):
         """
@@ -123,7 +123,7 @@ class DragonPowerup(GenericFrameObject):
         """
         res = []
 
-        right_point = self.x + self.width
+        right_point = self._x + self._width
         if self.__current_bullets >= self.MAX_BULLETS:
             return res
 
@@ -133,21 +133,21 @@ class DragonPowerup(GenericFrameObject):
         if self.__current_bullets >= self.MAX_BULLETS:
             return res
 
-        laser2 = Laser(right_point, self.y, self.__game_obj)
+        laser2 = Laser(right_point, self._y, self.__game_obj)
         res.append(laser2)
         self.__current_bullets += 1
         if self.__current_bullets >= self.MAX_BULLETS:
             return res
 
-        laser3 = Laser(right_point, self.y - self.height + 1, self.__game_obj)
+        laser3 = Laser(right_point, self._y - self._height + 1, self.__game_obj)
         res.append(laser3)
         self.__current_bullets += 1
 
         return res
 
     def _check_bounds(self):
-        self.y = max(self.y, self.height - 1)
-        self.y = min(self.y, config.FRAME_BOTTOM_BOUNDARY)
+        self._y = max(self._y, self._height - 1)
+        self._y = min(self._y, config.FRAME_BOTTOM_BOUNDARY)
 
         for obj in self.__game_obj.get_rendered_objects():
             common_points = self.check_collision(obj)

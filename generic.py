@@ -55,7 +55,7 @@ class GenericFrameObject:
 
         self._generate_draw_obj()
 
-        self.x, self.y = get_spawn_coordinates(self.height)
+        self._x, self._y = get_spawn_coordinates(self._height)
 
     def get_id(self):
         return self.__id
@@ -65,8 +65,8 @@ class GenericFrameObject:
 
     def _generate_draw_obj(self):
         try:
-            self.__class__.height = hgt = len(self.__class__.stringRepr)
-            self.__class__.width = wdt = len(self.__class__.stringRepr[0])
+            self.__class__._height = hgt = len(self.__class__.stringRepr)
+            self.__class__._width = wdt = len(self.__class__.stringRepr[0])
 
             cond1 = len(self.__class__.color) != hgt
             cond2 = not isinstance(self.__class__.color[0], list) or len(
@@ -91,8 +91,8 @@ class GenericFrameObject:
         Returns a dictionary containing sufficient info to draw
         """
         return [{
-            "coord": [self.y, self.x],
-            "size": [self.height, self.width]
+            "coord": [self._y, self._x],
+            "size": [self._height, self._width]
         }]
 
     def get_type(self):
@@ -105,14 +105,14 @@ class GenericFrameObject:
         """
         If this object exceeds top or bottom bounds of the frame
         """
-        return self.x < 0 or self.x + self.width > config.FRAME_WIDTH \
-            or self.y > config.FRAME_BOTTOM_BOUNDARY or self.y < self.height
+        return self._x < 0 or self._x + self._width > config.FRAME_WIDTH \
+            or self._y > config.FRAME_BOTTOM_BOUNDARY or self._y < self._height
 
     def update(self):
         """
         Generic update function for moving things left
         """
-        self.x -= config.FRAME_MOVE_SPEED * config.X_VEL_FACTOR
+        self._x -= config.FRAME_MOVE_SPEED * config.X_VEL_FACTOR
 
         if self.exceeds_bounds():
             return GenericFrameObject.DEAD_FLAG
@@ -123,11 +123,11 @@ class GenericFrameObject:
         points = set([])
 
         # both coordinates must be integers
-        assert obj.y % 1 <= 1e-6
-        assert obj.x % 1 <= 1e-6
+        assert obj._y % 1 <= 1e-6
+        assert obj._x % 1 <= 1e-6
 
-        for i in range(int(obj.y) - obj.height + 1, int(obj.y) + 1):
-            for j in range(int(obj.x), int(obj.x) + obj.width):
+        for i in range(int(obj._y) - obj._height + 1, int(obj._y) + 1):
+            for j in range(int(obj._x), int(obj._x) + obj._width):
                 points.add((i, j))
 
         return points
@@ -157,11 +157,11 @@ class GroupedObject(GenericFrameObject):
 
     def __init__(self, x, y):
         super().__init__()
-        self.x = x
-        self.y = y
+        self._x = x
+        self._y = y
 
     def draw(self):
         return [{
-            "coord": [self.y, self.x],
+            "coord": [self._y, self._x],
             "size": [1, 1]
         }]

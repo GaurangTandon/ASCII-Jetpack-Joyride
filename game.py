@@ -196,7 +196,7 @@ class Game():
                             self.__rendered_objects.append(obj)
 
                         self.__next_spawn_ticks = max(
-                            self.__next_spawn_ticks, self.__ticks + obj.width)
+                            self.__next_spawn_ticks, self.__ticks + obj._width)
 
                         break
 
@@ -348,7 +348,7 @@ class Game():
         """
         getter
         """
-        return (None, None) if not self.__magnet_obj else (self.__magnet_obj.x, self.__magnet_obj.y)
+        return (None, None) if not self.__magnet_obj else (self.__magnet_obj._x, self.__magnet_obj._y)
 
     def get_end_time(self):
         """
@@ -394,5 +394,5 @@ class Game():
         self.__rendered_objects.append(val)
 
     def _get_direction(self, y_coord):
-        return (-1 if y_coord > self.__player.y else 0 if y_coord ==
-                self.__player.y else 1)
+        return (-1 if y_coord > self.__player._y else 0 if y_coord ==
+                self.__player._y else 1)

@@ -71,14 +71,14 @@ class Magnet(GenericFrameObject):
         super().__init__()
         self.exists = True
 
-        self.x = random.randint(
+        self._x = random.randint(
             config.FRAME_RIGHT_BOUNARY // 2 - 20, config.FRAME_RIGHT_BOUNARY // 2 + 20)
 
         top_half = random.randint(
             config.FRAME_HEIGHT // 4 - 5, config.FRAME_HEIGHT // 4 + 5)
         bottom_half = random.randint(
             3 * config.FRAME_HEIGHT // 4 - 5, 3 * config.FRAME_HEIGHT // 4 + 5)
-        self.y = top_half if random.random() < 0.5 else bottom_half
+        self._y = top_half if random.random() < 0.5 else bottom_half
 
         self.creation_time = time.time()
 

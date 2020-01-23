@@ -13,7 +13,7 @@ class BackgroundObject(GenericFrameObject):
     """
 
     def update(self):
-        self.x += (3*config.FRAME_MOVE_SPEED)//4
+        self._x += (3*config.FRAME_MOVE_SPEED)//4
         return super().update()
 
 
@@ -44,8 +44,8 @@ class Mountain(BackgroundObject):
     def __init__(self):
         super().__init__()
 
-        self.x = config.FRAME_RIGHT_BOUNARY + self.width
-        self.y = config.FRAME_BOTTOM_BOUNDARY
+        self._x = config.FRAME_RIGHT_BOUNARY + self._width
+        self._y = config.FRAME_BOTTOM_BOUNDARY
 
 
 class Cloud(BackgroundObject):
@@ -66,5 +66,5 @@ class Cloud(BackgroundObject):
 
     def __init__(self):
         super().__init__()
-        self.x = config.FRAME_RIGHT_BOUNARY + self.width
-        self.y = self.height
+        self._x = config.FRAME_RIGHT_BOUNARY + self._width
+        self._y = self._height

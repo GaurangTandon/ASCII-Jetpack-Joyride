@@ -19,8 +19,8 @@ class Ground(GenericFrameObject):
 
     def __init__(self):
         super().__init__()
-        self.x = 0
-        self.y = config.FRAME_HEIGHT - 1
+        self._x = 0
+        self._y = config.FRAME_HEIGHT - 1
 
     def update(self):
         pass
